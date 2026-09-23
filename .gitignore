@@ -1,0 +1,8 @@
+.build/
+dist/
+.DS_Store
+website/dist/*.dmg
+website/dist/*.zip
+website/dist/*.sha256
+.sites-runtime/
+website/.sites-runtime/

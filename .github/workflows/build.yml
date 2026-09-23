@@ -1,0 +1,27 @@
+name: Build and verify macOS app
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '*.md']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  app:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify power recovery and safety policy
+        run: ./Scripts/test.sh
+      - name: Build Universal macOS app
+        run: ./Scripts/build.sh
+      - name: Package disk image
+        run: ./Scripts/package.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Always-Awake-MVP
+          path: |
+            dist/*.dmg
+            dist/*.zip
+            dist/SHA256SUMS.txt
