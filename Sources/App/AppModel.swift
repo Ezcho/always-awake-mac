@@ -1,25 +1,20 @@
 import AppKit
-import SwiftUI
 import ServiceManagement
 
 @MainActor
-final class AppModel: ObservableObject {
-    @Published var active = false
-    @Published var busy = false
-    @Published var monitorOn = UserDefaults.standard.object(forKey: "monitorOn") as? Bool ?? true
-    @Published var error: String?
-    @Published var recoveryRequired = false
-    @Published var serviceReady = false
-    @Published var needsApproval = false
-    @Published var hardware = HardwareReading.current()
-    @Published var startedAt: Date?
-    @Published var now = Date()
+final class AppModel {
+    var active = false { didSet { updateMaintenance(); onChange?() } }
+    var busy = false { didSet { onChange?() } }
+    var monitorOn = UserDefaults.standard.object(forKey: "monitorOn") as? Bool ?? true { didSet { onChange?() } }
+    var error: String? { didSet { onChange?() } }
+    var recoveryRequired = false { didSet { updateMaintenance(); onChange?() } }
+    var serviceReady = false { didSet { onChange?() } }
+    var needsApproval = false { didSet { onChange?() } }
     let display = DisplayController()
     let client = HelperClient()
     private let service = SMAppService.daemon(plistName: AppIdentity.helperPlist)
     private var timer: Timer?
     private var heartbeatInFlight = false
-    private var ticks = 0
     private var activity: NSObjectProtocol?
     var onChange: (() -> Void)?
 
@@ -37,23 +32,13 @@ final class AppModel: ObservableObject {
             }
             self.onChange?()
         }
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.tick() }
-        }
         NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
-                self.hardware = HardwareReading.current()
                 if self.active { self.sendHeartbeat() }
                 self.refreshService()
             }
         }
-    }
-
-    var elapsed: String {
-        guard let startedAt else { return "00:00:00" }
-        let seconds = max(0, Int(now.timeIntervalSince(startedAt)))
-        return String(format: "%02d:%02d:%02d", seconds / 3600, seconds / 60 % 60, seconds % 60)
     }
 
     func refreshService() {
@@ -89,8 +74,7 @@ final class AppModel: ObservableObject {
         refreshService()
         if active || recoveryRequired { stop(); return }
         guard serviceReady else { prepareService(); return }
-        hardware = HardwareReading.current()
-        if let issue = hardware.issue { error = issue; return }
+        if let issue = HardwareReading.current().issue { error = issue; return }
         busy = true
         error = nil
         client.call(.start) { [weak self] result in
@@ -105,7 +89,6 @@ final class AppModel: ObservableObject {
                     return
                 }
                 self.active = true
-                self.startedAt = Date()
                 self.activity = ProcessInfo.processInfo.beginActivity(options: [.userInitiated, .idleSystemSleepDisabled], reason: "Always Awake session heartbeat")
                 do { try self.display.apply(keepOn: self.monitorOn) }
                 catch { self.error = error.localizedDescription }
@@ -159,19 +142,34 @@ final class AppModel: ObservableObject {
                     self.client.invalidate()
                     try await self.service.unregister()
                     self.refreshService()
-                    self.error = "보조 서비스를 제거했습니다. 앱을 종료한 뒤 휴지통으로 옮기면 삭제가 완료됩니다."
+                    self.error = "보조 서비스를 제거했습니다. 종료 후 앱을 휴지통으로 옮기면 됩니다."
                 } catch { self.error = "보조 서비스 제거 실패: \(error.localizedDescription)" }
             }
         }
         if active || recoveryRequired { stop { if $0 { remove() } } } else { remove() }
     }
 
+    // No UI clock or hardware polling while idle. Keep the lease alive even while
+    // a native menu is tracking, which runs outside the default run-loop mode.
+    private func updateMaintenance() {
+        guard active || recoveryRequired else {
+            timer?.invalidate()
+            timer = nil
+            return
+        }
+        guard timer == nil else { return }
+        let value = Timer(timeInterval: 10, repeats: true) { [weak self] _ in
+            Task { @MainActor in self?.tick() }
+        }
+        value.tolerance = 1
+        RunLoop.main.add(value, forMode: .common)
+        timer = value
+    }
+
     private func tick() {
-        now = Date()
-        ticks += 1
-        if ticks % 3 == 0 { hardware = HardwareReading.current(); refreshService() }
-        if ticks % 10 == 0 && active && !busy { sendHeartbeat() }
-        if ticks % 10 == 0 && recoveryRequired && !active && !busy && serviceReady {
+        if active && !busy { sendHeartbeat() }
+        if recoveryRequired { refreshService() }
+        if recoveryRequired && !active && !busy && serviceReady {
             client.call(.status) { [weak self] result in
                 guard let self, case .success(let reply) = result else { return }
                 if reply.active && reply.ownedByCaller { self.stop(); return }
@@ -207,7 +205,6 @@ final class AppModel: ObservableObject {
 
     private func localStop() {
         active = false
-        startedAt = nil
         display.release()
         if let activity { ProcessInfo.processInfo.endActivity(activity); self.activity = nil }
     }

@@ -1,19 +1,19 @@
 # Always Awake
 
-macOS 메뉴 막대에서 Session과 Monitor를 제어하는 네이티브 앱입니다. Swift / SwiftUI / AppKit으로 만들었으며 외부 패키지나 서버 없이 실행됩니다.
+macOS 메뉴 막대에서 Session과 Monitor를 제어하는 네이티브 앱입니다. Swift / AppKit으로 만들었으며 외부 패키지나 서버 없이 실행됩니다.
 
-[다운로드 페이지](https://ezcho.github.io/always-awake-mac/) · [MVP 다운로드](https://github.com/Ezcho/always-awake-mac/releases/tag/v1.0.0-mvp)
+[다운로드 페이지](https://ezcho.github.io/always-awake-mac/) · [MVP 다운로드](https://github.com/Ezcho/always-awake-mac/releases/tag/v1.0.1-mvp)
 
 > **MVP 테스트 빌드** — Developer ID 서명·Apple 공증 전입니다. 자동 테스트와 빌드 검증은 실제 덮개 닫힘·과열·방전 실기기 검증을 대체하지 않습니다. macOS의 `disablesleep` 설정은 비공개 동작에 의존하므로 OS 업데이트 후 다시 검증해야 합니다.
 
 ## 사용
 
 1. DMG를 열고 **Always Awake.app**을 **Applications**로 드래그합니다.
-2. 앱을 실행하고 **처음 한 번, 덮개 모드 준비**를 누릅니다.
+2. 앱을 실행하고 메뉴 막대의 **권한 허용…**를 누릅니다.
 3. macOS **시스템 설정 → 일반 → 로그인 항목 및 확장 프로그램**에서 Always Awake를 승인합니다. 관리자 승인이 필요할 수 있습니다.
 4. **Session ON**으로 잠자기를 차단합니다. **Monitor OFF**는 3초 후 화면만 끕니다.
 
-메뉴 막대 아이콘 **클릭**으로 Session ON/OFF, **우클릭 / Option+클릭**으로 제어창을 엽니다. 창을 닫아도 세션이 유지됩니다. 종료는 제어창 하단 `···` 메뉴를 사용합니다.
+메뉴 막대 아이콘 **클릭**으로 Session·Monitor 스위치를 엽니다. **Option+클릭**은 Session을 바로 전환합니다. 별도 앱 창이나 Dock 아이콘은 없습니다. 종료는 메뉴의 **종료**를 사용합니다.
 
 - Monitor ON: 세션 동안 화면의 자동 잠자기를 막습니다. 덮개가 닫힌 내장 화면은 켜지지 않습니다.
 - Monitor OFF: 세션 중 화면을 잠자기로 보냅니다. 키보드·마우스로 다시 켤 수 있습니다. 화면 잠금은 별도입니다.
@@ -44,7 +44,7 @@ macOS 메뉴 막대에서 Session과 Monitor를 제어하는 네이티브 앱입
 - helper는 launchd에 의해 재시작되며 시작 시 남은 복구 기록을 처리합니다. 복구 실패 시 기록을 보존하고 재시도합니다.
 - 사용자 전환은 세션을 중지합니다. 앱 재시작 시 임의로 세션을 다시 켜지 않습니다.
 
-앱/helper를 강제 삭제하거나 비활성화하면 복구가 지연되거나 실행되지 않을 수 있습니다. 정상 삭제는 **··· → 보조 서비스 제거 → 앱 종료 → 앱을 휴지통으로 이동** 순서입니다. 실행 중인 앱을 교체하는 업데이트도 먼저 세션을 끄고 보조 서비스를 제거하세요. 비상 복구:
+앱/helper를 강제 삭제하거나 비활성화하면 복구가 지연되거나 실행되지 않을 수 있습니다. 정상 삭제는 **설정 → 보조 서비스 제거 → 종료 → 앱을 휴지통으로 이동** 순서입니다. 실행 중인 앱을 교체하는 업데이트도 먼저 세션을 끄고 보조 서비스를 제거하세요. 비상 복구:
 
 ```sh
 sudo /usr/bin/pmset -a disablesleep 0
@@ -61,9 +61,9 @@ sudo /usr/bin/pmset -a disablesleep 0
 open 'dist/Always Awake.app'
 ```
 
-`dist/Always Awake.app`, `dist/Always-Awake-1.0.0.dmg`, `dist/Always-Awake-1.0.0.zip`이 생성됩니다. arm64와 x86_64를 모두 포함합니다. 빌드 스크립트는 기본적으로 로컬 ad-hoc 서명을 합니다. 앱은 `/Applications`에 설치된 뒤 helper 등록을 허용합니다. 실제 보호 기능을 테스트하려면 macOS에서 helper를 직접 승인해야 합니다.
+`dist/Always Awake.app`, `dist/Always-Awake-1.0.1.dmg`, `dist/Always-Awake-1.0.1.zip`이 생성됩니다. arm64와 x86_64를 모두 포함합니다. 빌드 스크립트는 기본적으로 로컬 ad-hoc 서명을 합니다. 앱은 `/Applications`에 설치된 뒤 helper 등록을 허용합니다. 실제 보호 기능을 테스트하려면 macOS에서 helper를 직접 승인해야 합니다.
 
-자동 테스트는 fake power driver로 소유권, lease 만료, crash 복구, 실패 rollback, 안전 기준 및 상태 전환을 검증합니다. 실제 시스템 전원 설정은 바꾸지 않습니다. 수동 실기기 검증 목록은 [QA.md](QA.md)를 참고하세요.
+자동 테스트는 fake power driver로 소유권, lease 만료, crash 복구, 실패 rollback, 안전 기준 및 상태 전환을 검증합니다. UI의 초 단위 시계·유휴 센서 조회는 없으며 세션 또는 복구가 진행 중일 때만 10초 heartbeat 타이머가 실행됩니다. 타이머는 메뉴를 펼친 동안에도 동작합니다. 실제 시스템 전원 설정은 바꾸지 않습니다. 수동 실기기 검증 목록은 [QA.md](QA.md)를 참고하세요.
 
 ## 정식 웹 배포
 
@@ -76,7 +76,7 @@ Apple Developer 계정의 Developer ID 인증서 및 이미 설정한 `notarytoo
 
 ## 소스 구성
 
-- `Sources/App`: 네이티브 제어창, 메뉴 막대, XPC client, 화면 전원 제어
+- `Sources/App`: 네이티브 메뉴 막대와 스위치, XPC client, 화면 전원 제어
 - `Sources/Helper`: privileged daemon, root 복구 기록, watchdog
 - `Sources/Shared`: 전원 세션 상태 기계, 안전 정책, 하드웨어 판독, 서명 검증
 - `Tests`: 시스템 설정을 바꾸지 않는 동작 테스트

@@ -23,7 +23,7 @@ final class ServiceDelegate: NSObject, NSXPCListenerDelegate {
         watchdog.setEventHandler { [weak self] in
             guard let self else { return }
             let wasActive = self.engine.owner != nil
-            let thermalOrBatteryIssue = HardwareReading.current().issue
+            let thermalOrBatteryIssue = wasActive ? HardwareReading.current().issue : nil
             if wasActive && thermalOrBatteryIssue != nil { self.safetySleepPending = true }
             let userChanged = self.ownerUID != nil && PowerSafety.consoleUser() != self.ownerUID
             self.engine.tick(safetyIssue: userChanged ? "사용자가 전환되어 세션을 종료했습니다." : thermalOrBatteryIssue)

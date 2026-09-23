@@ -1,6 +1,8 @@
 # MVP 검증 기록
 
-2026-09-23 로컬 검증: 21개 정책·복구 테스트 통과. macOS 26.6.2 (Apple Silicon)에서 앱 실행, Monitor 옵션 ON/OFF, 제어창·종료 메뉴 확인. arm64/x86_64 Universal 빌드, ad-hoc 서명 무결성 검사, DMG/ZIP 생성 확인. 아래 privileged helper 및 물리적 덮개 닫힘 검증은 아직 완료하지 않았습니다.
+2026-09-23 / 1.0.0: 21개 정책·복구 테스트 통과. macOS 26.6.2 (Apple Silicon)에서 앱 실행, Monitor 옵션 ON/OFF, 이전 제어창·종료 메뉴 확인.
+
+1.0.1: 메뉴 막대 전용 AppKit UI로 교체. Universal 빌드와 서명 검사, 기존 테스트 21개 통과. 실제 메뉴 막대 프로세스 실행과 네이티브 스위치 렌더링 확인. 실행 파일에서 SwiftUI 의존성 제거 확인. 창이 없는 앱의 메뉴는 현재 UI 자동화 도구가 인식하지 못해 새 메뉴의 실화면 클릭 검증은 별도로 필요합니다. 아래 privileged helper 및 물리적 덮개 닫힘 검증도 아직 완료하지 않았습니다.
 
 ## 자동 검증 범위
 
@@ -18,6 +20,8 @@
 아래 항목은 직접 확인한 후 체크합니다. 빌드 성공으로 완료 처리하지 않습니다.
 
 - [ ] Applications에 설치 후 SMAppService 승인 → XPC 연결
+- [ ] 메뉴 막대 클릭 → Session / Monitor 스위치, Option+클릭 → Session 즉시 전환
+- [ ] 메뉴를 40초 이상 펼쳐도 세션 heartbeat 유지
 - [ ] Session ON: `pmset -g`에서 SleepDisabled 1 / OFF: 0
 - [ ] Monitor ON: display assertion 유지 / OFF: 실제 화면만 잠자기
 - [ ] 외장 화면·충전기 없이 덮개를 2분 이상 닫아도 테스트 프로세스의 heartbeat 연속 기록
