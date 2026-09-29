@@ -817,6 +817,16 @@ Session · Monitor · เท่านี้เอง
 ''')
 
 
+# Short labels used by the compact landing page.
+COMPACT = {'en': ['Downloads', 'Session and display controls. Battery and thermal monitoring.', 'Drag the app into Applications.'], 'ko': ['다운로드', '세션·화면 제어. 배터리·열 상태 모니터링.', '앱을 응용 프로그램 폴더로 드래그하세요.'], 'zh-CN': ['下载次数', '会话与屏幕控制，电池与热状态监测。', '将应用拖入 Applications 文件夹。'], 'zh-TW': ['下載次數', '工作階段與螢幕控制，電池與熱狀態監測。', '將程式拖入 Applications 檔案夾。'], 'ja': ['ダウンロード数', 'セッションと画面を操作。バッテリーと熱状態を監視。', 'アプリを「アプリケーション」へドラッグ。'], 'hi': ['डाउनलोड', 'सेशन और स्क्रीन नियंत्रण। बैटरी और तापीय स्थिति की निगरानी।', 'ऐप को Applications फ़ोल्डर में खींचें।'], 'id': ['Unduhan', 'Kontrol sesi dan layar. Pemantauan baterai dan kondisi termal.', 'Seret aplikasi ke folder Applications.'], 'es': ['Descargas', 'Control de sesión y pantalla. Supervisión de batería y estado térmico.', 'Arrastra la app a Aplicaciones.'], 'fr': ['Téléchargements', 'Contrôle de session et d’écran. Suivi de batterie et d’état thermique.', 'Glissez l’app dans Applications.'], 'de': ['Downloads', 'Sitzung und Display steuern. Akku und thermischen Zustand überwachen.', 'Ziehe die App in den Ordner Programme.'], 'pt-BR': ['Downloads', 'Controle de sessão e tela. Monitoramento de bateria e estado térmico.', 'Arraste o app para Aplicativos.'], 'ru': ['Загрузки', 'Управление сеансом и экраном. Контроль батареи и теплового состояния.', 'Перетащите приложение в «Программы».'], 'ar': ['التنزيلات', 'تحكم في الجلسة والشاشة. مراقبة البطارية والحالة الحرارية.', 'اسحب التطبيق إلى مجلد Applications.'], 'vi': ['Lượt tải', 'Điều khiển phiên và màn hình. Theo dõi pin và trạng thái nhiệt.', 'Kéo ứng dụng vào thư mục Applications.'], 'th': ['ดาวน์โหลด', 'ควบคุมเซสชันและหน้าจอ ติดตามแบตเตอรี่และสถานะความร้อน', 'ลากแอปไปที่โฟลเดอร์ Applications']}
+for _locale, _values in COMPACT.items():
+    TEXT[_locale].update(zip(("downloads", "featureline", "draginstall"), _values))
+
+MCP_NOTES = {'en': 'MCP requires a source build; not included in 1.0.3.', 'ko': 'MCP는 소스 빌드가 필요합니다. 1.0.3에는 미포함.', 'zh-CN': 'MCP 需从源码构建，1.0.3 尚未包含。', 'zh-TW': 'MCP 需從原始碼建置，1.0.3 尚未包含。', 'ja': 'MCP はソースからビルド。1.0.3 には未収録。', 'hi': 'MCP के लिए सोर्स बिल्ड चाहिए; 1.0.3 में शामिल नहीं।', 'id': 'MCP perlu build dari sumber; belum ada di 1.0.3.', 'es': 'MCP requiere compilar el código; no viene en 1.0.3.', 'fr': 'MCP nécessite une compilation ; absent de la 1.0.3.', 'de': 'MCP benötigt einen Quellcode-Build; fehlt in 1.0.3.', 'pt-BR': 'MCP exige compilar o código; não vem na 1.0.3.', 'ru': 'MCP требует сборки из исходников; в 1.0.3 его нет.', 'ar': 'يتطلب MCP البناء من المصدر؛ غير متوفر في 1.0.3.', 'vi': 'MCP cần dựng từ mã nguồn; chưa có trong 1.0.3.', 'th': 'MCP ต้องสร้างจากซอร์ส ยังไม่มีในรุ่น 1.0.3'}
+for _locale, _note in MCP_NOTES.items():
+    TEXT[_locale]["mcpnote"] = _note
+
+
 def page_path(locale):
     return '/' if locale == 'en' else '/' + locale + '/'
 
@@ -832,26 +842,30 @@ def render(locale):
     alternate = '\n'.join(f'<link rel="alternate" hreflang="{code}" href="{page_url(code)}">' for code, _ in LANGUAGES)
     options = '\n'.join(f'<option value="{code}" lang="{code}"{(" selected" if code == locale else "")}>{name}</option>' for code, name in LANGUAGES)
     language_links = ' '.join(f'<a href="{page_path(code)}" hreflang="{code}" lang="{code}">{name}</a>' for code, name in LANGUAGES)
-    cards = ''.join(f'<article class="feature"><span class="pixel-icon icon-{n}" aria-hidden="true">{["↗", "◐", "+"][n-1]}</span><h3>{h("feature"+str(n))}</h3><p>{h("body"+str(n))}</p></article>' for n in range(1,4))
-    faq = ''.join(f'<details><summary>{h("q"+str(n))}<span aria-hidden="true">+</span></summary><p>{h("a"+str(n))}</p></details>' for n in range(1,4))
-    schema = {'@context':'https://schema.org','@type':'SoftwareApplication','name':'no-sleep-pika','alternateName':'pika','url':BASE,'applicationCategory':'UtilitiesApplication','operatingSystem':'macOS 13 or later','description':t['description'],'softwareVersion':'1.0.3','downloadUrl':DOWNLOAD,'image':BASE+'/assets/pika-pixel.png','codeRepository':REPO,'inLanguage':locale}
+    schema = {'@context':'https://schema.org','@type':'SoftwareApplication','name':'no-sleep-pika','alternateName':'pika','url':BASE,'applicationCategory':'UtilitiesApplication','operatingSystem':'macOS 13 or later','description':t['description'],'softwareVersion':'1.0.3','downloadUrl':DOWNLOAD,'image':BASE+'/assets/pika-working.png','codeRepository':REPO,'inLanguage':locale}
+    snapshot = json.loads((OUT / 'downloads.json').read_text())
+    count = snapshot['total']
+    assert isinstance(count, int) and count >= 0
+    updated = esc(snapshot['updatedAt'])
+    schema['offers'] = {'@type': 'Offer', 'price': '0', 'priceCurrency': 'USD'}
+    schema['isAccessibleForFree'] = True
     return f'''<!doctype html>
 <html lang="{locale}" dir="{'rtl' if locale == 'ar' else 'ltr'}">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{h('title')}</title><meta name="description" content="{esc(t['description'], quote=True)}">
-<meta name="theme-color" content="#f6f4eb"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#fafbf8"><meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="{page_url(locale)}">
 {alternate}
 <link rel="alternate" hreflang="x-default" href="{BASE}/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="no-sleep-pika">
 <meta property="og:title" content="{h('title')}"><meta property="og:description" content="{esc(t['description'], quote=True)}">
-<meta property="og:url" content="{page_url(locale)}"><meta property="og:image" content="{BASE}/assets/pika-pixel.png">
-<meta property="og:image:alt" content="A pixel-art pika animal">
+<meta property="og:url" content="{page_url(locale)}"><meta property="og:image" content="{BASE}/assets/pika-working.png">
+<meta property="og:image:alt" content="A pixel-art pika working at a laptop">
 <meta property="og:locale" content="{locale.replace('-', '_')}">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{h('title')}"><meta name="twitter:description" content="{esc(t['description'], quote=True)}"><meta name="twitter:image" content="{BASE}/assets/pika-pixel.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{h('title')}"><meta name="twitter:description" content="{esc(t['description'], quote=True)}"><meta name="twitter:image" content="{BASE}/assets/pika-working.png">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/style.css"><script src="/site.js" defer></script>
+<link rel="stylesheet" href="/style.css"><script src="/site.js" defer></script><script src="/downloads.js" defer></script>
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
 </head>
 <body data-locale="{locale}">
@@ -859,29 +873,17 @@ def render(locale):
 <div class="shell">
 <header class="header">
 <a href="{page_path(locale)}" class="brand" aria-label="no-sleep-pika"><img src="/assets/favicon.svg" alt="" width="30" height="30"><span>no-sleep-pika<span class="brand-dot">.</span></span></a>
-<nav aria-label="{h('features')}"><a href="#features">{h('features')}</a><a href="#mcp">MCP <span aria-hidden="true">↗</span></a></nav>
 <div class="language"><span aria-hidden="true">◎</span><label class="sr-only" for="language">{h('language')}</label><select id="language">{options}</select></div>
 </header>
 <main id="main">
-<section class="hero" aria-labelledby="hero-title">
-<div class="hero-copy"><p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>{h('eyebrow')}</p><h1 id="hero-title">{h('headline')}</h1><p class="intro">{h('intro')}</p>
-<div class="actions"><a class="button primary" href="{DOWNLOAD}"><svg width="17" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v11m-4-4 4 4 4-4M3 13v5h14v-5" stroke="currentColor" stroke-width="1.8"/></svg>{h('download')}</a><a class="text-link" href="{REPO}">{h('source')} <span aria-hidden="true">↗</span></a></div>
-<p class="release">{h('release')}</p><a class="requirement" href="#installation">{h('compatibility')} <span aria-hidden="true">↘</span></a>
-</div>
-<div class="hero-art"><span class="moon" aria-hidden="true"></span><span class="star star-a" aria-hidden="true">✦</span><span class="star star-b" aria-hidden="true">+</span><span class="star star-c" aria-hidden="true">✦</span><div class="orbit" aria-hidden="true"></div><img class="mascot" src="/assets/pika-pixel.png" alt="" width="1239" height="1270" fetchpriority="high"><span class="art-name" aria-hidden="true">no sleep, pika.</span><span class="art-coordinates" aria-hidden="true">☾ 00:01 — ∞</span></div>
-</section>
-<div class="divider"><span>{h('scroll')}</span><span aria-hidden="true">↓</span></div>
-<section id="features" class="features" aria-label="{h('features')}">{cards}</section>
-<section class="controls-panel" aria-labelledby="controls-title"><div><p class="eyebrow">{h('controls')}</p><h2 id="controls-title">{h('controlstitle')}</h2><p>{h('controlsbody')}</p></div><div class="app-preview"><div class="preview-menubar" aria-hidden="true"><span>pika</span><span>◉ &nbsp; ▰ &nbsp; 00:01</span></div><img src="/app.png" width="232" height="80" alt="{h('screenshot')}" loading="lazy"><p>{h('window')}</p></div></section>
-<section id="mcp" class="mcp-section" aria-labelledby="mcp-title"><div class="section-heading"><div><p class="eyebrow">{h('mcp')}</p><h2 id="mcp-title">{h('mcptitle')}</h2></div><p>{h('mcpbody')}</p></div>
-<div class="mcp-grid"><ol class="steps"><li><span>01</span><p>{h('buildstep')} <a href="{REPO}#mcp">{h('source')} ↗</a></p></li><li><span>02</span><p>{h('addstep')}</p></li><li><span>03</span><p>{h('toolstep')}</p></li></ol>
-<div class="terminal" dir="ltr"><div class="terminal-bar"><span class="terminal-dots" aria-hidden="true">● ● ●</span><span>pika / MCP</span><span>STDIO</span></div><div class="terminal-body"><p class="code-label">{h('buildlabel')}</p><pre><code>git clone https://github.com/Ezcho/always-awake-mac.git
-cd always-awake-mac
-./Scripts/build.sh</code></pre><div class="code-heading"><p class="code-label">{h('configlabel')}</p><button class="copy" data-copy="mcp-command" data-copied="{h('copied')}" data-failed="{h('copyfail')}">{h('copy')} <span aria-hidden="true">⧉</span></button></div><pre class="command"><code id="mcp-command">/Applications/pika.app/Contents/MacOS/pika-mcp</code></pre><div class="tool-list"><code>pika_status</code><code>pika_set_session(enabled)</code><code>pika_set_monitor(enabled)</code></div><span class="copy-status sr-only" role="status" aria-live="polite"></span></div></div></div></section>
-<section id="installation" class="installation" aria-labelledby="install-title"><p class="eyebrow">{h('installation')}</p><h2 id="install-title">{h('installtitle')}</h2><ol class="install-steps">{''.join(f'<li><span>0{n}</span><p>{h("install"+str(n))}</p></li>' for n in range(1,4))}</ol><div class="install-note"><span aria-hidden="true">ⓘ</span><div><p>{h('limitation')} <a href="{REPO}#readme">GitHub ↗</a></p><p>{h('safety')}</p></div></div></section>
-<section class="faq" aria-labelledby="faq-title"><h2 id="faq-title">{h('faq')}</h2><div>{faq}</div></section>
+<h1 class="sr-only">no-sleep-pika — {h('title').split(' — ', 1)[-1]}</h1>
+<img class="working-pika" src="/assets/pika-working.png" alt="" width="1024" height="1024" fetchpriority="high">
+<div class="download-area"><a class="button primary" href="{DOWNLOAD}"><svg width="17" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v11m-4-4 4 4 4-4M3 13v5h14v-5" stroke="currentColor" stroke-width="1.8"/></svg>{h('download')}</a>
+<p class="download-meta"><span id="download-count" data-label="{h('downloads')}" data-updated-at="{updated}" title="GitHub · {updated}" aria-live="polite">{count:,} {h('downloads')}</span></p><p class="release">{h('release')}</p></div>
+<section id="mcp" class="mcp" aria-labelledby="mcp-title"><div class="mcp-heading"><h2 id="mcp-title">{h('connect')}</h2><span>STDIO</span></div><p class="mcp-note">{h('mcpnote')} <a href="{REPO}#mcp">{h('source')} ↗</a></p>
+<div class="terminal-body"><div class="command" dir="ltr"><code id="mcp-command">/Applications/pika.app/Contents/MacOS/pika-mcp</code><button class="copy" data-copy="mcp-command" data-copied="{h('copied')}" data-failed="{h('copyfail')}">{h('copy')}</button></div><span class="copy-status sr-only" role="status" aria-live="polite"></span></div></section>
+<a class="help-link" href="{REPO}#readme">GitHub · {h('compatibility')} ↗</a>
 </main>
-<footer><div><a class="brand" href="{page_path(locale)}">no-sleep-pika<span class="brand-dot">.</span></a><p>{h('footer')}</p></div><div class="footer-links"><a href="{REPO}">GitHub ↗</a><a href="{REPO}/releases/tag/{RELEASE}">1.0.3 ↗</a><a href="#mcp">MCP ↗</a></div></footer>
 <noscript><nav class="language-fallback" aria-label="{h('language')}">{language_links}</nav></noscript>
 </div></body></html>'''
 

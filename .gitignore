@@ -1,6 +1,7 @@
 .build/
 dist/
 .DS_Store
+__pycache__/
 website/dist/*.dmg
 website/dist/*.zip
 website/dist/*.sha256

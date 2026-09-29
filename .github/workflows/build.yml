@@ -21,7 +21,10 @@ jobs:
       - name: Package disk image
         run: ./Scripts/package.sh
       - name: Verify multilingual website
-        run: python3 Scripts/test-site.py
+        run: |
+          python3 Scripts/test-site.py
+          node --check docs/site.js
+          node --check docs/downloads.js
       - name: Build administrator installer packages
         run: ./Scripts/package-helper.sh
       - uses: actions/upload-artifact@v4
