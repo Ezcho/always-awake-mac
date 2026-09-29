@@ -1,14 +1,18 @@
 {
-  "total": 8,
-  "updatedAt": "2026-09-29T12:06:40.801005+00:00",
+  "total": 11,
+  "updatedAt": "2026-09-29T13:15:56.799928+00:00",
   "source": "GitHub release assets",
   "assets": [
     {
       "name": "Always-Awake-1.0.3.dmg",
-      "downloads": 4
+      "downloads": 7
     },
     {
       "name": "Always-Awake-1.0.3.zip",
+      "downloads": 0
+    },
+    {
+      "name": "pika-1.0.3.dmg",
       "downloads": 0
     },
     {

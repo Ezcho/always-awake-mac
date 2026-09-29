@@ -11,7 +11,7 @@ BASE = 'https://no-sleep-pika.online'
 REPO = 'https://github.com/Ezcho/always-awake-mac'
 # Keep this aligned with the published release, not the unreleased source version.
 RELEASE = 'v1.0.3-mvp'
-DOWNLOAD = f'{REPO}/releases/download/{RELEASE}/Always-Awake-1.0.3.dmg'
+DOWNLOAD = f'{REPO}/releases/download/{RELEASE}/pika-1.0.3.dmg'
 LANGUAGES = [('en','English'),('ko','한국어'),('zh-CN','简体中文'),('zh-TW','繁體中文'),('ja','日本語'),('hi','हिन्दी'),('id','Bahasa Indonesia'),('es','Español'),('fr','Français'),('de','Deutsch'),('pt-BR','Português'),('ru','Русский'),('ar','العربية'),('vi','Tiếng Việt'),('th','ไทย')]
 KEYS = '''title description skip features connect download eyebrow headline intro source release compatibility scroll feature1 body1 feature2 body2 feature3 body3 controls controlstitle controlsbody window mcp mcptitle mcpbody buildstep addstep toolstep copy copied copyfail installation installtitle install1 install2 install3 limitation safety faq q1 a1 q2 a2 q3 a3 footer language screenshot buildlabel configlabel'''.split()
 TEXT = {}
