@@ -114,7 +114,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
 
     @objc func statusClick() {
         if NSApp.currentEvent?.modifierFlags.contains(.option) == true {
-            model.toggleSession()
+            toggleSession()
         } else { showMenu() }
     }
 
@@ -150,7 +150,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         statusItem?.button?.toolTip = "Always Awake · \(model.active ? "ON" : "OFF")\n클릭: 메뉴 · Option+클릭: Session 전환"
     }
 
-    @objc private func toggleSession() { model.toggleSession(); updateMenu() }
+    @objc private func toggleSession() {
+        guard !model.busy else { return }
+        // End menu tracking before starting XPC work or presenting an approval/error.
+        menu.cancelTracking()
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.logger.notice("Session toggle requested")
+            self.model.toggleSession { [weak self] in
+                guard let self else { return }
+                self.updateMenu()
+                self.logger.notice("Session toggle completed: active=\(self.model.active)")
+                if self.model.error != nil {
+                    self.showControlWindow()
+                    self.showMessage()
+                }
+            }
+        }
+    }
     @objc private func toggleMonitor() { model.setMonitor(!model.monitorOn) }
     @objc private func prepareService() { menu.cancelTracking(); model.prepareService() }
     @objc private func removeService() { menu.cancelTracking(); model.removeService() }
@@ -185,6 +202,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
 }
 
 MainActor.assumeIsolated {
+    if CommandLine.arguments.contains("--repair-service") {
+        ServiceDiagnostics.repairRegistration()
+        RunLoop.main.run()
+        exit(1)
+    }
+    if CommandLine.arguments.contains("--check-service") || CommandLine.arguments.contains("--test-session") {
+        ServiceDiagnostics.run(testSession: CommandLine.arguments.contains("--test-session"))
+        RunLoop.main.run()
+        exit(1)
+    }
     let app = NSApplication.shared
     let delegate = AppDelegate()
     app.delegate = delegate

@@ -69,15 +69,16 @@ final class AppModel {
         }
     }
 
-    func toggleSession() {
-        guard !busy else { return }
+    func toggleSession(completion: (() -> Void)? = nil) {
+        guard !busy else { completion?(); return }
         refreshService()
-        if active || recoveryRequired { stop(); return }
-        guard serviceReady else { prepareService(); return }
-        if let issue = HardwareReading.current().issue { error = issue; return }
+        if active || recoveryRequired { stop { _ in completion?() }; return }
+        guard serviceReady else { prepareService(); completion?(); return }
+        if let issue = HardwareReading.current().issue { error = issue; completion?(); return }
         busy = true
         error = nil
         client.call(.start) { [weak self] result in
+            defer { completion?() }
             guard let self else { return }
             self.busy = false
             switch result {

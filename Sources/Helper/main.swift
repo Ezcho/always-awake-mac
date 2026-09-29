@@ -14,8 +14,7 @@ final class ServiceDelegate: NSObject, NSXPCListenerDelegate {
         // Recover first, even if an interrupted update left the GUI signature invalid.
         engine = SessionEngine(driver: SystemSleepDriver(), journal: try DiskRecoveryJournal())
         // The helper lives at App/Contents/Library/HelperTools/AlwaysAwakeHelper.
-        let executable = URL(fileURLWithPath: CommandLine.arguments[0]).resolvingSymlinksInPath()
-        let appURL = executable.deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let appURL = try HelperInstallation.appURL()
         clientRequirement = try Signature.requirement(for: appURL)
         super.init()
         let watchdog = DispatchSource.makeTimerSource(queue: queue)
@@ -103,6 +102,16 @@ final class ServiceClient: NSObject, AwakeServiceProtocol {
         }, reply: reply)
     }
     func status(reply: @escaping (Data) -> Void) { perform({}, reply: reply) }
+}
+
+// Read-only installation check: no journal, listener or power settings are touched.
+if CommandLine.arguments.dropFirst().contains("--check-installation") {
+    do {
+        let app = try HelperInstallation.appURL()
+        _ = try Signature.requirement(for: app)
+        print("Installation verified: \(app.path)")
+        exit(0)
+    } catch { fputs("\(error.localizedDescription)\n", stderr); exit(1) }
 }
 
 guard geteuid() == 0 else { fputs("AlwaysAwakeHelper must be launched by macOS as a system service.\n", stderr); exit(1) }

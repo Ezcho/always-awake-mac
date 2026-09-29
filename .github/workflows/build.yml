@@ -16,6 +16,8 @@ jobs:
         run: ./Scripts/test.sh
       - name: Build Universal macOS app
         run: ./Scripts/build.sh
+      - name: Verify helper launch paths and signature
+        run: python3 Scripts/test-installation.py
       - name: Package disk image
         run: ./Scripts/package.sh
       - uses: actions/upload-artifact@v4

@@ -2,7 +2,7 @@
 
 macOS 메뉴 막대에서 Session과 Monitor를 제어하는 네이티브 앱입니다. Swift / AppKit으로 만들었으며 외부 패키지나 서버 없이 실행됩니다.
 
-[다운로드 페이지](https://ezcho.github.io/always-awake-mac/) · [MVP 다운로드](https://github.com/Ezcho/always-awake-mac/releases/tag/v1.0.2-mvp)
+[다운로드 페이지](https://ezcho.github.io/always-awake-mac/) · [MVP 다운로드](https://github.com/Ezcho/always-awake-mac/releases/tag/v1.0.3-mvp)
 
 > **MVP 테스트 빌드** — Developer ID 서명·Apple 공증 전입니다. 자동 테스트와 빌드 검증은 실제 덮개 닫힘·과열·방전 실기기 검증을 대체하지 않습니다. macOS의 `disablesleep` 설정은 비공개 동작에 의존하므로 OS 업데이트 후 다시 검증해야 합니다.
 
@@ -57,13 +57,18 @@ sudo /usr/bin/pmset -a disablesleep 0
 ```sh
 ./Scripts/test.sh
 ./Scripts/build.sh
+python3 Scripts/test-installation.py
 ./Scripts/package.sh
 open 'dist/Always Awake.app'
 ```
 
-`dist/Always Awake.app`, `dist/Always-Awake-1.0.2.dmg`, `dist/Always-Awake-1.0.2.zip`이 생성됩니다. arm64와 x86_64를 모두 포함합니다. 빌드 스크립트는 기본적으로 로컬 ad-hoc 서명을 합니다. 앱은 `/Applications`에 설치된 뒤 helper 등록을 허용합니다. 실제 보호 기능을 테스트하려면 macOS에서 helper를 직접 승인해야 합니다.
+`dist/Always Awake.app`, `dist/Always-Awake-1.0.3.dmg`, `dist/Always-Awake-1.0.3.zip`이 생성됩니다. arm64와 x86_64를 모두 포함합니다. 빌드 스크립트는 기본적으로 로컬 ad-hoc 서명을 합니다. 앱은 `/Applications`에 설치된 뒤 helper 등록을 허용합니다. 실제 보호 기능을 테스트하려면 macOS에서 helper를 직접 승인해야 합니다.
 
 자동 테스트는 fake power driver로 소유권, lease 만료, crash 복구, 실패 rollback, 안전 기준 및 상태 전환을 검증합니다. UI의 초 단위 시계·유휴 센서 조회는 없으며 세션 또는 복구가 진행 중일 때만 10초 heartbeat 타이머가 실행됩니다. 타이머는 메뉴를 펼친 동안에도 동작합니다. 실제 시스템 전원 설정은 바꾸지 않습니다. 수동 실기기 검증 목록은 [QA.md](QA.md)를 참고하세요.
+
+설치된 보조 서비스의 연결만 확인하려면 `'/Applications/Always Awake.app/Contents/MacOS/AlwaysAwake' --check-service`를 실행합니다. `--test-session`은 기존 세션이 없을 때 실제 Session을 켰다가 즉시 끄므로 수동 검증에만 사용합니다. 두 명령은 화면 설정을 바꾸지 않습니다.
+
+ad-hoc 업데이트 후 기존 서비스가 연결되지 않으면 세션 OFF·앱 종료 후 동일 실행 파일의 `--repair-service`로 기존 등록을 갱신할 수 있습니다. macOS 승인이 필요할 수 있습니다. 제거 직후 재등록을 거절하면 잠시 뒤 같은 명령을 다시 실행하세요.
 
 ## 정식 웹 배포
 
