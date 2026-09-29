@@ -5,6 +5,7 @@ import OSLog
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDelegate {
     private let logger = Logger(subsystem: AppIdentity.bundleID, category: "Lifecycle")
     let model = AppModel()
+    private let controlServer = LocalControlServer()
     private var statusItem: NSStatusItem!
     private let menu = NSMenu()
     private let sessionRow = MenuSwitchRow(title: "Session")
@@ -12,6 +13,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     private let setupItem = NSMenuItem(title: "권한 허용…", action: #selector(prepareService), keyEquivalent: "")
     private let errorItem = NSMenuItem(title: "안내…", action: #selector(showMessage), keyEquivalent: "")
     private let removeItem = NSMenuItem(title: "보조 서비스 제거", action: #selector(removeService), keyEquivalent: "")
+    private let modeItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+    private let windowMode = NSTextField(wrappingLabelWithString: "")
     private var pendingTermination = false
     private var controlWindow: NSWindow?
     private let windowSessionRow = MenuSwitchRow(title: "Session")
@@ -43,6 +46,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         menu.addItem(monitorItem)
         sessionRow.action = { [weak self] in self?.toggleSession() }
         monitorRow.action = { [weak self] in self?.toggleMonitor() }
+        modeItem.isEnabled = false
+        menu.addItem(modeItem)
         menu.addItem(.separator())
         let openItem = NSMenuItem(title: "제어창 열기", action: #selector(showControlWindow), keyEquivalent: "")
         openItem.target = self
@@ -71,21 +76,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         statusItem.button?.action = #selector(statusClick)
         statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
         model.onChange = { [weak self] in self?.updateMenu() }
+        do {
+            try controlServer.start { [weak self] request, reply in
+                MainActor.assumeIsolated {
+                    guard let self else { reply(ControlWire.failure("app_closed", "pika is closing")); return }
+                    self.model.handleAutomation(request, completion: reply)
+                }
+            }
+        } catch { logger.error("MCP local control unavailable: \(error.localizedDescription)") }
         updateMenu()
         showControlWindow()
     }
 
     @objc private func showControlWindow() {
         if controlWindow == nil {
-            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 264, height: 140),
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 264, height: 184),
                                   styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false)
-            window.title = "Always Awake"
+            window.title = "pika"
             window.delegate = self
             window.isReleasedWhenClosed = false
             window.collectionBehavior = [.moveToActiveSpace]
             window.center()
-            windowSessionRow.frame.origin = NSPoint(x: 24, y: 88)
-            windowMonitorRow.frame.origin = NSPoint(x: 24, y: 48)
+            windowSessionRow.frame.origin = NSPoint(x: 24, y: 132)
+            windowMonitorRow.frame.origin = NSPoint(x: 24, y: 92)
             windowSessionRow.action = { [weak self] in self?.toggleSession() }
             windowMonitorRow.action = { [weak self] in self?.toggleMonitor() }
             windowSetup.target = self
@@ -97,7 +110,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
                 button.controlSize = .small
                 button.frame = NSRect(x: x, y: 12, width: 100, height: 26)
             }
-            for view in [windowSessionRow, windowMonitorRow, windowSetup, windowMessage] as [NSView] {
+            windowMode.font = .systemFont(ofSize: 11)
+            windowMode.textColor = .secondaryLabelColor
+            windowMode.frame = NSRect(x: 24, y: 46, width: 216, height: 34)
+            for view in [windowSessionRow, windowMonitorRow, windowSetup, windowMessage, windowMode] as [NSView] {
                 window.contentView?.addSubview(view)
             }
             controlWindow = window
@@ -129,14 +145,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
 
     private func updateMenu() {
         sessionRow.update(on: model.active, enabled: !model.busy)
-        monitorRow.update(on: model.monitorOn, enabled: !model.busy)
+        monitorRow.update(on: model.monitorOn, enabled: model.active && !model.busy)
         windowSessionRow.update(on: model.active, enabled: !model.busy)
-        windowMonitorRow.update(on: model.monitorOn, enabled: !model.busy)
-        windowSetup.isHidden = model.serviceReady
+        windowMonitorRow.update(on: model.monitorOn, enabled: model.active && !model.busy)
+        let notice = model.sessionNotice ?? (model.standardModeAvailable ? "일반 모드 · 덮개를 열어 두세요" : "")
+        windowMode.stringValue = notice
+        modeItem.title = model.standardModeAvailable ? "일반 모드 · 덮개 열림" : notice
+        modeItem.isHidden = notice.isEmpty
+        modeItem.toolTip = notice
+        windowSetup.isHidden = model.serviceReady || model.standardModeAvailable
         windowSetup.isEnabled = !model.busy
         windowMessage.isHidden = model.error == nil && !model.recoveryRequired
         windowMessage.title = model.recoveryRequired ? "복구 필요…" : "안내…"
-        setupItem.isHidden = model.serviceReady
+        setupItem.isHidden = model.serviceReady || model.standardModeAvailable
         setupItem.isEnabled = !model.busy
         errorItem.isHidden = model.error == nil && !model.recoveryRequired
         errorItem.title = model.recoveryRequired ? "복구 필요…" : "안내…"
@@ -144,10 +165,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         removeItem.isHidden = !model.serviceReady && !model.needsApproval
         removeItem.isEnabled = !model.busy
         let symbol = model.recoveryRequired ? "exclamationmark.circle" : model.active ? "power.circle.fill" : "power.circle"
-        let image = NSImage(systemSymbolName: symbol, accessibilityDescription: "Always Awake \(model.active ? "ON" : "OFF")")
+        let image = NSImage(systemSymbolName: symbol, accessibilityDescription: "pika \(model.active ? "ON" : "OFF")")
         image?.isTemplate = true
         statusItem?.button?.image = image
-        statusItem?.button?.toolTip = "Always Awake · \(model.active ? "ON" : "OFF")\n클릭: 메뉴 · Option+클릭: Session 전환"
+        statusItem?.button?.toolTip = "pika · \(model.active ? "ON" : "OFF")\n클릭: 메뉴 · Option+클릭: Session 전환"
     }
 
     @objc private func toggleSession() {
@@ -177,7 +198,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     @objc private func showMessage() {
         menu.cancelTracking()
         let alert = NSAlert()
-        alert.messageText = model.recoveryRequired ? "잠자기 설정 복구" : "Always Awake"
+        alert.messageText = model.recoveryRequired ? "잠자기 설정 복구" : "pika"
         alert.informativeText = model.error ?? "Session 스위치를 눌러 잠자기 설정을 복구해 주세요."
         alert.addButton(withTitle: "확인")
         NSApp.activate(ignoringOtherApps: true)
@@ -202,6 +223,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
 }
 
 MainActor.assumeIsolated {
+    if CommandLine.arguments.contains("--unregister-service") {
+        ServiceDiagnostics.unregisterLegacyService()
+        RunLoop.main.run()
+        exit(1)
+    }
     if CommandLine.arguments.contains("--repair-service") {
         ServiceDiagnostics.repairRegistration()
         RunLoop.main.run()

@@ -2,6 +2,17 @@ import Foundation
 import Security
 
 enum Signature {
+    static func isAdHoc(_ url: URL) -> Bool {
+        var code: SecStaticCode?
+        guard SecStaticCodeCreateWithPath(url as CFURL, [], &code) == errSecSuccess,
+              let code else { return false }
+        var information: CFDictionary?
+        guard SecCodeCopySigningInformation(code, SecCSFlags(rawValue: kSecCSSigningInformation), &information) == errSecSuccess,
+              let values = information as? [String: Any],
+              let flags = values[kSecCodeInfoFlags as String] as? NSNumber else { return false }
+        return SecCodeSignatureFlags(rawValue: flags.uint32Value).contains(.adhoc)
+    }
+
     // A production identity yields a Team ID requirement. Ad-hoc development builds
     // are pinned to their exact designated requirement; there is no identifier-only bypass.
     static func requirement(for url: URL) throws -> String {

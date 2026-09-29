@@ -1,0 +1,10 @@
+#!/bin/bash
+set -euo pipefail
+source "$(dirname "$0")/common.sh"
+validate_paths
+require_sleep_enabled
+require_app_closed
+if /bin/launchctl print system/com.alwaysawake.mac.helper >/dev/null 2>&1; then
+    fail 'The previous app-managed helper is still registered. Remove the old helper from pika first, quit the app, then rerun this installer.'
+fi
+stop_installed_helper

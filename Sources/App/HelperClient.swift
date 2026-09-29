@@ -6,11 +6,27 @@ final class HelperClient {
     private var connection: NSXPCConnection?
     var onDisconnect: (() -> Void)?
 
+    private var connectionFailureMessage: String {
+        if InstalledHelper.isPresent {
+            return "설치된 보조 서비스에 연결할 수 없습니다. pika 설치 패키지로 다시 설치한 후 실행해 주세요."
+        }
+        let helper = Bundle.main.bundleURL.appendingPathComponent("Contents/Library/HelperTools/AlwaysAwakeHelper")
+        if Signature.isAdHoc(helper) {
+            return "보조 서비스를 실행할 수 없습니다. 이 테스트 빌드는 정식 서명이 없어 macOS에서 차단될 수 있습니다. 정식 서명된 pika로 업데이트해 주세요."
+        }
+        return "보조 서비스에 연결할 수 없습니다. 시스템 설정 → 로그인 항목 및 확장 프로그램에서 pika 허용 여부를 확인해 주세요. 업데이트 직후라면 앱을 종료한 뒤 다시 실행해 주세요."
+    }
+
     private func connect() throws -> NSXPCConnection {
         if let connection { return connection }
         let helperURL = Bundle.main.bundleURL.appendingPathComponent("Contents/Library/HelperTools/AlwaysAwakeHelper")
         let requirement = try Signature.requirement(for: helperURL)
-        let value = NSXPCConnection(machServiceName: AppIdentity.serviceName, options: .privileged)
+        let serviceName: String
+        if InstalledHelper.isPresent {
+            try InstalledHelper.validateForClient()
+            serviceName = InstalledHelper.serviceName
+        } else { serviceName = AppIdentity.serviceName }
+        let value = NSXPCConnection(machServiceName: serviceName, options: .privileged)
         value.setCodeSigningRequirement(requirement)
         value.remoteObjectInterface = NSXPCInterface(with: AwakeServiceProtocol.self)
         value.invalidationHandler = { [weak self, weak value] in
@@ -38,8 +54,9 @@ final class HelperClient {
         }
         do {
             let value = try connect()
+            let failureMessage = connectionFailureMessage
             guard let proxy = value.remoteObjectProxyWithErrorHandler({ _ in
-                finish(.failure(AwakeError("보조 서비스에 연결할 수 없습니다. 시스템 설정에서 Always Awake 허용 여부를 확인해 주세요.")))
+                finish(.failure(AwakeError(failureMessage)))
             }) as? AwakeServiceProtocol else { throw AwakeError("보조 서비스를 찾을 수 없습니다.") }
             let reply: (Data) -> Void = { data in
                 do { finish(.success(try JSONDecoder().decode(ServiceReply.self, from: data))) }
@@ -55,7 +72,7 @@ final class HelperClient {
                 guard !finished else { return }
                 // Drop a timed-out start so its eventual effect cannot become an orphan session.
                 if self?.connection === value { value?.invalidate() }
-                finish(.failure(AwakeError("보조 서비스 응답이 지연됩니다. 잠자기 설정을 복구하고 있습니다.")))
+                finish(.failure(AwakeError(failureMessage)))
             }
         } catch { finish(.failure(error)) }
     }

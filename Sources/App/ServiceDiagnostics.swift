@@ -5,6 +5,38 @@ import ServiceManagement
 /// --check-service is read-only; --test-session starts and immediately ends a session.
 @MainActor
 enum ServiceDiagnostics {
+    // Installer migration only. Never unregister while the persistent sleep
+    // override is active; the old helper must restore it first.
+    static func unregisterLegacyService() {
+        Task { @MainActor in
+            do {
+                try SystemSleepController.requireSystemSleepEnabled()
+                let reply = ControlWire.call(["operation": "status"])
+                if reply["ok"] as? Bool == true {
+                    guard reply["sessionOn"] as? Bool == false,
+                          reply["recoveryRequired"] as? Bool == false,
+                          reply["busy"] as? Bool == false else {
+                        throw AwakeError("먼저 pika의 Session을 OFF로 바꾸고 복구가 끝날 때까지 기다려 주세요.")
+                    }
+                }
+                let service = SMAppService.daemon(plistName: AppIdentity.helperPlist)
+                if service.status != .notRegistered && service.status != .notFound {
+                    try await service.unregister()
+                    try await Task.sleep(nanoseconds: 2_000_000_000)
+                }
+                guard service.status == .notRegistered || service.status == .notFound else {
+                    throw AwakeError("기존 보조 서비스 등록 해제가 확인되지 않았습니다.")
+                }
+                try SystemSleepController.requireSystemSleepEnabled()
+                print("PASS: legacy helper unregistered; system sleep remains enabled")
+                exit(0)
+            } catch {
+                print("FAIL: \(error.localizedDescription)")
+                exit(1)
+            }
+        }
+    }
+
     // Use after replacing an ad-hoc signed build, whose pinned signature changes.
     static func repairRegistration() {
         Task { @MainActor in
@@ -12,10 +44,14 @@ enum ServiceDiagnostics {
             do {
                 if service.status != .notRegistered && service.status != .notFound {
                     try await service.unregister()
+                    // macOS may finish the callback before smd finishes removing the job.
+                    try await Task.sleep(nanoseconds: 2_000_000_000)
                 }
                 try service.register()
                 print("Service registration status: \(service.status.rawValue)")
-                exit(service.status == .enabled ? 0 : 1)
+                guard service.status == .enabled else { exit(1) }
+                // Enabled is an approval state, not proof that launchd can run the helper.
+                run(testSession: false)
             } catch {
                 print("Service registration status: \(service.status.rawValue), \(error.localizedDescription)")
                 exit(1)

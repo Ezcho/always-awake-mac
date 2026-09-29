@@ -5,6 +5,7 @@ final class ServiceDelegate: NSObject, NSXPCListenerDelegate {
     let queue = DispatchQueue(label: "com.alwaysawake.power")
     let engine: SessionEngine
     let clientRequirement: String
+    let serviceName: String
     var ownerUID: uid_t?
     private var safetySleepPending = false
     private var timer: DispatchSourceTimer?
@@ -13,9 +14,9 @@ final class ServiceDelegate: NSObject, NSXPCListenerDelegate {
     init(configuration: Void) throws {
         // Recover first, even if an interrupted update left the GUI signature invalid.
         engine = SessionEngine(driver: SystemSleepDriver(), journal: try DiskRecoveryJournal())
-        // The helper lives at App/Contents/Library/HelperTools/AlwaysAwakeHelper.
-        let appURL = try HelperInstallation.appURL()
-        clientRequirement = try Signature.requirement(for: appURL)
+        let installation = try HelperInstallation.configuration()
+        clientRequirement = installation.clientRequirement
+        serviceName = installation.serviceName
         super.init()
         let watchdog = DispatchSource.makeTimerSource(queue: queue)
         watchdog.schedule(deadline: .now() + 5, repeating: 5)
@@ -39,7 +40,7 @@ final class ServiceDelegate: NSObject, NSXPCListenerDelegate {
             let source = DispatchSource.makeSignalSource(signal: sig, queue: queue)
             source.setEventHandler { [weak self] in
                 do { try self?.engine.shutdown(); exit(0) }
-                catch { NSLog("Always Awake recovery pending: %@", error.localizedDescription); exit(1) }
+                catch { NSLog("pika recovery pending: %@", error.localizedDescription); exit(1) }
             }
             source.resume()
             signals.append(source)
@@ -107,6 +108,11 @@ final class ServiceClient: NSObject, AwakeServiceProtocol {
 // Read-only installation check: no journal, listener or power settings are touched.
 if CommandLine.arguments.dropFirst().contains("--check-installation") {
     do {
+        if try HelperInstallation.executableURL() == InstalledHelper.executable {
+            _ = try HelperInstallation.configuration()
+            print("Installed helper verified: \(InstalledHelper.executable.path)")
+            exit(0)
+        }
         let app = try HelperInstallation.appURL()
         _ = try Signature.requirement(for: app)
         print("Installation verified: \(app.path)")
@@ -117,11 +123,11 @@ if CommandLine.arguments.dropFirst().contains("--check-installation") {
 guard geteuid() == 0 else { fputs("AlwaysAwakeHelper must be launched by macOS as a system service.\n", stderr); exit(1) }
 do {
     let delegate = try ServiceDelegate(configuration: ())
-    let listener = NSXPCListener(machServiceName: AppIdentity.serviceName)
+    let listener = NSXPCListener(machServiceName: delegate.serviceName)
     listener.delegate = delegate
     listener.resume()
     withExtendedLifetime(delegate) { dispatchMain() }
 } catch {
-    NSLog("Always Awake helper: %@", error.localizedDescription)
+    NSLog("pika helper: %@", error.localizedDescription)
     exit(1)
 }

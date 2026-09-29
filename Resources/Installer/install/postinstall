@@ -1,0 +1,16 @@
+#!/bin/bash
+set -euo pipefail
+source "$(dirname "$0")/common.sh"
+validate_paths
+require_sleep_enabled
+[[ -f "$HELPER" && -f "$PLIST" && -f "$PIN" && -d "$APP" ]] || fail 'Required installation files are missing.'
+/usr/bin/codesign --verify --deep --strict "$APP" || fail 'App signature validation failed.'
+/usr/bin/codesign --verify --strict "$HELPER" || fail 'Helper signature validation failed.'
+requirement="$(/bin/cat "$PIN")"
+[[ "$requirement" == *'identifier "com.alwaysawake.mac"'* ]] || fail 'Client requirement does not identify pika.'
+/usr/bin/codesign --verify --strict -R="$requirement" "$APP" || fail 'Installed app does not match the helper client requirement.'
+/bin/chmod 755 '/Library/Application Support/pika' "$HELPER"
+/bin/chmod 644 "$PLIST" "$PIN"
+/bin/launchctl bootstrap system "$PLIST" || fail 'macOS did not start the installed helper. Installation files were preserved for diagnosis.'
+/bin/launchctl print "system/$LABEL" >/dev/null || fail 'Installed helper is not registered with launchd.'
+echo 'pika installed. Open /Applications/pika.app to begin.'

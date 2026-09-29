@@ -20,10 +20,16 @@ jobs:
         run: python3 Scripts/test-installation.py
       - name: Package disk image
         run: ./Scripts/package.sh
+      - name: Verify multilingual website
+        run: python3 Scripts/test-site.py
+      - name: Build administrator installer packages
+        run: ./Scripts/package-helper.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: Always-Awake-MVP
+          name: pika
           path: |
             dist/*.dmg
             dist/*.zip
+            dist/*.pkg
+            dist/SHA256SUMS-pkg.txt
             dist/SHA256SUMS.txt

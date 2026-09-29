@@ -14,7 +14,7 @@ struct RenderPreview {
         session.update(on: false, enabled: true)
         let monitor = MenuSwitchRow(title: "Monitor")
         monitor.frame.origin = NSPoint(x: 8, y: 8)
-        monitor.update(on: true, enabled: true)
+        monitor.update(on: false, enabled: false)
         view.addSubview(session)
         view.addSubview(monitor)
         let window = NSWindow(contentRect: view.frame, styleMask: .borderless, backing: .buffered, defer: false)

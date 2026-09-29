@@ -1,0 +1,7 @@
+#!/bin/bash
+set -euo pipefail
+source "$(dirname "$0")/common.sh"
+validate_paths
+require_sleep_enabled
+require_app_closed
+stop_installed_helper

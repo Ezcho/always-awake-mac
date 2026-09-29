@@ -55,7 +55,7 @@ final class SessionEngine {
     func begin(owner candidate: UUID, safetyIssue: String?) throws {
         if let safetyIssue { throw AwakeError(safetyIssue) }
         if owner == candidate { try renew(owner: candidate, safetyIssue: safetyIssue); return }
-        guard owner == nil else { throw AwakeError("다른 Always Awake 창에서 세션을 사용 중입니다.") }
+        guard owner == nil else { throw AwakeError("다른 pika 창에서 세션을 사용 중입니다.") }
         if recoveryRequired { recover() }
         guard !recoveryRequired else { throw AwakeError(lastMessage ?? "잠자기 설정 복구가 필요합니다.") }
         guard try !driver.sleepIsDisabled() else {

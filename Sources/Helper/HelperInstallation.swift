@@ -2,7 +2,7 @@ import Foundation
 import MachO
 
 enum HelperInstallation {
-    static func appURL() throws -> URL {
+    static func executableURL() throws -> URL {
         // launchd may supply the relative BundleProgram as argv[0]. dyld knows
         // the executable that was actually loaded, independent of argv or cwd.
         var size: UInt32 = 0
@@ -12,7 +12,18 @@ enum HelperInstallation {
         guard _NSGetExecutablePath(&buffer, &size) == 0 else {
             throw AwakeError("보조 서비스 실행 경로를 읽지 못했습니다.")
         }
-        let executable = URL(fileURLWithPath: String(cString: buffer)).resolvingSymlinksInPath()
+        return URL(fileURLWithPath: String(cString: buffer)).resolvingSymlinksInPath()
+    }
+
+    static func configuration() throws -> (serviceName: String, clientRequirement: String) {
+        if try executableURL() == InstalledHelper.executable {
+            return (InstalledHelper.serviceName, try InstalledHelper.clientRequirement())
+        }
+        return (AppIdentity.serviceName, try Signature.requirement(for: appURL()))
+    }
+
+    static func appURL() throws -> URL {
+        let executable = try executableURL()
         let app = executable.deletingLastPathComponent().deletingLastPathComponent()
             .deletingLastPathComponent().deletingLastPathComponent()
         guard app.pathExtension == "app",

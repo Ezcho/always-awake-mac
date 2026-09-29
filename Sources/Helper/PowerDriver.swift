@@ -43,6 +43,7 @@ final class SystemSleepDriver: SleepDriver {
 }
 
 final class DiskRecoveryJournal: RecoveryJournal {
+    // Keep the existing recovery location across the pika rename.
     private let directory = URL(fileURLWithPath: "/Library/Application Support/Always Awake", isDirectory: true)
     private var record: URL { directory.appendingPathComponent("recovery.json") }
     private struct Record: Codable { let version: Int; let originalSleepDisabled: Bool }

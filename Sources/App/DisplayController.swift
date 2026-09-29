@@ -10,10 +10,10 @@ final class DisplayController {
         release()
         if keepOn {
             let result = IOPMAssertionCreateWithName(kIOPMAssertionTypePreventUserIdleDisplaySleep as CFString,
-                IOPMAssertionLevel(kIOPMAssertionLevelOn), "Always Awake · Monitor ON" as CFString, &assertion)
+                IOPMAssertionLevel(kIOPMAssertionLevelOn), "pika · Monitor ON" as CFString, &assertion)
             guard result == kIOReturnSuccess else { assertion = 0; throw AwakeError("화면 켜짐 설정을 적용하지 못했습니다 (\(result)).") }
             var activity: IOPMAssertionID = 0
-            IOPMAssertionDeclareUserActivity("Always Awake · Wake display" as CFString, kIOPMUserActiveLocal, &activity)
+            IOPMAssertionDeclareUserActivity("pika · Wake display" as CFString, kIOPMUserActiveLocal, &activity)
             if activity != 0 { IOPMAssertionRelease(activity) }
         } else {
             let task = DispatchWorkItem { [weak self] in

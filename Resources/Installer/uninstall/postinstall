@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+source "$(dirname "$0")/common.sh"
+validate_paths
+require_sleep_enabled
+! /bin/launchctl print "system/$LABEL" >/dev/null 2>&1 || fail 'Helper is still registered. No files were removed.'
+[[ ! -e "$JOURNAL" && ! -L "$JOURNAL" ]] || fail 'Power recovery is pending. No files were removed.'
+# Delete only this installation's three fixed files, never an app or recovery folder.
+/bin/rm -f "$PLIST" "$HELPER" "$PIN"
+/bin/rmdir '/Library/Application Support/pika' 2>/dev/null || true
+echo 'pika helper removed. The app and any unrelated files were preserved.'

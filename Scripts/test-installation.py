@@ -3,7 +3,7 @@
 from pathlib import Path
 import subprocess
 
-app = Path(__file__).resolve().parent.parent / "dist/Always Awake.app"
+app = Path(__file__).resolve().parent.parent / "dist/pika.app"
 helper = app / "Contents/Library/HelperTools/AlwaysAwakeHelper"
 for argv0 in [str(helper), "Contents/Library/HelperTools/AlwaysAwakeHelper", "AlwaysAwakeHelper"]:
     result = subprocess.run(
