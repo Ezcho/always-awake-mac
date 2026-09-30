@@ -4,10 +4,25 @@ import IOKit.pwr_mgt
 final class DisplayController {
     private var assertion: IOPMAssertionID = 0
     private var pendingSleep: DispatchWorkItem?
+    private var sleepRequest: UUID?
+    private var sessionEnabled = false
     var onError: ((String) -> Void)?
 
-    func apply(keepOn: Bool, onlyWhileLidClosed: Bool = false) throws {
+    func arm() {
         release()
+        sessionEnabled = true
+    }
+
+    func disarm() {
+        sessionEnabled = false
+        release()
+    }
+
+    func apply(keepOn: Bool) throws {
+        release()
+        // Both conditions are mandatory for every display operation, including
+        // callers whose cached lid state has not caught up with a reopened lid.
+        guard sessionEnabled, HardwareReading.lidIsClosed() == true else { return }
         if keepOn {
             let result = IOPMAssertionCreateWithName(kIOPMAssertionTypePreventUserIdleDisplaySleep as CFString,
                 IOPMAssertionLevel(kIOPMAssertionLevelOn), "pika · Monitor ON" as CFString, &assertion)
@@ -16,9 +31,12 @@ final class DisplayController {
             IOPMAssertionDeclareUserActivity("pika · Wake display" as CFString, kIOPMUserActiveLocal, &activity)
             if activity != 0 { IOPMAssertionRelease(activity) }
         } else {
+            let request = UUID()
+            sleepRequest = request
             let task = DispatchWorkItem { [weak self] in
-                // The lid may reopen between the observation and delayed sleep.
-                guard !onlyWhileLidClosed || HardwareReading.lidIsClosed() == true else { return }
+                guard let self, self.sessionEnabled, self.sleepRequest == request,
+                      HardwareReading.lidIsClosed() == true else { return }
+                self.sleepRequest = nil
                 let process = Process()
                 process.executableURL = URL(fileURLWithPath: "/usr/bin/pmset")
                 process.arguments = ["displaysleepnow"]
@@ -27,7 +45,7 @@ final class DisplayController {
                         DispatchQueue.main.async { self?.onError?("화면을 끄지 못했습니다. Monitor를 다시 전환해 주세요.") }
                     }
                 }
-                do { try process.run() } catch { self?.onError?("화면 잠자기 요청 실패: \(error.localizedDescription)") }
+                do { try process.run() } catch { self.onError?("화면 잠자기 요청 실패: \(error.localizedDescription)") }
             }
             pendingSleep = task
             DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: task)
@@ -35,6 +53,7 @@ final class DisplayController {
     }
 
     func release() {
+        sleepRequest = nil
         pendingSleep?.cancel()
         pendingSleep = nil
         if assertion != 0 { IOPMAssertionRelease(assertion); assertion = 0 }

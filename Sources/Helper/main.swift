@@ -29,7 +29,9 @@ final class ServiceDelegate: NSObject, NSXPCListenerDelegate {
             self.engine.tick(safetyIssue: userChanged ? "사용자가 전환되어 세션을 종료했습니다." : thermalOrBatteryIssue)
             if self.safetySleepPending && self.engine.owner == nil && !self.engine.recoveryRequired {
                 self.safetySleepPending = false
-                PowerSafety.sleepNow()
+                // Restore protection on every safety stop. An open lid must not
+                // be forced to sleep by an armed (waiting) session.
+                if HardwareReading.lidIsClosed() == true { PowerSafety.sleepNow() }
             }
             if self.engine.owner == nil { self.ownerUID = nil }
         }

@@ -136,7 +136,7 @@ final class AppModel {
     func stop(completion: ((Bool) -> Void)? = nil) {
         busy = true
         stopLidObservation()
-        display.release()
+        display.disarm()
         client.call(.stop) { [weak self] result in
             guard let self else { return }
             self.busy = false
@@ -167,7 +167,7 @@ final class AppModel {
         do {
             // While armed, Monitor only selects what to do after the lid closes.
             if lidEngaged {
-                try display.apply(keepOn: value, onlyWhileLidClosed: true)
+                try display.apply(keepOn: value)
             }
             monitorPreference = value
             UserDefaults.standard.set(value, forKey: "monitorOn")
@@ -254,6 +254,7 @@ final class AppModel {
 
     private func startLidObservation() {
         stopLidObservation()
+        display.arm()
         updateLidState()
         // Read only the lid registry value here; full safety checks and the helper
         // lease retain their existing cadence. Never poll when Session is OFF.
@@ -277,7 +278,7 @@ final class AppModel {
         guard let closed = HardwareReading.lidIsClosed(), closed != lidEngaged else { return }
         lidEngaged = closed
         if closed {
-            do { try display.apply(keepOn: monitorOn, onlyWhileLidClosed: true) }
+            do { try display.apply(keepOn: monitorOn) }
             catch { self.error = error.localizedDescription }
         } else {
             // Reopening cancels any delayed sleep and returns to the armed state.
@@ -290,7 +291,7 @@ final class AppModel {
         stopLidObservation()
         sessionMode = "off"
         active = false
-        display.release()
+        display.disarm()
         if let activity { ProcessInfo.processInfo.endActivity(activity); self.activity = nil }
     }
 

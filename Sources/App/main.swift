@@ -25,6 +25,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     func applicationDidFinishLaunching(_ notification: Notification) {
         let peers = NSRunningApplication.runningApplications(withBundleIdentifier: AppIdentity.bundleID)
         if let existing = peers.first(where: { $0.processIdentifier != ProcessInfo.processInfo.processIdentifier }) {
+            let runningVersion = existing.bundleURL.flatMap { Bundle(url: $0) }?.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+            let thisVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+            if runningVersion != thisVersion || existing.bundleURL?.standardizedFileURL != Bundle.main.bundleURL.standardizedFileURL {
+                NSApp.setActivationPolicy(.accessory)
+                NSApp.activate(ignoringOtherApps: true)
+                let alert = NSAlert()
+                alert.messageText = "이전 앱을 먼저 종료해 주세요"
+                alert.informativeText = "다른 pika 또는 Always Awake가 실행 중입니다. 기존 앱에서 Session을 OFF로 바꾸고 종료한 뒤 pika \(AppIdentity.version)을 다시 실행해 주세요."
+                alert.addButton(withTitle: "확인")
+                alert.runModal()
+                NSApp.terminate(nil)
+                return
+            }
             if let url = existing.bundleURL {
                 let configuration = NSWorkspace.OpenConfiguration()
                 configuration.activates = true
@@ -92,7 +105,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         if controlWindow == nil {
             let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 264, height: 184),
                                   styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false)
-            window.title = "pika"
+            window.title = "pika · \(AppIdentity.version)"
             window.delegate = self
             window.isReleasedWhenClosed = false
             window.collectionBehavior = [.moveToActiveSpace]

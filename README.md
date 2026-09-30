@@ -1,19 +1,19 @@
 # pika
 
-**Keep your Mac awake from the menu bar.** Session and display controls, battery and thermal monitoring, with a native MCP interface in the development source. macOS 13+, Apple Silicon and Intel.
+**Keep your Mac awake from the menu bar.** Session and display controls, battery and thermal monitoring, with a native MCP interface. macOS 13+, Apple Silicon and Intel.
 
 macOS 메뉴 막대에서 Session과 Monitor를 제어하는 네이티브 앱입니다. Swift / AppKit으로 만들었으며 외부 패키지나 서버 없이 실행됩니다.
 
-[다운로드 페이지](https://no-sleep-pika.online/) · [공개 릴리스](https://github.com/Ezcho/always-awake-mac/releases/tag/v1.0.3-mvp)
+[다운로드 페이지](https://no-sleep-pika.online/) · [공개 릴리스](https://github.com/Ezcho/always-awake-mac/releases/tag/v1.0.4)
 
 웹페이지의 다운로드 수는 공개 GitHub Release의 DMG·ZIP·설치 PKG 다운로드 합계입니다. 제거 패키지와 체크섬 파일은 제외합니다. 고유 사용자 수나 설치 성공 횟수는 아닙니다. 브라우저는 공개 API에서 갱신하고 1시간 캐시합니다. API 연결 실패 시 마지막 집계값을 유지하며, 표시값에 마우스를 올리면 집계 시각을 볼 수 있습니다. 배포용 기본 집계는 `python3 Scripts/update-downloads.py` 후 `python3 Scripts/build-site.py`로 갱신합니다.
 
-> **이 문서는 개발 중인 1.0.4 소스를 설명합니다.** 현재 공개 다운로드는 1.0.3이며 MCP·덮개 대기 동작·새 PKG 설치 경로는 아직 포함되지 않았습니다. 1.0.4는 덮개 닫힘 동작을 위해 관리자 보조 서비스를 사용합니다. 보조 서비스가 없으면 설치를 안내하며 Session을 시작하지 않습니다. 새 `.pkg`의 설치 및 실기 검증은 진행 중입니다. 현재 빌드는 Developer ID 서명·Apple 공증 전입니다.
+> **공개 다운로드: 1.0.4 (build 7).** DMG 앱에 MCP와 덮개 대기 동작이 포함됩니다. 덮개 기능에는 관리자 보조 서비스가 필요하며, 보조 서비스가 없거나 서명이 맞지 않으면 설치를 안내합니다. 새 빌드의 실제 덮개 동작은 사용자 검증 대상입니다. 현재 빌드는 Developer ID 서명·Apple 공증 전입니다.
 
 ## 사용
 
 1. DMG를 열고 **pika.app**을 **Applications**로 드래그합니다.
-2. 앱과 보조 서비스를 `.pkg`로 설치하고 실행한 뒤, 덮개를 열어 둔 채 **Session ON**을 누릅니다.
+2. 기존 앱의 Session을 OFF로 바꾸고 종료한 뒤 새 앱을 실행합니다. 제어창 제목의 **pika · 1.0.4**를 확인하세요. 보조 서비스 설치 안내가 나오면 같은 릴리스의 `.pkg`로 앱과 보조 서비스를 함께 설치합니다. 이후 덮개를 열어 둔 채 **Session ON**을 누릅니다.
 3. 덮개 모드에서는 **Session ON → 대기 → 덮개 닫기** 순서로 동작합니다. ON을 누르거나 대기 중 Monitor를 바꿔도 현재 화면을 끄거나 깨우지 않습니다.
 
 메뉴 막대 아이콘 **클릭**으로 Session·Monitor 스위치를 엽니다. **Option+클릭**은 Session을 바로 전환합니다. 실행하면 작은 제어창이 표시됩니다. 창의 X를 눌러 닫아도 Session과 메뉴 막대는 유지됩니다. 앱을 다시 실행하거나 메뉴의 **제어창 열기**로 창을 다시 엽니다. Dock 아이콘은 없습니다. 종료는 메뉴의 **종료**를 사용합니다.
