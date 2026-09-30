@@ -68,6 +68,14 @@ final class UpdateDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             fail("pika가 아직 실행 중이거나 업데이트 요청이 취소되었습니다.", canRetry: false); return
         }
         do {
+            // A user may have installed a newer build while this window was waiting.
+            // Same-version retries repair an interrupted install; newer installs win.
+            if let installed = Bundle(url: URL(fileURLWithPath: "/Applications/pika.app"))?
+                .object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
+                guard let current = UpdateVersion(installed), let target = UpdateVersion(release.version), current <= target else {
+                    throw UpdateError("이미 더 최신 버전이 설치되어 있거나 버전을 확인할 수 없습니다. pika를 다시 열어 주세요.")
+                }
+            }
             try release.verify(package)
             let script = try UpdateInstallCommand.appleScript(package: package, hash: release.sha256)
             let process = Process()
