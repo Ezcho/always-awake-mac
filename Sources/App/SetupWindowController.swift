@@ -5,9 +5,10 @@ import AppKit
 @MainActor
 final class SetupWindowController: NSWindowController {
     private let onInstallHelper: () -> Void
+    private let onQuit: () -> Void
     private let onOpenPrivacySettings: () -> Void
     private let onContinue: () -> Void
-    private let helperButton = NSButton(title: "보조 서비스 설치 / 연결", target: nil, action: nil)
+    private let helperButton = NSButton(title: "PKG 다시 받기", target: nil, action: nil)
     private let continueButton = NSButton(title: "제어창으로", target: nil, action: nil)
     private let helperStatus = NSTextField(wrappingLabelWithString: "")
     private let helperBadge = NSTextField(labelWithString: "2")
@@ -15,9 +16,11 @@ final class SetupWindowController: NSWindowController {
     private let green = NSColor(calibratedRed: 0.19, green: 0.39, blue: 0.27, alpha: 1)
 
     init(onInstallHelper: @escaping () -> Void,
+         onQuit: @escaping () -> Void,
          onOpenPrivacySettings: @escaping () -> Void,
          onContinue: @escaping () -> Void) {
         self.onInstallHelper = onInstallHelper
+        self.onQuit = onQuit
         self.onOpenPrivacySettings = onOpenPrivacySettings
         self.onContinue = onContinue
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 500, height: 548),
@@ -45,13 +48,13 @@ final class SetupWindowController: NSWindowController {
 
     func update(helperReady: Bool, busy: Bool, status: String?) {
         helperBadge.stringValue = helperReady ? "✓" : "2"
-        helperButton.title = busy ? "연결 중…" : helperReady ? "보조 서비스 연결 완료" : "보조 서비스 설치 / 연결"
+        helperButton.title = busy ? "연결 중…" : helperReady ? "보조 서비스 연결 완료" : "PKG 다시 받기"
         helperButton.isEnabled = !helperReady && !busy
         continueButton.isEnabled = !busy
         let message = status?.trimmingCharacters(in: .whitespacesAndNewlines)
         helperStatus.stringValue = (message?.isEmpty == false ? message : nil)
             ?? (helperReady ? "준비됐어요. Session을 켜고 덮개를 닫으세요."
-                : "덮개 기능에 필요해요. 설치할 때 관리자 승인을 요청합니다.")
+                : "PKG에 함께 포함됩니다. 연결되지 않으면 PKG를 다시 설치하세요.")
         // Keep the full diagnostic available even if a long system error is truncated.
         helperStatus.toolTip = helperStatus.stringValue
         helperStatus.setAccessibilityValue(helperStatus.stringValue)
@@ -76,7 +79,7 @@ final class SetupWindowController: NSWindowController {
         stack.addArrangedSubview(heading)
 
         let first = card(badge: NSTextField(labelWithString: "✓"),
-                         title: "Applications에 넣고 pika 열기",
+                         title: "PKG 설치 후 pika 열기",
                          detail: label("이 창이 보이면 앱 실행 허용은 완료됐어요.", size: 12))
         addFullWidth(first, to: stack)
 
@@ -120,7 +123,9 @@ final class SetupWindowController: NSWindowController {
         continueButton.target = self
         continueButton.action = #selector(continueToControls)
         continueButton.keyEquivalent = "\r"
-        let footer = NSStackView(views: [NSView(), continueButton])
+        let quit = NSButton(title: "pika 종료", target: self, action: #selector(quitForInstaller))
+        quit.bezelStyle = .rounded
+        let footer = NSStackView(views: [quit, NSView(), continueButton])
         footer.orientation = .horizontal
         addFullWidth(footer, to: stack)
     }
@@ -170,6 +175,7 @@ final class SetupWindowController: NSWindowController {
         view.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
     }
 
+    @objc private func quitForInstaller() { onQuit() }
     @objc private func installHelper() { onInstallHelper() }
     @objc private func openPrivacySettings() { onOpenPrivacySettings() }
     @objc private func continueToControls() { close(); onContinue() }

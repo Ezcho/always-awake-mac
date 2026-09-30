@@ -120,12 +120,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
             setupWindow = SetupWindowController(onInstallHelper: { [weak self] in
                 guard let self, !self.model.busy else { return }
                 let alert = NSAlert()
-                alert.messageText = "보조 서비스를 설치할까요?"
-                alert.informativeText = "현재 pika와 일치하는 보조 서비스만 다운로드합니다. 설치 프로그램을 열면서 pika는 종료됩니다. macOS에서 관리자 승인을 완료한 뒤 응용 프로그램 폴더의 pika를 다시 열어 주세요."
-                alert.addButton(withTitle: "설치 진행")
+                alert.messageText = "pika PKG를 다시 받을까요?"
+                alert.informativeText = "앱과 보조 서비스가 함께 들어 있는 PKG를 내려받아 Finder에 표시합니다. 다운로드 완료 후 시작 안내의 ‘pika 종료’를 누르고, 선택된 PKG를 열어 설치해 주세요."
+                alert.addButton(withTitle: "다운로드")
                 alert.addButton(withTitle: "취소")
                 if alert.runModal() == .alertFirstButtonReturn { self.model.installHelper() }
-            }, onOpenPrivacySettings: {
+            }, onQuit: { [weak self] in self?.quitApp() }, onOpenPrivacySettings: {
                 let settings = URL(string: "x-apple.systempreferences:com.apple.preference.security?General")!
                 if !NSWorkspace.shared.open(settings) {
                     NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Applications/System Settings.app"))

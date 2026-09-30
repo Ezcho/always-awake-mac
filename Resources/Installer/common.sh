@@ -48,7 +48,13 @@ require_sleep_enabled() {
     sleep_enabled || fail 'Turn Session OFF in pika before installing or removing its helper. The installer will not override system power settings.'
 }
 require_app_closed() {
-    ! /usr/bin/pgrep -x AlwaysAwake >/dev/null || fail 'Quit pika from its menu before continuing, then run the installer again.'
+    local status=0
+    /usr/bin/pgrep -x AlwaysAwake >/dev/null || status=$?
+    case "$status" in
+        0) fail 'pika 메뉴 → 종료 후 다시 설치하세요. 창의 ×는 종료가 아닙니다. Quit pika from its menu, then run the installer again.' ;;
+        1) return 0 ;;
+        *) fail 'Could not inspect running apps. Installation stopped without replacing files.' ;;
+    esac
 }
 stop_installed_helper() {
     local job pid='' attempt

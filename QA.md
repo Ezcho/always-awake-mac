@@ -94,3 +94,11 @@
 - helper-only preinstall은 현재 /Applications/pika.app의 서명을 정확히 확인한 뒤 변경합니다. 실행 중인 세션, 다른 잠자기 차단 설정, 남은 복구 기록이 있으면 설치를 거절합니다.
 - 실제 Gatekeeper 승인, 관리자 설치 및 덮개 테스트는 사용자 담당으로 남깁니다.
 - 검증 완료: 63개 가짜 드라이버·복구·MCP 테스트, 17개 웹 페이지 검사, arm64/x86_64 Universal 빌드 및 서명 무결성, DMG 재마운트·배경 연결, helper-only PKG에 Applications payload가 없음을 확인했습니다. 실제 시스템 전원 설정이나 관리자 설치는 실행하지 않았습니다.
+
+## 2026-09-30 / 1.0.6 build 9 — 통합 PKG
+
+- 사용자 설치 로그 21:49:01에서 helper-only 1.0.5 preinstall의 `Quit pika from its menu` 실패를 확인했습니다. 설치 당시 메인 앱 프로세스가 남아 있었고, 읽기 전용 확인에서 /Applications/pika.app의 AlwaysAwake 프로세스와 SleepDisabled=0을 확인했습니다. 이번 실패는 로그상 서명 검사 전의 앱 실행 검사입니다.
+- 앱+보조 서비스 통합 productbuild PKG를 기본 배포로 전환합니다. Installer의 must-close에 앱 bundle ID를 지정하고 종료 안내를 설치 시작 화면에 표시합니다. preinstall의 실행 중 앱 거부 검사는 유지하며 프로세스 조회 실패도 거부합니다.
+- 앱 내 복구 다운로드는 통합 PKG를 검증해 Finder에 표시합니다. Installer를 연 뒤 앱 자동 종료가 완료됐다고 가정하는 경로를 제거하고, 명시적 pika 종료 버튼을 제공합니다.
+- 실제 관리자 설치, Session 및 덮개 동작은 사용자 테스트 대상으로 남깁니다.
+- 63개 기존 로직 테스트, 3개 프로세스 검사 회귀 사례, Universal 빌드, 설치 파일 내 앱/보조 서비스 payload·서명 pin·must-close·안내 리소스 확인 및 17개 웹 페이지 검사를 통과했습니다.

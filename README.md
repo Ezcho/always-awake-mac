@@ -4,16 +4,16 @@
 
 macOS 메뉴 막대에서 Session과 Monitor를 제어하는 네이티브 앱입니다. Swift / AppKit으로 만들었으며 외부 패키지나 서버 없이 실행됩니다.
 
-[다운로드 페이지](https://no-sleep-pika.online/) · [공개 릴리스](https://github.com/Ezcho/always-awake-mac/releases/tag/v1.0.5)
+[다운로드 페이지](https://no-sleep-pika.online/) · [공개 릴리스](https://github.com/Ezcho/always-awake-mac/releases/tag/v1.0.6)
 
 웹페이지의 다운로드 수는 공개 GitHub Release의 DMG·ZIP·설치 PKG 다운로드 합계입니다. 제거 패키지와 체크섬 파일은 제외합니다. 고유 사용자 수나 설치 성공 횟수는 아닙니다. 브라우저는 공개 API에서 갱신하고 1시간 캐시합니다. API 연결 실패 시 마지막 집계값을 유지하며, 표시값에 마우스를 올리면 집계 시각을 볼 수 있습니다. 배포용 기본 집계는 `python3 Scripts/update-downloads.py` 후 `python3 Scripts/build-site.py`로 갱신합니다.
 
-> **공개 다운로드: 1.0.5 (build 8).** DMG 앱에 MCP와 덮개 대기 동작이 포함됩니다. 덮개 기능에는 관리자 보조 서비스가 필요하며, 보조 서비스가 없거나 서명이 맞지 않으면 설치를 안내합니다. 새 빌드의 실제 덮개 동작은 사용자 검증 대상입니다. 현재 빌드는 Developer ID 서명·Apple 공증 전입니다.
+> **공개 다운로드: 1.0.6 (build 9).** 통합 PKG에 앱·보조 서비스와 MCP와 덮개 대기 동작이 포함됩니다. 덮개 기능에는 관리자 보조 서비스가 필요하며, 보조 서비스가 없거나 서명이 맞지 않으면 설치를 안내합니다. 새 빌드의 실제 덮개 동작은 사용자 검증 대상입니다. 현재 빌드는 Developer ID 서명·Apple 공증 전입니다.
 
 ## 사용
 
-1. DMG를 열고 **pika.app**을 **Applications**로 드래그합니다.
-2. 기존 앱의 Session을 OFF로 바꾸고 종료한 뒤 새 앱을 실행합니다. 제어창 제목의 **pika · 1.0.5**를 확인하세요. 설치 안내창에서 **보조 서비스 설치**를 선택하면 현재 앱에 맞는 보조 서비스만 내려받고 검사합니다. pika가 종료된 뒤 macOS 설치 프로그램에서 관리자 승인을 완료하고 pika를 다시 실행합니다. 이후 덮개를 열어 둔 채 **Session ON**을 누릅니다.
+1. 기존 pika에서 **Session OFF → 메뉴 막대 pika → 종료**를 선택합니다. 창의 ×는 종료가 아닙니다.
+2. 홈페이지의 **pika PKG**를 열고 관리자 승인을 거쳐 앱과 보조 서비스를 함께 설치합니다. 드래그 설치나 별도 helper 설치가 필요 없습니다. 응용 프로그램에서 pika를 열고 제어창의 **pika · 1.0.6**을 확인하세요.
 3. 덮개 모드에서는 **Session ON → 대기 → 덮개 닫기** 순서로 동작합니다. ON을 누르거나 대기 중 Monitor를 바꿔도 현재 화면을 끄거나 깨우지 않습니다.
 
 메뉴 막대 아이콘 **클릭**으로 Session·Monitor 스위치를 엽니다. **Option+클릭**은 Session을 바로 전환합니다. 실행하면 작은 제어창이 표시됩니다. 창의 X를 눌러 닫아도 Session과 메뉴 막대는 유지됩니다. 앱을 다시 실행하거나 메뉴의 **제어창 열기**로 창을 다시 엽니다. Dock 아이콘은 없습니다. 종료는 메뉴의 **종료**를 사용합니다.
@@ -66,11 +66,12 @@ sudo /usr/bin/pmset -a disablesleep 0
 ./Scripts/test.sh
 ./Scripts/build.sh
 python3 Scripts/test-installation.py
-./Scripts/package.sh
+./Scripts/package-helper.sh
+python3 Scripts/test-installer-package.py
 open 'dist/pika.app'
 ```
 
-`dist/pika.app`, `dist/pika-1.0.5.dmg`, `dist/pika-1.0.5.zip`이 생성됩니다. arm64와 x86_64를 모두 포함합니다. 빌드 스크립트는 기본적으로 로컬 ad-hoc 서명을 합니다. ad-hoc 빌드는 앱과 보조 서비스를 함께 설치하는 `.pkg`가 필요합니다. 정식 서명 빌드에서 덮개 닫힘 모드를 쓰려면 앱을 `/Applications`에 설치하고 macOS에서 helper를 승인해야 합니다.
+`dist/pika.app`과 기본 배포 파일 `dist/pika-1.0.6.pkg`가 생성됩니다. `Scripts/package.sh`는 선택적으로 DMG/ZIP을 생성하는 개발용 경로입니다. arm64와 x86_64를 모두 포함합니다. 빌드 스크립트는 기본적으로 로컬 ad-hoc 서명을 합니다. ad-hoc 빌드는 앱과 보조 서비스를 함께 설치하는 `.pkg`가 필요합니다. 정식 서명 빌드에서 덮개 닫힘 모드를 쓰려면 앱을 `/Applications`에 설치하고 macOS에서 helper를 승인해야 합니다.
 
 자동 테스트는 fake power driver로 소유권, lease 만료, crash 복구, 실패 rollback, 안전 기준 및 상태 전환을 검증합니다. UI의 초 단위 시계·유휴 센서 조회는 없으며 세션 또는 복구가 진행 중일 때만 10초 heartbeat 타이머가 실행됩니다. 타이머는 메뉴를 펼친 동안에도 동작합니다. 실제 시스템 전원 설정은 바꾸지 않습니다. 수동 실기기 검증 목록은 [QA.md](QA.md)를 참고하세요.
 
@@ -102,7 +103,7 @@ Apple Developer 계정의 Developer ID 인증서 및 이미 설정한 `notarytoo
 
 앱에 포함된 네이티브 `pika-mcp` 실행 파일을 STDIO MCP 서버로 등록합니다. Python/Node 설치나 웹 서버는 필요하지 않습니다. 앱과 보조 서비스를 설치한 뒤 `/Applications/pika.app`을 실행하세요.
 
-1. `/Applications/pika.app`을 실행하고 시작 안내에서 보조 서비스 설치를 완료한 뒤 앱을 다시 엽니다. 메뉴 막대에서 pika를 실행 중인 상태로 둡니다.
+1. PKG로 앱과 보조 서비스를 설치한 뒤 `/Applications/pika.app`을 엽니다. 메뉴 막대에서 pika를 실행 중인 상태로 둡니다.
 2. Codex CLI가 있다면 터미널에서 한 번 등록합니다. 이 명령은 MCP 서버 설정을 추가하며 Session을 켜지는 않습니다.
 
 ```sh
@@ -139,7 +140,7 @@ command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
 
 ## 관리자 보조 서비스 설치 패키지
 
-`./Scripts/package-helper.sh`는 빌드된 앱으로 보조 서비스 전용 `dist/pika-helper-1.0.5.pkg`와 `dist/pika-1.0.5.pkg`와 `dist/pika-helper-uninstall-1.0.5.pkg`를 만듭니다. `.pkg`는 앱과 root 소유의 별도 LaunchDaemon을 함께 설치합니다. 앱/보조 서비스 서명은 서로 정확히 일치해야 하므로 서로 다른 빌드의 DMG와 PKG를 섞지 마세요.
+`./Scripts/package-helper.sh`는 빌드된 앱으로 보조 서비스 전용 `dist/pika-helper-1.0.6.pkg`와 `dist/pika-1.0.6.pkg`와 `dist/pika-helper-uninstall-1.0.6.pkg`를 만듭니다. `.pkg`는 앱과 root 소유의 별도 LaunchDaemon을 함께 설치합니다. 앱/보조 서비스 서명은 서로 정확히 일치해야 하므로 서로 다른 빌드의 DMG와 PKG를 섞지 마세요.
 
 설치 전에 Session을 OFF로 하고 기존 앱 관리형 보조 서비스를 제거한 다음 앱을 종료합니다. 이전 버전에서 제거가 안 되면 새 앱의 `--unregister-service` 명령으로 안전 상태를 확인하고 정상 SMAppService API를 통해 제거할 수 있습니다. macOS Installer의 관리자 인증은 사용자가 직접 진행합니다. 설치/제거 스크립트는 복구 기록이나 전원 설정을 임의로 초기화하지 않습니다.
 
@@ -147,8 +148,8 @@ command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
 
 ## 최초 실행 안내
 
-- DMG의 그림 안내는 앱 실행이 차단되어도 볼 수 있습니다. 별도 설치 메모 파일은 넣지 않습니다.
-- 최초 실행 또는 보조 서비스 준비가 필요한 경우 네이티브 시작 안내창을 표시합니다. 종료 후 다시 실행하면 항상 제어창이 전면에 표시됩니다.
-- 개인정보 보호 및 보안의 **그래도 열기**는 macOS가 앱 실행을 차단한 경우에만 사용합니다. 앱 실행 허용과 보조 서비스 설치는 별도 단계입니다. [Apple 안내](https://support.apple.com/ko-kr/102445)
-- 설치 버튼은 현재 릴리스의 helper 전용 패키지만 HTTPS로 내려받아 GitHub 자산의 SHA-256과 대조합니다. 앱을 바꾸거나 자동으로 관리자 승인을 하지 않습니다. 이전 서비스 등록 해제와 설치는 Session OFF 및 복구 완료 상태에서만 준비합니다.
-- `LSFileQuarantineEnabled`를 켜고 다운로드 파일의 격리를 제거하지 않습니다. 승인과 관리자 인증은 사용자가 macOS UI에서 진행합니다.
+- 기본 배포는 앱과 보조 서비스를 함께 넣은 PKG입니다. Installer의 `must-close`에 pika를 지정하여 진행 전 앱 종료를 요청하며, preinstall에서도 실행 중인 앱을 다시 확인합니다. 설치 안내는 PKG 안에 표시됩니다.
+- 종료 후 다시 실행하면 항상 제어창이 전면에 표시됩니다. 연결이 준비되지 않았다면 시작 안내창이 표시됩니다.
+- 복구용 ‘PKG 다시 받기’ 버튼은 현재 버전의 통합 PKG를 HTTPS와 GitHub 자산 SHA-256으로 검증해 Finder에 표시합니다. 앱을 종료하지 않은 채 Installer를 자동 실행하지 않습니다. 사용자가 ‘pika 종료’를 누르고 PKG를 엽니다.
+- 개인정보 보호 및 보안의 **그래도 열기**는 macOS가 실행을 차단한 경우에만 사용합니다. [Apple 안내](https://support.apple.com/ko-kr/102445)
+- `LSFileQuarantineEnabled`를 유지하며 보안 승인·관리자 인증은 사용자가 macOS UI에서 진행합니다.

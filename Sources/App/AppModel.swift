@@ -90,7 +90,7 @@ final class AppModel {
             return
         }
         guard !requiresInstalledHelper else {
-            error = "덮개 모드에는 보조 서비스가 필요합니다. 설치 안내에서 보조 서비스만 설치해 주세요."
+            error = "덮개 모드에는 보조 서비스가 필요합니다. 설치 안내에서 pika PKG를 다시 설치해 주세요."
             onSetupRequested?()
             return
         }
@@ -222,11 +222,11 @@ final class AppModel {
             return
         }
         guard Bundle.main.bundleURL.standardizedFileURL.path == "/Applications/pika.app" else {
-            setupStatus = "pika.app을 응용 프로그램 폴더로 드래그한 뒤 그곳에서 다시 실행해 주세요."
+            setupStatus = "홈페이지의 pika PKG를 설치한 뒤 응용 프로그램에서 다시 실행해 주세요."
             return
         }
         busy = true
-        setupStatus = "현재 앱에 맞는 보조 서비스를 다운로드하고 확인하는 중…"
+        setupStatus = "pika 통합 설치 파일을 다운로드하고 확인하는 중…"
         Task { @MainActor in
             defer { self.busy = false }
             do {
@@ -245,13 +245,10 @@ final class AppModel {
                     }
                 }
                 try SystemSleepController.requireSystemSleepEnabled()
-                guard NSWorkspace.shared.open(package) else {
-                    throw AwakeError("macOS 설치 프로그램을 열지 못했습니다. 설치 안내를 다시 열어 시도해 주세요.")
-                }
-                self.busy = false
-                // The user now reviews and authorizes installation in Installer.
-                // Its preflight also requires the app to be closed.
-                NSApp.terminate(nil)
+                // Reveal the verified PKG; never race Installer against app shutdown.
+                // The user quits explicitly, and the distribution asks to close pika.
+                NSWorkspace.shared.activateFileViewerSelecting([package])
+                self.setupStatus = "PKG 다운로드 완료. 아래 ‘pika 종료’를 누른 뒤 Finder에 선택된 설치 파일을 여세요."
             } catch {
                 self.setupStatus = error.localizedDescription
                 self.error = error.localizedDescription

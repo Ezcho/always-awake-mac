@@ -49,7 +49,9 @@ cat > "$STAGE/components.plist" <<'PLIST'
 <key>BundleOverwriteAction</key><string>upgrade</string>
 </dict></array></plist>
 PLIST
-/usr/bin/pkgbuild --root "$PAYLOAD" --ownership recommended --install-location / --identifier com.alwaysawake.mac.installer --version "$VERSION" --component-plist "$STAGE/components.plist" --scripts "$STAGE/install-scripts" "$ROOT/dist/pika-$VERSION.pkg"
+/usr/bin/pkgbuild --root "$PAYLOAD" --ownership recommended --install-location / --identifier com.alwaysawake.mac.installer --version "$VERSION" --component-plist "$STAGE/components.plist" --scripts "$STAGE/install-scripts" "$STAGE/pika-component.pkg"
+/usr/bin/sed "s/@VERSION@/$VERSION/g" Resources/Installer/Distribution.xml > "$STAGE/Distribution.xml"
+/usr/bin/productbuild --distribution "$STAGE/Distribution.xml" --resources Resources/Installer/ui --package-path "$STAGE" "$ROOT/dist/pika-$VERSION.pkg"
 # DMG users already installed the matching app. Keep that app in place and ask
 # Installer to install only the privileged helper, launchd plist and client pin.
 mkdir -p "$STAGE/helper-root"

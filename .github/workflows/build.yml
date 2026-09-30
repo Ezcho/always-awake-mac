@@ -27,6 +27,8 @@ jobs:
           node --check docs/downloads.js
       - name: Build administrator installer packages
         run: ./Scripts/package-helper.sh
+      - name: Verify full installer and process preflight
+        run: python3 Scripts/test-installer-package.py
       - uses: actions/upload-artifact@v4
         with:
           name: pika

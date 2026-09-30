@@ -2,7 +2,7 @@
 
 `Scripts/package-helper.sh` builds three **unsigned** native Installer packages from the already-built `dist/pika.app`. It does not install anything or execute privileged commands.
 
-- `pika-VERSION.pkg` installs `/Applications/pika.app`, its standalone helper, launchd plist, and a root-protected client-signature requirement.
+- `pika-VERSION.pkg` is the primary product archive. Its bilingual welcome/conclusion pages and `must-close` declaration request that pika be closed before installation. It installs `/Applications/pika.app`, its standalone helper, launchd plist, and a root-protected client-signature requirement.
 - `pika-helper-VERSION.pkg` installs only the helper, launchd plist and client pin for the matching app already dragged into Applications. Its preflight verifies that app before changing the helper.
 - `pika-helper-uninstall-VERSION.pkg` unloads the helper and removes only its three fixed files. It preserves the app and power-recovery data.
 
@@ -19,3 +19,5 @@ The installed paths are:
 - `/Library/Application Support/pika/installed-client.requirement`
 
 The plist uses `ProgramArguments`, not `BundleProgram`. Apple documents the Installer/LaunchDaemons route and this distinction here: https://developer.apple.com/forums/thread/771162
+
+`Distribution.xml` uses Apple’s [must-close declaration](https://developer.apple.com/library/archive/documentation/DeveloperTools/Reference/DistributionDefinitionRef/Chapters/Distribution_XML_Ref.html). Scripts retain a second running-process check and fail closed if process inspection itself fails. The helper-only package remains a developer artifact; public installation uses the full PKG.
