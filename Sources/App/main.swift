@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     let model = AppModel()
     private let controlServer = LocalControlServer()
     private var statusItem: NSStatusItem!
+    private var statusIcon: PikaStatusIcon?
     private let menu = NSMenu()
     private let sessionRow = MenuSwitchRow(title: "Session")
     private let monitorRow = MenuSwitchRow(title: "Monitor")
@@ -92,6 +93,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         statusItem.button?.target = self
         statusItem.button?.action = #selector(statusClick)
         statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        if let button = statusItem.button { statusIcon = PikaStatusIcon(button: button) }
         model.onChange = { [weak self] in self?.updateMenu() }
         model.onSetupRequested = { [weak self] in self?.showSetupWindow() }
         do {
@@ -218,11 +220,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         errorItem.toolTip = model.error
         removeItem.isHidden = !model.serviceReady && !model.needsApproval
         removeItem.isEnabled = !model.busy
-        let symbol = model.recoveryRequired ? "exclamationmark.circle" : model.active ? "power.circle.fill" : "power.circle"
-        let image = NSImage(systemSymbolName: symbol, accessibilityDescription: "pika \(model.active ? "ON" : "OFF")")
-        image?.isTemplate = true
-        statusItem?.button?.image = image
-        statusItem?.button?.toolTip = "pika · \(model.active ? "ON" : "OFF")\n클릭: 메뉴 · Option+클릭: Session 전환"
+        statusIcon?.update(model.recoveryRequired ? .recovery : model.active ? .on : .off)
     }
 
     @objc private func toggleSession() {
@@ -265,6 +263,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     @objc private func quitApp() { menu.cancelTracking(); NSApp.terminate(nil) }
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool { showControlWindow(); return true }
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
+    func applicationWillTerminate(_ notification: Notification) { statusIcon?.invalidate() }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         guard model.active || model.recoveryRequired || model.busy else { model.client.invalidate(); return .terminateNow }

@@ -134,3 +134,14 @@
 최종 로컬 검증: 101개 Swift 로직 검사, 23개 설치 스크립트 시뮬레이션, Universal 앱 빌드·서명 무결성, PKG payload·빌드 번호·정확한 client pin·포함 스크립트 일치, helper 실행 경로 3개 검사를 통과했습니다. 관리자 설치는 수행하지 않았습니다.
 
 GitHub Actions의 macos-15 환경에서도 소스 `b128f09`의 테스트·Universal 빌드·DMG/PKG 패키징·설치 파일 검사 전체가 통과했습니다: https://github.com/Ezcho/always-awake-mac/actions/runs/36722210760 . 이는 대상 M2/15.5에서의 관리자 설치 검증을 대체하지 않습니다.
+
+## 2026-09-30 / 1.0.8 build 11 — 일하는 피카 아이콘과 MCP 메모리
+
+- 설치된 1.0.6 앱과 helper를 변경하지 않고 15초 간격으로 3분간 13회 측정했습니다. 앱 본체 physical footprint는 32.345 MiB로 일정했습니다. root helper의 physical footprint 조회는 권한상 불가능해 RSS로 측정했으며 8.891–9.016 MiB 범위였습니다. 이는 짧은 관찰이며 장시간·모든 작업 상태에서의 누수 부재를 보장하지 않습니다.
+- Codex 아래 여러 pika-mcp 프로세스가 존재했습니다. 각각 별도 stdio 연결이며, 측정 시작에 있던 6개 프로세스의 footprint는 2.2–2.4 MiB 부근으로 일정했습니다. 프로세스 개수 증가와 한 프로세스 내부의 메모리 누적은 별도로 판단합니다. 사용자 프로세스를 종료하지 않았습니다.
+- 별도 MCP 테스트 프로세스에 initialize와 tools/list만 요청해 문제를 재현했습니다. 기존 1.0.7은 2,000→20,000회 사이 footprint가 12,222,968→97,157,672 bytes로 81.00 MiB 증가했습니다. Foundation 임시 객체를 요청마다 해제하는 autoreleasepool 추가 후 동일 검사에서 2,753,016→2,753,016 bytes로 증가가 0.00 MiB였습니다. 실제 Session/Monitor 요청은 보내지 않았습니다.
+- Scripts/test-mcp-memory.py는 20,000회 요청, 워밍업 이후 최대 증가 12 MiB, 절대 사용량 200 MiB 제한 및 정상 EOF 종료를 검사합니다. 기존 바이너리에서 실패하고 수정 바이너리에서 통과함을 확인했습니다. CI에도 포함했습니다.
+- 앱 ICNS를 노트북으로 일하는 피카 픽셀 일러스트로 교체했습니다. 원본과 생성 프롬프트는 Resources/PikaAppIcon.png 및 Resources/PikaAppIcon.prompt.txt에 저장하며, ICNS 변환 시 표준 크기와 둥근 타일 마스크를 적용합니다.
+- 메뉴 막대는 22×22 단색 template 이미지입니다. OFF 정지, ON 타이핑 4fps, 복구 필요 시 ! 표시. 동작 줄이기 및 화면/시스템 잠자기에서는 애니메이션을 멈춥니다. 애니메이션은 장식이며 Session/Monitor의 덮개 조건과 전원 동작을 변경하지 않습니다.
+- 1×/2× 프레임을 한 번 만들어 재사용합니다. 1,000 tick 이미지 재사용, 10,000 동일 상태 갱신 시 단일 타이머 유지, 100 ON/OFF 반복, 잠자기/깨우기, observer 및 활성 타이머 teardown 검사를 통과했습니다. 실제 설치 앱의 Session은 조작하지 않았습니다.
+- 최종 1.0.8 Universal 앱·PKG, 기존 로직 검사 101개, 설치 시뮬레이션 23개, helper 경로 검사 3개, 아이콘 리소스 수명 검사를 통과했습니다. 배포 바이너리의 MCP 20,000회 검사도 2,720,224 bytes로 일정했습니다. 앱 아이콘의 실제 256px ICNS 원본과 메뉴 22px/확대 프레임을 시각 확인했습니다.

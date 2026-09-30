@@ -18,6 +18,8 @@ jobs:
         run: ./Scripts/build.sh
       - name: Verify helper launch paths and signature
         run: python3 Scripts/test-installation.py
+      - name: Verify bounded MCP memory under repeated requests
+        run: python3 Scripts/test-mcp-memory.py dist/pika.app/Contents/MacOS/pika-mcp
       - name: Package disk image
         run: ./Scripts/package.sh
       - name: Verify multilingual website

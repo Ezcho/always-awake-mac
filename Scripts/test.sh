@@ -15,3 +15,5 @@ xcrun swiftc -swift-version 5 -module-cache-path .build/module-cache Sources/Sha
 .build/ServiceRepairTests
 xcrun swiftc -swift-version 5 -module-cache-path .build/module-cache Sources/Shared/Protocol.swift Sources/Shared/SessionEngine.swift Sources/Shared/SafetyPolicy.swift Sources/App/AppModel.swift Tests/AppDiagnostics/main.swift -o .build/AppDiagnosticsTests
 .build/AppDiagnosticsTests
+xcrun swiftc -swift-version 5 -module-cache-path .build/module-cache Sources/App/PikaStatusIcon.swift Tests/StatusIcon/main.swift -o .build/PikaStatusIconTests
+.build/PikaStatusIconTests
