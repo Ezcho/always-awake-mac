@@ -56,4 +56,15 @@ try shell.write(to: root.appendingPathComponent("install.sh"), atomically: true,
 try UpdateInstallCommand.appleScript(package: file, hash: hash).write(to: root.appendingPathComponent("authorize.applescript"), atomically: true, encoding: .utf8)
 rejected("digest injection") { _ = try UpdateInstallCommand.script(package: file, hash: "';id") }
 rejected("remote package path") { _ = try UpdateInstallCommand.script(package: URL(string: "https://example.invalid/a")!, hash: hash) }
+
+let mockApp = root.appendingPathComponent("pika.app")
+try FileManager.default.createDirectory(at: mockApp.appendingPathComponent("Contents"), withIntermediateDirectories: true)
+let info = mockApp.appendingPathComponent("Contents/Info.plist")
+for version in ["1.0.10", "1.0.11"] {
+    let data = try PropertyListSerialization.data(fromPropertyList: ["CFBundleShortVersionString": version], format: .xml, options: 0)
+    try data.write(to: info, options: .atomic)
+    check(UpdateInstalledApp.version(at: mockApp) == version, "read replaced Info.plist without Bundle cache: \(version)")
+}
+try Data("invalid plist".utf8).write(to: info)
+check(UpdateInstalledApp.version(at: mockApp) == nil, "corrupt installed metadata does not pass success check")
 print("\(checks) update validation checks passed; no administrator prompts or installation")

@@ -103,3 +103,14 @@ enum UpdateInstallCommand {
         return "do shell script \"\(literal)\" with administrator privileges"
     }
 }
+
+// Bundle caches Info.plist; updates must read fresh bytes before and after replacement.
+enum UpdateInstalledApp {
+    static func version(at app: URL) -> String? {
+        guard let bytes = try? Data(contentsOf: app.appendingPathComponent("Contents/Info.plist")),
+              let plist = try? PropertyListSerialization.propertyList(from: bytes, format: nil) as? [String: Any],
+              let version = plist["CFBundleShortVersionString"] as? String,
+              UpdateVersion(version) != nil else { return nil }
+        return version
+    }
+}

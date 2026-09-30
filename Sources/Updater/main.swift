@@ -70,8 +70,7 @@ final class UpdateDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         do {
             // A user may have installed a newer build while this window was waiting.
             // Same-version retries repair an interrupted install; newer installs win.
-            if let installed = Bundle(url: URL(fileURLWithPath: "/Applications/pika.app"))?
-                .object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
+            if let installed = UpdateInstalledApp.version(at: URL(fileURLWithPath: "/Applications/pika.app")) {
                 guard let current = UpdateVersion(installed), let target = UpdateVersion(release.version), current <= target else {
                     throw UpdateError("이미 더 최신 버전이 설치되어 있거나 버전을 확인할 수 없습니다. pika를 다시 열어 주세요.")
                 }
@@ -111,8 +110,7 @@ final class UpdateDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         try? FileManager.default.createDirectory(at: log, withIntermediateDirectories: true)
         try? Data(details.utf8).write(to: log.appendingPathComponent("last-update.log"), options: .atomic)
         if success {
-            let installed = Bundle(url: URL(fileURLWithPath: "/Applications/pika.app"))?
-                .object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+            let installed = UpdateInstalledApp.version(at: URL(fileURLWithPath: "/Applications/pika.app"))
             guard installed == release.version else { fail("설치된 앱 버전이 예상과 다릅니다. 다시 시도해 주세요."); return }
             label.stringValue = "업데이트 완료. pika를 여는 중…"
             openApp()
