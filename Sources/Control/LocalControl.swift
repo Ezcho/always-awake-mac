@@ -11,6 +11,15 @@ enum ControlWire {
         ["ok": false, "code": code, "message": message]
     }
 
+    static func connectionFailure(_ error: Int32) -> [String: Any] {
+        if error == ENOENT || error == ECONNREFUSED {
+            return failure("app_not_running", "Open the MCP-enabled pika.app on this Mac, then retry.")
+        }
+        // Permission/resource failures do not prove that the app is absent.
+        // Repair commands must not treat an unreachable running app as idle.
+        return failure("connection_failed", "Could not verify the running pika app (connection error \(error)).")
+    }
+
     static func address() -> sockaddr_un {
         var addr = sockaddr_un()
         addr.sun_family = sa_family_t(AF_UNIX)
@@ -69,7 +78,7 @@ enum ControlWire {
             $0.withMemoryRebound(to: sockaddr.self, capacity: 1) { connect(fd, $0, socklen_t(MemoryLayout<sockaddr_un>.size)) }
         }
         guard connected == 0 else {
-            return failure("app_not_running", "Open the MCP-enabled pika.app on this Mac, then retry.")
+            return connectionFailure(errno)
         }
         var uid: uid_t = 0; var gid: gid_t = 0
         guard getpeereid(fd, &uid, &gid) == 0, uid == getuid() else {

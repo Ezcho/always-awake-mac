@@ -10,15 +10,7 @@ enum ServiceDiagnostics {
     static func unregisterLegacyService() {
         Task { @MainActor in
             do {
-                try SystemSleepController.requireSystemSleepEnabled()
-                let reply = ControlWire.call(["operation": "status"])
-                if reply["ok"] as? Bool == true {
-                    guard reply["sessionOn"] as? Bool == false,
-                          reply["recoveryRequired"] as? Bool == false,
-                          reply["busy"] as? Bool == false else {
-                        throw AwakeError("먼저 pika의 Session을 OFF로 바꾸고 복구가 끝날 때까지 기다려 주세요.")
-                    }
-                }
+                try requireIdleLegacyService()
                 let service = SMAppService.daemon(plistName: AppIdentity.helperPlist)
                 if service.status != .notRegistered && service.status != .notFound {
                     try await service.unregister()
@@ -37,16 +29,30 @@ enum ServiceDiagnostics {
         }
     }
 
-    // Use after replacing an ad-hoc signed build, whose pinned signature changes.
+    private static func requireIdleLegacyService() throws {
+        try SystemSleepController.requireSystemSleepEnabled()
+        try ServiceRepairPolicy.requireIdleApplication(ControlWire.call(["operation": "status"]))
+        // The socket query can take time; recheck immediately before mutation.
+        try SystemSleepController.requireSystemSleepEnabled()
+    }
+
+    // Legacy app-managed services only. PKG installations have a different owner.
     static func repairRegistration() {
         Task { @MainActor in
             let service = SMAppService.daemon(plistName: AppIdentity.helperPlist)
             do {
+                try ServiceRepairPolicy.requireLegacyRepair(installedHelperPresent: InstalledHelper.isPresent)
+                try requireIdleLegacyService()
                 if service.status != .notRegistered && service.status != .notFound {
                     try await service.unregister()
                     // macOS may finish the callback before smd finishes removing the job.
                     try await Task.sleep(nanoseconds: 2_000_000_000)
                 }
+                guard service.status == .notRegistered || service.status == .notFound else {
+                    throw AwakeError("기존 보조 서비스 등록 해제가 확인되지 않았습니다.")
+                }
+                try ServiceRepairPolicy.requireLegacyRepair(installedHelperPresent: InstalledHelper.isPresent)
+                try requireIdleLegacyService()
                 try service.register()
                 print("Service registration status: \(service.status.rawValue)")
                 guard service.status == .enabled else { exit(1) }

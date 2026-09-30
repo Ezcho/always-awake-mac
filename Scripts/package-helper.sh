@@ -7,6 +7,7 @@ APP="$ROOT/dist/pika.app"
 VERSION="$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' Resources/Info.plist)"
 [[ -d "$APP" ]] || { echo 'Run Scripts/build.sh first.' >&2; exit 1; }
 [[ "$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$APP/Contents/Info.plist")" == "$VERSION" ]] || { echo 'Rebuild the app: version mismatch.' >&2; exit 1; }
+[[ "$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$APP/Contents/Info.plist")" == "$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' Resources/Info.plist)" ]] || { echo 'Rebuild the app: build number mismatch.' >&2; exit 1; }
 [[ "$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "$APP/Contents/Info.plist")" == com.alwaysawake.mac ]] || { echo 'Unexpected app identity.' >&2; exit 1; }
 /usr/bin/codesign --verify --deep --strict "$APP"
 [[ -z "$(/usr/bin/find "$APP" -type l -print -quit)" ]] || { echo 'Symlinks are not allowed in this app payload.' >&2; exit 1; }

@@ -11,3 +11,7 @@ xcrun swiftc -swift-version 5 -module-cache-path .build/module-cache Sources/Sha
 .build/AutomationTests
 xcrun swiftc -swift-version 5 -module-cache-path .build/module-cache Sources/Shared/Protocol.swift Sources/Shared/SessionEngine.swift Sources/Shared/SleepSetting.swift Tests/SleepSetting/main.swift -o .build/SleepSettingTests
 .build/SleepSettingTests
+xcrun swiftc -swift-version 5 -module-cache-path .build/module-cache Sources/Shared/Protocol.swift Sources/Shared/SessionEngine.swift Sources/Shared/SafetyPolicy.swift Sources/Control/LocalControl.swift Sources/App/ServiceRepairPolicy.swift Tests/ServiceRepair/main.swift -o .build/ServiceRepairTests
+.build/ServiceRepairTests
+xcrun swiftc -swift-version 5 -module-cache-path .build/module-cache Sources/Shared/Protocol.swift Sources/Shared/SessionEngine.swift Sources/Shared/SafetyPolicy.swift Sources/App/AppModel.swift Tests/AppDiagnostics/main.swift -o .build/AppDiagnosticsTests
+.build/AppDiagnosticsTests

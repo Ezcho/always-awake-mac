@@ -46,6 +46,7 @@ final class AppModel {
         client.onDisconnect = { [weak self] in
             guard let self else { return }
             self.helperConnected = false
+            self.setupStatus = nil
             let wasActive = self.active
             self.localStop()
             self.refreshService()
@@ -84,6 +85,7 @@ final class AppModel {
     }
 
     func prepareService() {
+        setupStatus = nil
         if InstalledHelper.isPresent {
             do { try InstalledHelper.validateForClient() }
             catch { self.error = error.localizedDescription; onSetupRequested?() }
@@ -118,6 +120,7 @@ final class AppModel {
 
     func toggleSession(completion: (() -> Void)? = nil) {
         guard !busy else { completion?(); return }
+        setupStatus = nil
         refreshService()
         if active || recoveryRequired { stop { _ in completion?() }; return }
         guard serviceReady else { prepareService(); completion?(); return }
@@ -153,6 +156,7 @@ final class AppModel {
 
     func stop(completion: ((Bool) -> Void)? = nil) {
         busy = true
+        setupStatus = nil
         stopLidObservation()
         display.disarm()
         client.call(.stop) { [weak self] result in
@@ -197,7 +201,7 @@ final class AppModel {
     func checkHelperConnection() {
         guard !busy, !active, !checkingHelper else { return }
         refreshService()
-        guard serviceReady else { helperConnected = false; return }
+        guard serviceReady else { helperConnected = false; setupStatus = nil; return }
         checkingHelper = true
         client.call(.status) { [weak self] result in
             guard let self else { return }

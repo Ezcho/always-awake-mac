@@ -76,7 +76,9 @@ stop_installed_helper() {
         # bootout sends SIGTERM; helper's shutdown handler restores its journal.
         /bin/launchctl bootout "system/$LABEL" || fail 'Could not unload the existing pika helper. No files were removed.'
         if [[ "$pid" =~ ^[0-9]+$ ]]; then
-            for attempt in {1..20}; do
+            # launchd allows 20 seconds (ExitTimeOut). A queued pmset call and
+            # restoration can outlast the old five-second installer limit.
+            for attempt in {1..100}; do
                 /bin/kill -0 "$pid" 2>/dev/null || break
                 /bin/sleep 0.25
             done
@@ -86,4 +88,24 @@ stop_installed_helper() {
     ! /bin/launchctl print "system/$LABEL" >/dev/null 2>&1 || fail 'Helper is still loaded.'
     require_sleep_enabled
     [[ ! -e "$JOURNAL" && ! -L "$JOURNAL" ]] || fail 'A power recovery record remains. Open pika and restore the session before continuing. No recovery data was deleted.'
+}
+require_helper_running() {
+    local job='' pid='' previous='' stable=0 attempt
+    # Registration alone also succeeds for a job that repeatedly crashes.
+    # Require the same live process across two seconds; never start a session.
+    for attempt in {1..120}; do
+        job="$(/bin/launchctl print "system/$LABEL" 2>/dev/null)" || job=''
+        pid="$(printf '%s\n' "$job" | /usr/bin/awk '$1 == "pid" && $2 == "=" {print $3; exit}')"
+        if [[ "$pid" =~ ^[1-9][0-9]*$ ]] && /bin/kill -0 "$pid" 2>/dev/null; then
+            if [[ "$pid" == "$previous" ]]; then stable=$((stable + 1)); else stable=0; fi
+            if (( stable >= 8 )); then return 0; fi
+        else
+            stable=0
+            pid=''
+        fi
+        previous="$pid"
+        /bin/sleep 0.25
+    done
+    printf '%s\n' "$job" >&2
+    fail 'Helper registered but did not remain running. Installation files were preserved; check the Installer log for launchd diagnostics.'
 }

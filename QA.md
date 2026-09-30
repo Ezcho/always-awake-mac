@@ -110,3 +110,25 @@
 - Apple 공개 소스의 show_system_power_settings 및 PMActivateSystemPowerSettings에 맞춰, 정상 System-wide power settings 헤더가 있고 키만 없는 경우 기본값 false로 읽습니다. 빈 출력·명령 실패·헤더 없는 미확인 상태·손상/중복 키는 계속 거부합니다. 시스템 설정을 강제로 0으로 초기화하지 않습니다.
 - 참고: https://github.com/apple-oss-distributions/PowerManagement/blob/main/pmset/pmset.m 및 https://github.com/apple-oss-distributions/PowerManagement/blob/main/pmconfigd/PMSettings.m
 - 설치기와 Swift 파서에 각각 초기값·명시적 ON/OFF·잘못된 출력 회귀 검사를 추가했습니다. 대상 Sequoia 실기 설치는 미검증이며 사용자 재시험이 필요합니다.
+
+### 전체 코드 점검 — 설치 진행 후 지연 실패 제보 반영
+
+점검 범위: 패키징/설치·제거 스크립트, 서명과 설치 경로 검증, helper 시작·XPC 인증, 전원 복구·안전 정책, 앱 수명주기·Session/Monitor, 로컬 IPC·MCP, 배포 파이프라인. M2/Sequoia 15.5 로그 없이 확인 가능한 코드 결함과 실제 대상 Mac의 원인은 구분합니다.
+
+확인하여 수정한 항목:
+
+- 초기 `SleepDisabled` 키가 없는 정상 상태를 설치 실패로 처리하던 파서. 이 검사는 Installer 진행 버튼 이후 preinstall에서 실행되므로 제보 시점과 양립하지만, 실제 원인으로 확정할 수 없습니다.
+- `stop_installed_helper`가 기존 서비스 종료를 5초만 기다렸습니다. helper의 pmset 한 번은 시간 초과 처리까지 최대 6초, launchd의 ExitTimeOut은 20초입니다. Installer 대기를 25초로 늘리고 여전히 종료·전원 복구·기록 정리를 확인합니다. 강제 종료나 복구 기록 삭제는 하지 않습니다.
+- postinstall은 launchd 등록만 성공하면 정상 설치로 표시했습니다. 등록됐지만 반복 종료하는 서비스도 통과할 수 있었습니다. 설치 앱/보조 실행 파일 일치, 읽기 전용 helper 실행·설정 검사, 동일 PID가 2초 유지되는지 최대 30초 확인하도록 변경했습니다. 이 검사는 XPC 연결이나 실제 덮개 작동 완료를 뜻하지 않습니다.
+- `--repair-service`에 Session/복구/작업 중 검사 및 PKG 서비스와의 충돌 방지가 없었습니다. 이제 idle 확인 전에는 서비스 등록을 변경하지 않으며, PKG 설치는 PKG로 복구하도록 안내합니다. IPC 접근 권한/리소스 오류를 앱 미실행으로 오인하던 분류도 수정했습니다.
+- 이전 ‘보조 서비스 연결 완료’ 안내가 새 시작·복구 오류를 가리는 상태를 제거했습니다.
+- 패키징 시 버전 문자열뿐 아니라 빌드 번호와 실제 포함된 설치 스크립트 일치도 검증합니다.
+
+남아 있는 실패 조건과 검증 한계:
+
+- 실행 중인 pika, 활성 시스템 잠자기 차단, 남은 복구 기록, 이전 SMAppService 등록, 보호 경로의 잘못된 소유자/권한은 의도적으로 설치를 거절합니다. 다른 소프트웨어 설정이나 보호 파일을 임의 초기화하지 않습니다.
+- payload 복사 이후 postinstall이 실패하면 설치 파일이 남을 수 있습니다. 완전한 트랜잭션 rollback을 제공하지 않으므로 해당 버전 PKG 재설치가 필요할 수 있습니다. 디스크 부족, 관리자 승인 실패, launchd/OS의 실행 거부도 원인 후보입니다.
+- 현재 앱은 ad-hoc 서명, PKG는 정식 Developer ID Installer 서명·공증이 없는 상태입니다. 기존 `notarize.sh`는 앱/DMG 경로이며 기본 배포 PKG 서명·공증은 아직 제공하지 않습니다. 보안 정책에 의한 차단 가능성은 코드 변경만으로 해소됐다고 보장할 수 없습니다.
+- 실제 M2/Sequoia 15.5 관리자 설치, Gatekeeper 승인, 덮개·Session 테스트는 미검증입니다. 현재 정상 동작하는 Mac의 설치 앱과 전원 설정은 변경하지 않습니다.
+
+최종 로컬 검증: 101개 Swift 로직 검사, 23개 설치 스크립트 시뮬레이션, Universal 앱 빌드·서명 무결성, PKG payload·빌드 번호·정확한 client pin·포함 스크립트 일치, helper 실행 경로 3개 검사를 통과했습니다. 관리자 설치는 수행하지 않았습니다.

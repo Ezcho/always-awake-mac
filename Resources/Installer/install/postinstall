@@ -11,6 +11,10 @@ requirement="$(/bin/cat "$PIN")"
 /usr/bin/codesign --verify --strict -R="$requirement" "$APP" || fail 'Installed app does not match the helper client requirement.'
 /bin/chmod 755 '/Library/Application Support/pika' "$HELPER"
 /bin/chmod 644 "$PLIST" "$PIN"
+# Execute only the installed, signature-checked helper's read-only self-check.
+# This catches runtime/linker and configuration errors before launchd startup.
+/usr/bin/cmp -s "$HELPER" "$APP/Contents/Library/HelperTools/AlwaysAwakeHelper" || fail 'App and helper payloads do not match.'
+"$HELPER" --check-installation || fail 'Installed helper could not load or validate its configuration.'
 /bin/launchctl bootstrap system "$PLIST" || fail 'macOS did not start the installed helper. Installation files were preserved for diagnosis.'
-/bin/launchctl print "system/$LABEL" >/dev/null || fail 'Installed helper is not registered with launchd.'
+require_helper_running
 echo 'pika installed. Open /Applications/pika.app to begin.'
