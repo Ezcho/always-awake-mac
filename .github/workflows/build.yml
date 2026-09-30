@@ -29,6 +29,7 @@ jobs:
       - name: Verify multilingual website
         run: |
           python3 Scripts/test-site.py
+          python3 Scripts/test-ai-docs.py
           node --check docs/site.js
           node --check docs/downloads.js
           node Scripts/test-web-additions.cjs

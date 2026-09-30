@@ -189,3 +189,12 @@ PKG를 GitHub 정식 릴리스로 공개한 뒤 `gh api repos/Ezcho/always-awake
 - 빌드 산출물과 설치 파일은 `.build/`, `dist/`에서 만들고 GitHub Releases로 배포합니다. Git 소스에는 포함하지 않습니다.
 - 작업 메모, 검증 기록, 이미지 생성 프롬프트, 시안, 로그는 `.local/`에서 로컬로만 관리합니다. 기존 자료는 `.local/archive/`에 원래 디렉터리 구조로 보존했습니다. 새 클론에는 이 로컬 자료가 포함되지 않습니다.
 - 인증서·개인 키·환경변수 파일은 커밋하지 않습니다. `docs/analytics.json`의 GA 측정 ID는 공개 웹 설정입니다.
+
+## AI 검색·문서 접근
+
+- [문서 목록 llms.txt](https://no-sleep-pika.online/llms.txt), [전체 텍스트 llms-full.txt](https://no-sleep-pika.online/llms-full.txt), [한국어 사용 안내 Markdown](https://no-sleep-pika.online/guide/ko/index.md)을 제공합니다.
+- `python3 Scripts/build-site.py`는 사이트맵에 포함된 모든 공개 HTML에서 본문·코드·절대 링크를 추출해 같은 경로의 `index.md`를 생성합니다. 별도로 번역하거나 작성한 사본이 아니므로 HTML과 내용이 함께 갱신됩니다. 이후 사이트맵에 추가하는 글도 자동 포함됩니다. HTML의 `rel="alternate"` 링크로 Markdown을 찾을 수 있습니다.
+- `OAI-SearchBot`, `ChatGPT-User`, `Claude-SearchBot`, `Claude-User`의 공개 문서 접근을 robots.txt에 명시했습니다. 기존 `User-agent: * / Allow: /` 정책은 유지하며, 학습 크롤러와 검색 크롤러는 구별합니다. JS 분석 통계는 봇 방문 확인 수단이 아닙니다.
+- Anthropic은 Claude 검색용 `Claude-SearchBot`, 사용자 요청용 `Claude-User`, 학습용 `ClaudeBot`을 구분합니다. Claude Code 공식 문서도 `llms.txt`와 `.md` 문서를 제공합니다. 이 형식을 제공한다고 모든 AI가 자동 탐색하거나 검색 순위·인용·추천이 보장되는 것은 아닙니다.
+- 공식 근거: [Anthropic 크롤러 안내](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler), [Claude Code 문서 목록](https://code.claude.com/docs/llms.txt), [OpenAI 크롤러 안내](https://developers.openai.com/api/docs/bots). 확인일: 2026-10-01.
+- 검증: `python3 Scripts/test-ai-docs.py`. 공개 페이지·코드 보존, 생성 결과 최신성, 문서 링크, 검색 봇 접근 및 새 글 자동 포함을 확인합니다.

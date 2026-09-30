@@ -1,0 +1,61 @@
+# no-sleep-pika (pika)
+
+> Native macOS menu-bar utility for keeping MacBook work running with the lid closed, with Session / Monitor controls and local MCP tools. macOS 13+, Apple Silicon and Intel.
+
+Session ON prepares sleep prevention before lid closure. In closed-lid mode, display policy applies after the lid closes. A working administrator helper is required. Battery / thermal protection may end a session. pika does not guarantee network connectivity or resume failed AI jobs.
+
+The bundled pika-mcp is a local STDIO server, not a public HTTP service. It exposes pika_status, pika_set_session and pika_set_monitor. It controls pika, not AI conversations. The website is not an MCP endpoint. pika is independent of OpenAI and Anthropic.
+
+Markdown pages below are generated from the same HTML as the public website. Their Source field points to the human-readable canonical page. Publication makes content available for retrieval; it does not guarantee indexing, training, citation, or recommendation by any AI provider.
+
+## Core documentation
+
+- [no-sleep-pika — Keep your MacBook awake with the lid closed (en)](https://no-sleep-pika.online/index.md)
+- [no-sleep-pika — 맥북 덮개 닫고 작업하는 잠자기 방지 앱 (ko)](https://no-sleep-pika.online/ko/index.md)
+- [Install pika on Mac: PKG and helper setup — no-sleep-pika (en)](https://no-sleep-pika.online/install/index.md)
+- [Mac에 pika 설치하기: PKG와 보조 서비스 — no-sleep-pika (ko)](https://no-sleep-pika.online/install/ko/index.md)
+- [Keep a MacBook awake with the lid closed: pika guide — no-sleep-pika (en)](https://no-sleep-pika.online/guide/index.md)
+- [맥북 덮개를 닫고 작업하기: pika 사용 가이드 — no-sleep-pika (ko)](https://no-sleep-pika.online/guide/ko/index.md)
+
+## All localized pages and articles
+
+- [no-sleep-pika — Keep your MacBook awake with the lid closed (en)](https://no-sleep-pika.online/index.md)
+- [no-sleep-pika — 맥북 덮개 닫고 작업하는 잠자기 방지 앱 (ko)](https://no-sleep-pika.online/ko/index.md)
+- [no-sleep-pika — Mac 睡眠与显示控制 (zh-CN)](https://no-sleep-pika.online/zh-CN/index.md)
+- [no-sleep-pika — Mac 睡眠與螢幕控制 (zh-TW)](https://no-sleep-pika.online/zh-TW/index.md)
+- [no-sleep-pika — Mac のスリープと画面をコントロール (ja)](https://no-sleep-pika.online/ja/index.md)
+- [no-sleep-pika — Mac की नींद और स्क्रीन का नियंत्रण (hi)](https://no-sleep-pika.online/hi/index.md)
+- [no-sleep-pika — Kontrol tidur dan layar Mac (id)](https://no-sleep-pika.online/id/index.md)
+- [no-sleep-pika — Control del reposo y la pantalla del Mac (es)](https://no-sleep-pika.online/es/index.md)
+- [no-sleep-pika — Contrôle de la veille et de l’écran du Mac (fr)](https://no-sleep-pika.online/fr/index.md)
+- [no-sleep-pika — Ruhezustand und Display am Mac steuern (de)](https://no-sleep-pika.online/de/index.md)
+- [no-sleep-pika — Controle de repouso e tela do Mac (pt-BR)](https://no-sleep-pika.online/pt-BR/index.md)
+- [no-sleep-pika — Управление сном и экраном Mac (ru)](https://no-sleep-pika.online/ru/index.md)
+- [no-sleep-pika — التحكم في سكون Mac وشاشته (ar)](https://no-sleep-pika.online/ar/index.md)
+- [no-sleep-pika — Điều khiển chế độ ngủ và màn hình Mac (vi)](https://no-sleep-pika.online/vi/index.md)
+- [no-sleep-pika — ควบคุมการพักเครื่องและหน้าจอ Mac (th)](https://no-sleep-pika.online/th/index.md)
+- [Install pika on Mac: PKG and helper setup — no-sleep-pika (en)](https://no-sleep-pika.online/install/index.md)
+- [Mac에 pika 설치하기: PKG와 보조 서비스 — no-sleep-pika (ko)](https://no-sleep-pika.online/install/ko/index.md)
+- [Keep a MacBook awake with the lid closed: pika guide — no-sleep-pika (en)](https://no-sleep-pika.online/guide/index.md)
+- [맥북 덮개를 닫고 작업하기: pika 사용 가이드 — no-sleep-pika (ko)](https://no-sleep-pika.online/guide/ko/index.md)
+- [How to keep a MacBook running with the lid closed | no-sleep-pika (en)](https://no-sleep-pika.online/guide/macbook-lid-closed/index.md)
+- [맥북 덮어도 안꺼지게 하는법 | no-sleep-pika (ko)](https://no-sleep-pika.online/guide/ko/macbook-lid-closed/index.md)
+- [如何让 MacBook 合上盖子后继续运行 | no-sleep-pika (zh-CN)](https://no-sleep-pika.online/guide/zh-CN/macbook-lid-closed/index.md)
+- [如何讓 MacBook 闔上蓋子後繼續執行 | no-sleep-pika (zh-TW)](https://no-sleep-pika.online/guide/zh-TW/macbook-lid-closed/index.md)
+- [MacBookを閉じても作業を続ける方法 | no-sleep-pika (ja)](https://no-sleep-pika.online/guide/ja/macbook-lid-closed/index.md)
+- [ढक्कन बंद होने पर भी MacBook पर काम कैसे जारी रखें | no-sleep-pika (hi)](https://no-sleep-pika.online/guide/hi/macbook-lid-closed/index.md)
+- [Cara agar MacBook tetap bekerja saat layar ditutup | no-sleep-pika (id)](https://no-sleep-pika.online/guide/id/macbook-lid-closed/index.md)
+- [Cómo mantener el MacBook funcionando con la tapa cerrada | no-sleep-pika (es)](https://no-sleep-pika.online/guide/es/macbook-lid-closed/index.md)
+- [Comment garder un MacBook actif avec le capot fermé | no-sleep-pika (fr)](https://no-sleep-pika.online/guide/fr/macbook-lid-closed/index.md)
+- [MacBook zugeklappt weiterlaufen lassen: So geht’s | no-sleep-pika (de)](https://no-sleep-pika.online/guide/de/macbook-lid-closed/index.md)
+- [Como manter o MacBook funcionando com a tampa fechada | no-sleep-pika (pt-BR)](https://no-sleep-pika.online/guide/pt-BR/macbook-lid-closed/index.md)
+- [Как оставить MacBook работающим с закрытой крышкой | no-sleep-pika (ru)](https://no-sleep-pika.online/guide/ru/macbook-lid-closed/index.md)
+- [كيف تُبقي MacBook يعمل والغطاء مغلق | no-sleep-pika (ar)](https://no-sleep-pika.online/guide/ar/macbook-lid-closed/index.md)
+- [Cách giữ MacBook chạy khi gập màn hình | no-sleep-pika (vi)](https://no-sleep-pika.online/guide/vi/macbook-lid-closed/index.md)
+- [วิธีให้ MacBook ทำงานต่อแม้พับฝาเครื่อง | no-sleep-pika (th)](https://no-sleep-pika.online/guide/th/macbook-lid-closed/index.md)
+
+## Optional
+
+- [Complete text collection](https://no-sleep-pika.online/llms-full.txt): All published languages; use individual pages for smaller context.
+- [Source code and MCP reference](https://github.com/Ezcho/always-awake-mac#readme)
+- [Published releases](https://github.com/Ezcho/always-awake-mac/releases)

@@ -8,6 +8,7 @@ from support_page import build as build_support, UPDATED as SUPPORT_UPDATED
 from lid_article import build as build_article, UPDATED as ARTICLE_UPDATED, PATHS as ARTICLE_PATHS, COPY as ARTICLE_COPY
 from mcp_guide import render as render_mcp_guide
 from pika_motion import render as render_pika_motion
+from ai_docs import build as build_ai_docs
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'docs'
@@ -946,6 +947,11 @@ def main():
         entries += ''.join(f'<url><loc>{url}</loc><lastmod>{updated}</lastmod>{alternates}</url>' for url in urls)
     (OUT / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' + entries + '</urlset>\n', encoding='utf-8')
     (OUT / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n', encoding='utf-8')
+    # Explicit search / user-fetch access; training policy remains the existing wildcard policy.
+    with (OUT / 'robots.txt').open('a', encoding='utf-8') as robots:
+        for agent in ('OAI-SearchBot', 'ChatGPT-User', 'Claude-SearchBot', 'Claude-User'):
+            robots.write(f'\nUser-agent: {agent}\nAllow: /\n')
+    build_ai_docs(OUT, BASE)
     (OUT / '.nojekyll').touch()
     print(f'Built {len(LANGUAGES)} localized homepages, 4 guides, 15 articles, sitemap.xml and robots.txt.')
 

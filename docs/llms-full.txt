@@ -1,0 +1,2405 @@
+# no-sleep-pika (pika)
+
+> Native macOS menu-bar utility for keeping MacBook work running with the lid closed, with Session / Monitor controls and local MCP tools. macOS 13+, Apple Silicon and Intel.
+
+Session ON prepares sleep prevention before lid closure. In closed-lid mode, display policy applies after the lid closes. A working administrator helper is required. Battery / thermal protection may end a session. pika does not guarantee network connectivity or resume failed AI jobs.
+
+The bundled pika-mcp is a local STDIO server, not a public HTTP service. It exposes pika_status, pika_set_session and pika_set_monitor. It controls pika, not AI conversations. The website is not an MCP endpoint. pika is independent of OpenAI and Anthropic.
+
+Markdown pages below are generated from the same HTML as the public website. Their Source field points to the human-readable canonical page. Publication makes content available for retrieval; it does not guarantee indexing, training, citation, or recommendation by any AI provider.
+
+
+Source: https://no-sleep-pika.online/
+Language: en
+
+# Keep working with your Mac closed.
+
+[Download for Mac](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 Downloads
+
+Public release 1.0.13 · macOS 13+ · Apple Silicon & Intel
+
+## Connect MCP
+
+STDIO
+
+Install and open pika, then connect using the command below. [View source ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/ko/
+Language: ko
+
+# 맥을 덮어도 작업을 유지하세요
+
+[Mac용 다운로드](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 다운로드
+
+공개 버전 1.0.13 · macOS 13+ · Apple Silicon 및 Intel
+
+## MCP 연결
+
+STDIO
+
+pika를 설치하고 실행한 뒤 아래 명령어로 연결하세요. [소스코드 보기 ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## AI Agent에 pika 연결하기
+
+같은 Mac에서 한 번만 설정하면, Agent가 상태를 확인하고 Session / Monitor를 제어할 수 있어요.
+
+### 1pika 먼저 준비하기
+
+pika PKG로 앱과 보조 서비스를 함께 설치하세요. 응용 프로그램에서 pika를 열고 메뉴 막대에서 실행 중인 상태로 두세요. [설치 도움말 ↗](https://no-sleep-pika.online/install/ko/)
+
+### 2MCP 서버 등록하기
+
+Codex CLI가 설치되어 있다면 터미널에 아래 명령을 한 번 실행하세요. 연결할 때 MCP 클라이언트가 서버를 실행합니다.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+Codex CLI가 없나요? 설정 파일로 연결
+
+Codex의 ~/.codex/config.toml 파일에 아래 항목을 추가하세요. pika 항목이 이미 있으면 해당 항목만 수정하고, 다른 설정은 유지하세요.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+다른 로컬 MCP 클라이언트
+
+MCP 서버 추가에서 이름은 pika, 연결 방식은 STDIO로 선택하세요. Command에 아래 경로를 넣고, 인수와 환경변수는 비워 두세요. 서버 URL이나 API 키는 필요하지 않습니다.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+이 연결은 Mac 내부의 STDIO 방식입니다. 홈페이지 주소는 MCP 서버 주소가 아니며, URL만 받는 클라우드 연결에는 이 실행 파일을 등록할 수 없습니다.
+
+[Codex 공식 문서 ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3연결 확인하기
+
+저장 후 MCP 클라이언트를 재시작하고 새 대화에서 이렇게 요청하세요.
+
+`pika_status를 호출해서 현재 상태를 알려줘. Session과 Monitor는 변경하지 마.`
+
+pika_status 도구가 상태를 정상 반환하면 앱 연결이 확인된 것입니다. Session이 OFF여도 정상이며, 서비스 등록만으로 보조 서비스 연결까지 확인되는 것은 아닙니다.
+
+### 연결 후 사용할 도구
+
+`pika_set_session` — Session 켜기 / 끄기
+`pika_set_monitor` — Monitor 켜기 / 끄기 · Session ON 필요
+
+Session ON은 준비 상태입니다. 덮개를 닫아야 화면 설정이 적용되고, 덮개가 열려 있을 때 Monitor 변경은 선택만 저장합니다.
+
+Agent를 종료해도 pika 세션은 유지됩니다. 종료할 때는 앱에서 Session을 끄거나 Agent에게 꺼 달라고 요청하세요.
+
+연결이 안 될 때
+
+도구가 안 보이면 실행 경로를 확인하고 클라이언트를 재시작하세요. 앱 연결 오류라면 같은 Mac·사용자 계정에서 pika를 실행하세요. 보조 서비스 오류라면 pika를 종료하고 최신 통합 PKG를 다시 설치한 뒤 여세요. 터미널에서 codex 명령을 찾지 못하면 위의 설정 파일 방식을 사용하세요.
+
+
+---
+
+Source: https://no-sleep-pika.online/zh-CN/
+Language: zh-CN
+
+# 合上 Mac，工作继续。
+
+[下载 Mac 版](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 下载次数
+
+公开版本 1.0.13 · macOS 13+ · Apple Silicon 与 Intel
+
+## 连接 MCP
+
+STDIO
+
+安装并打开 pika，然后使用下方命令连接。 [查看源代码 ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/zh-TW/
+Language: zh-TW
+
+# 闔上 Mac，工作繼續。
+
+[下載 Mac 版](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 下載次數
+
+公開版本 1.0.13 · macOS 13+ · Apple Silicon 與 Intel
+
+## 連接 MCP
+
+STDIO
+
+安裝並開啟 pika，再使用下方指令連接。 [查看原始碼 ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/ja/
+Language: ja
+
+# Macを閉じても、作業を続けよう。
+
+[Mac 版をダウンロード](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 ダウンロード数
+
+公開版 1.0.13 · macOS 13+ · Apple Silicon / Intel
+
+## MCP 接続
+
+STDIO
+
+pika をインストールして開き、下のコマンドで接続。 [ソースを見る ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/hi/
+Language: hi
+
+# Mac बंद करने पर भी काम जारी रखें।
+
+[Mac के लिए डाउनलोड](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 डाउनलोड
+
+सार्वजनिक संस्करण 1.0.13 · macOS 13+ · Apple Silicon और Intel
+
+## MCP जोड़ें
+
+STDIO
+
+pika इंस्टॉल करके खोलें, फिर नीचे दिए कमांड से कनेक्ट करें। [सोर्स कोड देखें ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/id/
+Language: id
+
+# Tutup Mac, pekerjaan tetap berjalan.
+
+[Unduh untuk Mac](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 Unduhan
+
+Rilis publik 1.0.13 · macOS 13+ · Apple Silicon & Intel
+
+## Hubungkan MCP
+
+STDIO
+
+Instal dan buka pika, lalu hubungkan dengan perintah di bawah. [Lihat kode sumber ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/es/
+Language: es
+
+# Cierra tu Mac y mantén tus tareas en marcha.
+
+[Descargar para Mac](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 Descargas
+
+Versión pública 1.0.13 · macOS 13+ · Apple Silicon e Intel
+
+## Conectar MCP
+
+STDIO
+
+Instala y abre pika; conecta con el comando de abajo. [Ver código fuente ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/fr/
+Language: fr
+
+# Fermez votre Mac, vos tâches continuent.
+
+[Télécharger pour Mac](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 Téléchargements
+
+Version publique 1.0.13 · macOS 13+ · Apple Silicon et Intel
+
+## Connecter MCP
+
+STDIO
+
+Installez et ouvrez pika, puis connectez-le avec la commande ci-dessous. [Voir le code source ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/de/
+Language: de
+
+# Mac zuklappen. Aufgaben laufen weiter.
+
+[Für Mac laden](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 Downloads
+
+Öffentliche Version 1.0.13 · macOS 13+ · Apple Silicon & Intel
+
+## MCP verbinden
+
+STDIO
+
+Installiere und öffne pika und verbinde es mit dem Befehl unten. [Quellcode ansehen ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/pt-BR/
+Language: pt-BR
+
+# Feche o Mac e mantenha suas tarefas rodando.
+
+[Baixar para Mac](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 Downloads
+
+Versão pública 1.0.13 · macOS 13+ · Apple Silicon e Intel
+
+## Conectar MCP
+
+STDIO
+
+Instale e abra o pika, depois conecte com o comando abaixo. [Ver código-fonte ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/ru/
+Language: ru
+
+# Закройте Mac — работа продолжится.
+
+[Скачать для Mac](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 Загрузки
+
+Публичная версия 1.0.13 · macOS 13+ · Apple Silicon и Intel
+
+## Подключить MCP
+
+STDIO
+
+Установите и откройте pika, затем подключите командой ниже. [Исходный код ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/ar/
+Language: ar
+
+# أغلق غطاء Mac ودع مهامك تستمر.
+
+[تنزيل لنظام Mac](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 التنزيلات
+
+الإصدار العام 1.0.13 · macOS 13+ · Apple Silicon وIntel
+
+## ربط MCP
+
+STDIO
+
+ثبّت pika وافتحه، ثم اتصل باستخدام الأمر أدناه. [عرض الشيفرة المصدرية ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/vi/
+Language: vi
+
+# Gập Mac lại, công việc vẫn tiếp tục.
+
+[Tải cho Mac](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 Lượt tải
+
+Bản công khai 1.0.13 · macOS 13+ · Apple Silicon & Intel
+
+## Kết nối MCP
+
+STDIO
+
+Cài đặt và mở pika, rồi kết nối bằng lệnh bên dưới. [Xem mã nguồn ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/th/
+Language: th
+
+# พับฝา Mac แล้วให้งานทำต่อไป
+
+[ดาวน์โหลดสำหรับ Mac](https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.13/pika-1.0.13.pkg) 
+
+36 ดาวน์โหลด
+
+รุ่นสาธารณะ 1.0.13 · macOS 13+ · Apple Silicon และ Intel
+
+## เชื่อมต่อ MCP
+
+STDIO
+
+ติดตั้งและเปิด pika แล้วเชื่อมต่อด้วยคำสั่งด้านล่าง [ดูซอร์สโค้ด ↗](https://github.com/Ezcho/always-awake-mac#mcp)
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+## Connect your agent to pika
+
+Set up once on the same Mac. Your agent can then read status and control Session / Monitor.
+
+### 1Prepare pika
+
+Install the pika PKG, which includes the app and helper. Open pika from Applications and keep it running in the menu bar. [Installation help ↗](https://no-sleep-pika.online/install/)
+
+### 2Add the MCP server
+
+If Codex CLI is installed, paste this into Terminal once. The MCP client starts the server when it connects.
+
+`codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp`
+
+No Codex CLI? Use a configuration file
+
+For Codex, add this section to ~/.codex/config.toml. If pika already exists, update it instead of adding a duplicate. Keep your other settings.
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Other local MCP clients
+
+Add a server named pika using STDIO. Set Command to the path below. Leave arguments and environment variables empty. No server URL or API key is required.
+
+`/Applications/pika.app/Contents/MacOS/pika-mcp`
+
+This is a local STDIO connection. The website address is not an MCP endpoint, and a cloud-only URL connector cannot run this Mac executable.
+
+[Codex official documentation ↗](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) 
+
+### 3Check the connection
+
+Save, restart your MCP client, and open a new chat. Ask your agent:
+
+`Call pika_status and show the current state. Do not change Session or Monitor.`
+
+A successful pika_status tool result confirms the connection to the app. Session OFF is normal; helper registration alone does not confirm helper connectivity.
+
+### What you can ask next
+
+`pika_set_session` — Session ON / OFF
+`pika_set_monitor` — Monitor ON / OFF · requires Session ON
+
+Session ON prepares pika. Display policy applies only after the lid closes. With the lid open, Monitor changes only save your preference.
+
+Closing the agent does not end a pika session. Turn Session OFF in pika or ask your agent to do so.
+
+Connection not working?
+
+No tools: confirm the command path and restart the client. App connection error: open pika on the same Mac and user account. Helper error: quit pika, reinstall the latest full PKG, and reopen pika. If Terminal says codex was not found, use the configuration-file option above.
+
+
+---
+
+Source: https://no-sleep-pika.online/install/
+Language: en
+
+[← Back](https://no-sleep-pika.online/)
+
+# Install pika on Mac: PKG and helper setup
+
+A home in Applications. Controls in your menu bar.
+
+- 01
+
+**pika**Session OFFQuit · 종료
+
+## Quit the previous pika
+
+Turn Session OFF, then choose pika → Quit in the menu bar. Closing the window with × keeps the app running.
+
+- 02
+
+PKG→
+
+**pika**App + Helper
+
+## Run the PKG installer
+
+Open the downloaded pika PKG, continue through macOS Installer and approve installation as an administrator. The app and helper are installed together.
+
+- 03
+
+pika→
+
+● ● ●**pika**Session Monitor 
+
+## Open pika
+
+Open pika from Applications. The control window appears in front. Wait for helper connection, then turn Session ON and close the lid.
+
+If macOS blocks the PKG or pika because the developer is unidentified or it cannot verify the app: open System Settings → Privacy & Security → Open Anyway, only if you trust this download. This build is not Developer ID signed or notarized.
+
+If macOS says the app will damage your computer or is damaged, stop and check the download; this is a different warning.
+
+[Apple’s instructions for opening an app ↗](https://support.apple.com/en-us/102445) 
+
+## App opened, but Session will not start?
+
+Opening the app and installing its helper are separate steps. “Open Anyway” alone does not repair a helper connection.
+
+- Download the latest full pika PKG from the homepage.
+
+- Turn Session OFF and quit pika from the menu bar before running the installer.
+
+- Complete installation and reopen pika. If it fails again, use Installer → Window → Installer Log to check the reason.
+
+The helper enables privileged power controls. Review the installer before approving. If macOS blocks that installer, follow the same app-specific Open Anyway flow only if you trust it.
+
+When ready: Session ON → close your MacBook’s lid.
+
+
+---
+
+Source: https://no-sleep-pika.online/install/ko/
+Language: ko
+
+[← 홈으로](https://no-sleep-pika.online/ko/)
+
+# Mac에 pika 설치하기: PKG와 보조 서비스
+
+응용 프로그램에 설치하고, 메뉴 막대에서 사용하세요.
+
+- 01
+
+**pika**Session OFFQuit · 종료
+
+## 기존 pika 종료
+
+Session을 OFF로 바꾼 뒤 메뉴 막대의 pika → 종료를 선택하세요. 창의 ×를 누르면 앱은 계속 실행 중입니다.
+
+- 02
+
+PKG→
+
+**pika**App + Helper
+
+## PKG 설치
+
+다운로드한 pika PKG를 열고 macOS 설치 프로그램에서 계속 진행해 관리자 승인을 완료하세요. 앱과 보조 서비스가 함께 설치됩니다.
+
+- 03
+
+pika→
+
+● ● ●**pika**Session Monitor 
+
+## pika 실행
+
+응용 프로그램에서 pika를 여세요. 제어창이 전면에 나타납니다. 보조 서비스 연결을 확인하고 Session ON → 덮개 닫기 순서로 사용하세요.
+
+PKG나 pika 실행 시 개발자를 확인하거나 앱을 검증할 수 없다는 경고가 나오면, 출처를 신뢰할 때만 시스템 설정 → 개인정보 보호 및 보안 → 그래도 열기를 선택하세요. 현재 빌드는 Developer ID 서명·공증이 없습니다.
+
+“컴퓨터를 손상시킵니다” 또는 “앱이 손상되었습니다”라는 경고는 다릅니다. 이 경우 진행하지 말고 다운로드를 확인하세요.
+
+[Apple 공식 앱 실행 안내 ↗](https://support.apple.com/ko-kr/102445) 
+
+## 앱은 열렸는데 Session이 시작되지 않나요?
+
+앱 실행 허용과 보조 서비스 설치는 별개입니다. “그래도 열기”만으로 보조 서비스 연결 문제가 해결되는 것은 아닙니다.
+
+- 홈페이지에서 최신 pika 통합 PKG를 받으세요.
+
+- Session을 OFF로 바꾸고 메뉴 막대에서 pika를 종료한 뒤 PKG를 실행하세요.
+
+- 설치 완료 후 pika를 다시 여세요. 다시 실패하면 설치 프로그램 → 윈도우 → 설치 프로그램 로그에서 이유를 확인할 수 있습니다.
+
+보조 서비스는 관리자 권한이 필요한 전원 제어를 담당합니다. 설치 내용을 확인한 뒤 승인하세요. 설치 파일도 macOS에 차단되면 출처를 신뢰할 때만 같은 “그래도 열기” 절차를 사용하세요.
+
+준비되면: Session ON → 맥북 덮개 닫기.
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/
+Language: en
+
+[← Home](https://no-sleep-pika.online/)
+
+# Keep a MacBook awake with the lid closed: pika guide
+
+Use Session to keep work running, and Monitor to choose the display behavior after you close the lid.
+
+Updated October 1, 2026
+
+[How to keep a MacBook running with the lid closed →](https://no-sleep-pika.online/guide/macbook-lid-closed/)
+
+## Start a closed-lid session
+
+Install the full pika PKG and open /Applications/pika.app. Wait for the helper connection, turn Session ON, choose Monitor, then close your MacBook’s lid. Keep the Mac ventilated.
+
+Turning Session ON does not immediately blank or lock the screen. While the lid is open, changing Monitor saves your choice; pika applies its display policy after the lid closes. Reopening the lid cancels pending display-off work.
+
+When you finish, turn Session OFF. This restores the sleep setting managed by pika and shows Monitor as OFF. It does not immediately turn off the screen. Closing the control window keeps pika running in the menu bar.
+
+## Monitor OFF, screen locked: is the Mac asleep?
+
+A locked screen and system sleep are different states. Monitor OFF requests display sleep after the lid closes; macOS may then require your password according to your Lock Screen settings. You do not need to disable that password requirement for pika.
+
+While the Session and helper remain active, pika requests that the Mac stay awake. A lock screen alone does not prove that background work has stopped. An individual app may still pause when locked or need user input; check your actual agent or job log.
+
+pika can end a session when battery or thermal protection triggers, the helper connection is lost, or the app stops responding. Session ON is not a promise that a job will run indefinitely.
+
+## Can Wi-Fi or an AI agent disconnect?
+
+Yes. Preventing system sleep does not guarantee a network connection. Wi-Fi signal, router or ISP outages, VPN policies, and a remote API’s timeout or service limits can still interrupt a job. pika does not reconnect Wi-Fi or retry your agent’s failed requests.
+
+For a first run, try a short job with the lid closed, reopen the Mac, and check timestamps and errors in the job’s own log. If work stopped, check both pika’s session status and the network. A local process can continue while a remote API request fails.
+
+For Wi-Fi problems, Option-click the Wi-Fi menu and open Wireless Diagnostics. For long remote jobs, use the agent’s supported retry and checkpoint features when available.
+
+## Update without downloading another installer
+
+If an older version cannot check for updates or macOS blocks pika-updater, install pika 1.0.13 or later once using the full PKG. After that, choose Check for Updates in the menu bar or the update button in the control window. Automatic checks only notify through the menu; installation starts when you choose it.
+
+Keep the lid open and finish your work before updating. pika stops the Session, verifies the download, and opens the standard macOS Installer. Complete its authorization and installation steps, then reopen pika from Applications. The PKG updates the app and helper together. Session stays OFF. If installation is cancelled, reopen pika and try again. Restart MCP client connections after updating.
+
+## The menu bar icon is missing
+
+Open pika from Applications to bring its controls to the foreground. Closing that window leaves the app running. If many status items crowd the menu bar, reduce other menu bar items or switch to an app with fewer menus, then check again.
+
+Check Activity Monitor for pika / AlwaysAwake before opening more copies. To quit fully, use pika’s Quit action rather than the window’s × button.
+
+## Connect pika to a local MCP client
+
+Keep pika running on the same Mac and user account as your MCP client. The server uses local STDIO; the website address is not an MCP endpoint.
+
+With Codex CLI installed, run once in Terminal:
+
+```
+codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp
+```
+
+Or add this to ~/.codex/config.toml. Update an existing pika entry instead of duplicating it:
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+Restart the MCP client and open a new chat. Ask: “Call pika_status and show the state without changing Session or Monitor.” A successful tool response confirms the app connection. Inspect sessionOn, recoveryRequired and lastError before requesting changes.
+
+pika_set_session controls Session. pika_set_monitor controls Monitor and requires Session ON. For another local MCP client, use STDIO with the executable path below, no arguments, and no API key:
+
+```
+/Applications/pika.app/Contents/MacOS/pika-mcp
+```
+
+Closing the agent does not end the pika session. Turn Session OFF in the app or ask the agent to do it.
+
+## Installation or helper connection failed?
+
+The installation guide covers the unified PKG, macOS security warnings, and reinstalling after quitting pika. The download is not Developer ID signed or notarized; behavior depends on macOS security settings.
+
+[Install pika →](https://no-sleep-pika.online/install/)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/ko/
+Language: ko
+
+[← 홈](https://no-sleep-pika.online/ko/)
+
+# 맥북 덮개를 닫고 작업하기: pika 사용 가이드
+
+Session으로 작업을 유지하고, Monitor로 덮개를 닫은 뒤의 화면 동작을 선택하세요.
+
+2026년 10월 1일 업데이트
+
+[맥북 덮어도 안꺼지게 하는법 →](https://no-sleep-pika.online/guide/ko/macbook-lid-closed/)
+
+## 덮개를 닫고 세션 시작하기
+
+통합 pika PKG를 설치한 뒤 /Applications/pika.app을 여세요. 보조 서비스 연결을 확인하고 Session ON → Monitor 선택 → 맥북 덮개 닫기 순서로 사용하세요. 통풍을 확보해 주세요.
+
+Session ON만으로 화면을 즉시 끄거나 잠그지 않습니다. 덮개가 열려 있을 때 Monitor를 바꾸면 선택만 저장하고, 덮개를 닫은 뒤 화면 설정을 적용합니다. 다시 열면 예약된 화면 끄기를 취소합니다.
+
+작업이 끝나면 Session을 OFF로 바꾸세요. pika가 관리하던 잠자기 설정을 복구하고 Monitor 표시도 OFF로 바뀝니다. 화면을 즉시 끄지는 않습니다. 제어창만 닫으면 pika는 메뉴 막대에서 계속 실행됩니다.
+
+## Monitor OFF 상태에서 잠금 화면이 뜨면 절전인가요?
+
+화면 잠금과 시스템 잠자기는 서로 다른 상태입니다. Monitor OFF는 덮개를 닫은 뒤 화면 잠자기를 요청하며, macOS의 잠금 화면 설정에 따라 암호 입력이 필요할 수 있습니다. pika 때문에 암호 요구 설정을 해제할 필요는 없습니다.
+
+Session과 보조 서비스가 활성 상태인 동안 pika는 Mac이 깨어 있도록 요청합니다. 잠금 화면이 보인다는 이유만으로 백그라운드 작업이 멈췄다고 판단할 수는 없습니다. 다만 개별 앱이 잠금 중 작업을 멈추거나 입력을 기다릴 수 있으므로 실제 Agent나 작업 로그를 확인하세요.
+
+배터리·열 보호 기준에 도달하거나 보조 서비스 연결이 끊기거나 앱이 응답하지 않으면 세션이 종료될 수 있습니다. Session ON이 작업의 무제한 실행을 보장하지는 않습니다.
+
+## 네트워크나 AI Agent 연결이 끊길 수도 있나요?
+
+네. 시스템 잠자기를 막아도 네트워크 연결을 보장하지는 않습니다. Wi-Fi 신호, 공유기·통신사 장애, VPN 정책, 원격 API의 시간 초과나 사용량 제한으로 작업이 끊길 수 있습니다. pika는 Wi-Fi 재연결이나 Agent 요청 재시도를 수행하지 않습니다.
+
+처음에는 짧은 작업으로 덮개를 닫았다가 열어 보고, 해당 작업 로그의 시간과 오류를 확인하세요. 작업이 멈췄다면 pika 세션 상태와 네트워크를 함께 점검하세요. 로컬 프로세스는 실행 중이어도 외부 API 요청은 실패할 수 있습니다.
+
+Wi-Fi 문제는 Option 키를 누른 채 Wi-Fi 메뉴를 클릭해 무선 진단을 여세요. 장시간 원격 작업에는 Agent가 제공하는 재시도와 중간 저장 기능을 함께 사용하세요.
+
+## 앱 안에서 업데이트하기
+
+이전 버전에서 업데이트 조회가 실패하거나 macOS가 pika-updater를 차단하면, 통합 PKG로 1.0.13 이상을 한 번 설치하세요. 그 이후에는 메뉴 막대의 업데이트 확인… 또는 제어창의 업데이트…에서 진행할 수 있습니다. 자동 확인은 메뉴에 새 버전을 표시하며, 설치는 사용자가 시작합니다.
+
+덮개를 열고 작업을 마친 뒤 업데이트하세요. Session을 종료하고 파일을 검증한 다음 macOS 기본 설치 프로그램을 엽니다. 승인과 설치를 마친 뒤 응용 프로그램에서 pika를 다시 여세요. PKG는 앱과 보조 서비스를 함께 교체하며 Session은 OFF로 유지됩니다. 설치를 취소했다면 pika를 다시 열어 재시도할 수 있습니다. 업데이트 후 MCP 클라이언트 연결도 다시 시작하세요.
+
+## 메뉴 막대 아이콘이 보이지 않을 때
+
+응용 프로그램에서 pika를 열면 제어창이 전면에 나타납니다. 이 창을 닫아도 앱은 계속 실행됩니다. 아이콘이 많아 메뉴 막대가 붐비면 다른 메뉴 막대 항목을 줄이거나 메뉴가 적은 앱으로 전환한 뒤 다시 확인하세요.
+
+여러 번 실행하기 전에 활성 상태 보기에서 pika / AlwaysAwake가 실행 중인지 확인하세요. 완전히 종료하려면 창의 × 대신 pika의 종료 기능을 사용하세요.
+
+## 로컬 MCP 클라이언트에 pika 연결하기
+
+MCP 클라이언트와 같은 Mac·사용자 계정에서 pika를 실행해 두세요. Mac 내부의 STDIO 방식이며 홈페이지 주소는 MCP 서버 주소가 아닙니다.
+
+Codex CLI가 설치되어 있다면 터미널에서 한 번 실행하세요:
+
+```
+codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp
+```
+
+또는 ~/.codex/config.toml에 아래 설정을 넣으세요. pika 항목이 이미 있으면 중복 추가하지 말고 수정하세요:
+
+```
+[mcp_servers.pika]
+command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
+```
+
+MCP 클라이언트를 재시작하고 새 대화에서 “pika_status를 호출해 상태를 알려줘. Session이나 Monitor는 변경하지 마”라고 요청하세요. 도구가 정상 응답하면 앱 연결이 확인됩니다. 제어를 요청하기 전에 sessionOn, recoveryRequired, lastError를 확인하세요.
+
+pika_set_session은 Session을 제어합니다. pika_set_monitor는 Monitor를 제어하며 Session ON이 필요합니다. 다른 로컬 MCP 클라이언트에서는 STDIO를 선택하고 아래 실행 경로를 넣으세요. 인수와 API 키는 필요 없습니다:
+
+```
+/Applications/pika.app/Contents/MacOS/pika-mcp
+```
+
+Agent를 종료해도 pika 세션은 유지됩니다. 앱에서 Session을 끄거나 Agent에게 종료를 요청하세요.
+
+## 설치 또는 보조 서비스 연결이 실패했나요?
+
+설치 안내에서 통합 PKG 사용, macOS 보안 경고, pika 종료 후 재설치 방법을 확인하세요. 현재 다운로드는 Developer ID 서명·공증이 없으며 macOS 보안 설정에 따라 동작이 달라질 수 있습니다.
+
+[pika 설치 안내 →](https://no-sleep-pika.online/install/ko/)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/macbook-lid-closed/
+Language: en
+
+[← User guide](https://no-sleep-pika.online/guide/)
+
+MACBOOK GUIDE
+
+# How to keep a MacBook running with the lid closed
+
+Close the screen and keep your work going. Choose the approach that fits an external-display desk or a background task without a monitor.
+
+no-sleep-pika · October 1, 2026
+
+For background work**Open pika → Session ON → Monitor OFF → close the lid**
+
+Changing Session or Monitor with the lid open does not immediately blank your screen.
+
+## Closing the lid: sleep or shutdown?
+
+Closing a MacBook’s lid normally puts it to sleep rather than shutting it down. Finding your apps still open afterward does not mean a build, download or AI agent kept working throughout. [Apple’s sleep guide](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac) lists closing a laptop display as a way to put the Mac to sleep.
+
+The key distinction is between turning off a display and putting the system to sleep. A background task may need the Mac awake without needing a lit screen.
+
+## Are you using an external monitor?
+
+### Keep working on another screen
+
+Check the Mac’s supported closed-display, or clamshell, setup with an external monitor, keyboard and mouse first. You may not need a separate sleep-prevention app for that workflow.
+
+### Keep only a background task running
+
+For a download, code build or AI agent without an external screen, follow the pika steps below. Start with a short test on your own Mac.
+
+Before closing the lid, check that the external display and input devices work. On an Apple Silicon Mac, approve an accessory connection if requested. [Apple’s accessory guide](https://support.apple.com/en-us/102282) explains this for closed-lid use. Check your Mac model’s instructions for its power and supported display configuration.
+
+## Use pika without an external monitor
+
+- **Install and open pika.** Use the unified PKG from the homepage, then open pika in Applications. The helper must be connected. See [installation help](https://no-sleep-pika.online/install/) if setup is blocked.
+
+- **Start your task and turn Session ON.** This does not immediately blank or lock the screen while the lid is open.
+
+- **Leave Monitor OFF if you do not need a display.** Monitor is available while Session is ON. Its display policy applies after you close the lid.
+
+- **Close the MacBook’s lid.** With Session ON, pika applies its closed-lid behavior. Use a ventilated desk.
+
+- **Turn Session OFF when finished.** pika restores the sleep setting it managed. Monitor also shows OFF, without immediately turning the screen off.
+
+The window’s × button only closes the controls. Leave pika running in the menu bar. If other status items hide its icon, open pika from Applications to bring the controls back.
+
+## Check that your work actually continues
+
+First try a task whose progress you can inspect, such as a build or AI agent job with timestamped logs.
+
+- Note the progress or last log timestamp before closing the lid.
+
+- Close the lid with Session ON and wait briefly.
+
+- Reopen it and check for progress recorded during the closed-lid interval.
+
+A lock screen alone does not mean the test failed. **Screen lock and system sleep are different.** Use your task’s progress as evidence. If an app is waiting for input or sign-in, pika cannot complete that interaction for you.
+
+## Battery, heat and network conditions still matter
+
+pika monitors battery level and macOS thermal state and may end a session when protection thresholds are reached. It uses more conservative limits with the lid closed and no external display. This does not make running a Mac inside a closed bag safe.
+
+Preventing sleep does not guarantee Wi-Fi, VPN or remote API availability. A connection failure or service limit may stop an AI task. Use your tool’s supported retry and checkpoint features for long jobs.
+
+The current download is not Developer ID signed or notarized, so macOS may block installation. Read the [security warning and installation guide](https://no-sleep-pika.online/install/) if needed. Verify behavior on your actual macOS version and hardware.
+
+## Common questions
+
+### Can I leave Session ON and Monitor OFF?
+
+Yes. That is the setup for work without a lit display. Session manages keeping work running; Monitor controls display behavior after the lid closes.
+
+### Will reopening the lid turn the screen off?
+
+pika cancels its pending display-off work when the lid reopens. macOS’s own lock and display settings still apply.
+
+### Can an AI agent control the session?
+
+A local MCP client on the same Mac can query status and control Session and Monitor. See the [MCP setup steps and commands](https://no-sleep-pika.online/guide/#mcp).
+
+For connection issues and missing menu bar icons, continue to the [full pika user guide](https://no-sleep-pika.online/guide/).
+
+## Close your Mac. Keep work running.
+
+pika is a macOS menu bar app with two switches: Session and Monitor. For macOS 13 or later on Apple Silicon and Intel.
+
+[Download pika →](https://no-sleep-pika.online/)[Installation help](https://no-sleep-pika.online/install/)[Connect an AI agent with MCP](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/ko/macbook-lid-closed/
+Language: ko
+
+[← 사용 가이드](https://no-sleep-pika.online/guide/ko/)
+
+MACBOOK GUIDE
+
+# 맥북 덮어도 안꺼지게 하는법
+
+화면은 닫고, 하던 작업은 계속. 외장 모니터를 쓰는 경우와 백그라운드 작업만 필요한 경우를 나눠 알아봅니다.
+
+no-sleep-pika · 2026년 10월 1일
+
+작업만 유지하려면**pika 실행 → Session ON → Monitor OFF → 덮개 닫기**
+
+덮개가 열려 있을 때 Session이나 Monitor를 바꿔도 화면을 즉시 끄지 않습니다.
+
+## 덮으면 꺼지는 걸까요, 잠드는 걸까요?
+
+일반적으로 맥북 덮개를 닫으면 전원이 완전히 꺼지는 대신 잠자기 상태로 들어갑니다. 다시 열었을 때 앱이 그대로 보여도 그동안 빌드나 다운로드, AI 에이전트 작업이 계속 진행됐다는 뜻은 아닙니다. [Apple의 잠자기 안내](https://support.apple.com/ko-kr/guide/mac-help/mh10330/mac)도 덮개 닫기를 잠자기 방법으로 설명합니다.
+
+따라서 “맥북 덮어도 안 꺼지게” 하려면, 화면이 꺼지는 것과 시스템이 잠드는 것을 구분해야 합니다. 화면을 켜 둘 필요 없이 작업만 유지할 수도 있습니다.
+
+## 외장 모니터를 쓰나요?
+
+### 외장 모니터로 계속 작업
+
+외장 화면·키보드·마우스를 연결해 덮고 쓰는 클램쉘 구성을 먼저 확인하세요. 이 용도라면 별도 절전 방지 앱이 필요하지 않을 수 있습니다.
+
+### 화면 없이 작업만 계속
+
+다운로드, 코드 빌드, AI 에이전트를 돌려 두려면 아래 pika 사용 순서를 따라가세요. 먼저 짧은 작업으로 자신의 Mac에서 동작을 확인하면 됩니다.
+
+클램쉘 사용 전에는 덮개를 연 상태에서 외장 화면과 입력 장치가 정상 작동하는지 확인하세요. Apple Silicon Mac에서 액세서리 연결 승인을 요청하면 먼저 승인해야 합니다. [Apple의 덮개를 닫은 상태에서 액세서리 사용 안내](https://support.apple.com/ko-kr/102282)에서 자세히 볼 수 있습니다. 전원과 지원 디스플레이 구성은 해당 Mac 모델의 안내를 함께 확인하세요.
+
+## 외장 모니터 없이 pika로 작업 유지하기
+
+- **pika를 설치하고 실행합니다.** 홈페이지의 통합 PKG로 설치한 뒤 응용 프로그램 폴더의 pika를 여세요. 보조 서비스가 연결되어 있어야 합니다. 설치가 막히면 [설치 도움말](https://no-sleep-pika.online/install/ko/)을 확인하세요.
+
+- **하던 작업을 시작하고 Session을 ON으로 바꿉니다.** 덮개가 열린 상태에서는 화면을 즉시 끄거나 잠그지 않습니다.
+
+- **화면이 필요 없다면 Monitor를 OFF로 둡니다.** Monitor는 Session이 켜져 있을 때 선택할 수 있고, 화면 동작은 덮개를 닫은 뒤 적용됩니다.
+
+- **맥북 덮개를 닫습니다.** Session ON 상태에서 덮개를 닫으면 닫힌 덮개에 맞는 동작을 적용합니다. 통풍되는 책상 위에서 사용하세요.
+
+- **작업이 끝나면 Session을 OFF로 바꿉니다.** pika가 관리하던 잠자기 설정을 복구합니다. Monitor 표시도 OFF가 되지만 화면을 즉시 끄지는 않습니다.
+
+제어창의 × 버튼은 창만 닫습니다. pika를 계속 사용하려면 메뉴 막대에서 실행 중인 상태로 두세요. 아이콘이 다른 항목에 가렸다면 응용 프로그램에서 pika를 다시 열어 제어창을 볼 수 있습니다.
+
+## 진짜 계속 실행되는지 확인하는 방법
+
+처음에는 완료까지 시간이 걸리며 진행 상황을 확인할 수 있는 작업으로 시험하세요. 예를 들어 작업 로그에 시간이 기록되는 빌드나 AI 에이전트 작업이 좋습니다.
+
+- 덮기 직전의 진행률이나 마지막 로그 시간을 확인합니다.
+
+- Session ON 상태에서 덮개를 닫고 잠시 기다립니다.
+
+- 다시 열어 덮여 있던 시간에도 작업 로그나 진행률이 변했는지 확인합니다.
+
+잠금 화면이 나타났다는 이유만으로 실패한 것은 아닙니다. **화면 잠금과 시스템 잠자기는 다릅니다.** 판단 기준은 실제 작업의 진행 기록입니다. 다만 개별 앱이 입력이나 로그인을 기다리고 있으면 pika가 대신 진행해 주지는 않습니다.
+
+## 배터리·발열·네트워크도 확인하세요
+
+pika는 배터리와 macOS의 열 상태를 확인해 보호 기준에 도달하면 세션을 중단할 수 있습니다. 외장 화면 없이 덮개를 닫은 상태에서는 더 보수적인 기준을 사용합니다. 이 기능이 밀폐된 가방 안에서의 사용을 안전하게 만들어 주는 것은 아닙니다.
+
+잠자기를 막는 기능은 Wi-Fi나 VPN, 원격 API 연결을 보장하지 않습니다. 연결이 끊기거나 서비스 사용량 제한에 걸리면 AI 작업은 멈출 수 있습니다. 긴 작업에는 해당 도구의 재시도와 중간 저장 기능도 활용하세요.
+
+현재 배포 파일은 Developer ID 서명·공증이 없어 macOS가 설치를 차단할 수 있습니다. 이 경우 [보안 경고와 설치 안내](https://no-sleep-pika.online/install/ko/)를 확인하세요. macOS 버전이나 장비별 동작은 실제 사용 환경에서 확인해야 합니다.
+
+## 자주 묻는 질문
+
+### Session만 켜고 Monitor는 꺼도 되나요?
+
+네. 화면 없이 작업을 유지하려는 경우의 설정입니다. Session은 작업 유지, Monitor는 덮개를 닫은 뒤의 화면 동작을 담당합니다.
+
+### 덮개를 열면 화면이 바로 꺼지나요?
+
+pika는 덮개를 다시 열면 예약된 화면 끄기를 취소합니다. macOS 자체의 잠금·화면 설정은 별도로 적용됩니다.
+
+### AI 에이전트가 Session을 제어할 수 있나요?
+
+같은 Mac에서 로컬 MCP 클라이언트를 연결하면 상태 확인과 Session·Monitor 제어가 가능합니다. [MCP 연결 절차와 명령어](https://no-sleep-pika.online/guide/ko/#mcp)를 참고하세요.
+
+연결 끊김이나 메뉴 막대 문제는 [pika 전체 사용 가이드](https://no-sleep-pika.online/guide/ko/)에서 이어서 확인할 수 있습니다.
+
+## 맥을 덮어도 작업을 유지하세요
+
+pika는 Session과 Monitor 두 스위치로 제어하는 macOS 메뉴 막대 앱입니다. macOS 13 이상, Apple Silicon·Intel용입니다.
+
+[pika 다운로드 →](https://no-sleep-pika.online/ko/)[설치 방법](https://no-sleep-pika.online/install/ko/)[AI 에이전트 MCP 연결](https://no-sleep-pika.online/guide/ko/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/zh-CN/macbook-lid-closed/
+Language: zh-CN
+
+[← 使用指南](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# 如何让 MacBook 合上盖子后继续运行
+
+合上屏幕，继续工作。先区分外接显示器办公与只保留后台任务这两种需求。
+
+no-sleep-pika · 2026-10-01
+
+只保留后台任务**打开 pika → Session ON → Monitor OFF → 合上盖子**
+
+盖子打开时，切换 Session 或 Monitor 不会立即关闭或锁定屏幕。
+
+## 合盖是关机还是睡眠？
+
+MacBook 合盖通常会进入睡眠，而不是完全关机。重新打开后应用还在，不代表下载、构建或 AI 任务在此期间持续运行。屏幕关闭、屏幕锁定和系统睡眠是不同状态。
+
+[Apple 官方说明](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## 是否使用外接显示器？
+
+如果要在外接屏幕上继续工作，请先检查 Mac 支持的合盖模式，连接显示器、键盘和鼠标。这种用途可能不需要额外的防睡眠应用。Apple Silicon Mac 如提示批准配件连接，请在合盖前完成；电源及显示器配置要求请查阅对应机型说明。
+
+[Apple 官方说明](https://support.apple.com/en-us/102282)
+
+## 使用 pika 保持后台任务运行
+
+- 从首页下载完整 PKG，安装后在“应用程序”中打开 pika，确认辅助服务已连接。
+
+- 启动需要运行的任务，然后将 Session 切换为 ON。
+
+- 不需要显示器时，将 Monitor 保持为 OFF。只有 Session 开启时才能选择 Monitor。
+
+- 合上盖子后，pika 才应用合盖后的屏幕设置。请放在通风良好的桌面上使用。
+
+- 任务结束后将 Session 切换为 OFF，恢复 pika 管理的睡眠设置。Monitor 也显示 OFF，但不会立即关闭屏幕。
+
+## 如何确认任务没有暂停
+
+先做一次短测试：记录任务进度或日志时间，开启 Session 后合盖，稍后打开并查看合盖期间是否有进展。出现锁屏不等于任务停止。若应用正在等待输入或登录，pika 无法代替操作。关闭控制窗口只会隐藏窗口；菜单栏图标被遮挡时，可从“应用程序”重新打开控制窗口。
+
+## 电池、温度与网络限制
+
+电量不足或 macOS 热状态达到保护阈值时，pika 可能结束会话。合盖且未连接外接显示器时使用更保守的阈值，但这不代表可以安全地放在密闭包内运行。防睡眠不能保证 Wi-Fi、VPN 或远程 API 连接；长任务应使用工具自身的重试和检查点功能。当前下载没有 Developer ID 签名或公证，macOS 可能阻止安装。请在自己的系统和设备上验证。
+
+[更多安装、连接和排障步骤 · English →](https://no-sleep-pika.online/guide/)
+
+## 如何让 MacBook 合上盖子后继续运行
+
+pika 是一款 macOS 菜单栏应用，通过 Session 和 Monitor 两个开关控制。支持 macOS 13 及以上版本、Apple Silicon 和 Intel。
+
+[下载 pika →](https://no-sleep-pika.online/zh-CN/)[安装帮助（英语）](https://no-sleep-pika.online/install/)[MCP 连接指南（英语）](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/zh-TW/macbook-lid-closed/
+Language: zh-TW
+
+[← 使用指南](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# 如何讓 MacBook 闔上蓋子後繼續執行
+
+闔上螢幕，工作繼續。先區分外接顯示器操作與只保留背景工作這兩種需求。
+
+no-sleep-pika · 2026-10-01
+
+只保留背景工作**開啟 pika → Session ON → Monitor OFF → 闔上蓋子**
+
+蓋子開啟時，切換 Session 或 Monitor 不會立即關閉或鎖定螢幕。
+
+## 闔蓋是關機還是睡眠？
+
+MacBook 闔蓋通常會進入睡眠，而不是完全關機。重新打開後 App 還在，不代表下載、建置或 AI 工作在此期間持續進行。螢幕關閉、螢幕鎖定與系統睡眠是不同狀態。
+
+[Apple 官方說明](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## 有使用外接顯示器嗎？
+
+若要在外接螢幕繼續操作，請先確認 Mac 支援的闔蓋模式，連接顯示器、鍵盤和滑鼠。這種用途可能不需要額外的防睡眠 App。Apple Silicon Mac 若要求允許配件連接，請在闔蓋前完成；電源與顯示器配置要求請查看對應機型說明。
+
+[Apple 官方說明](https://support.apple.com/en-us/102282)
+
+## 以 pika 維持背景工作
+
+- 從首頁下載完整 PKG，安裝後從「應用程式」開啟 pika，確認輔助服務已連線。
+
+- 啟動要執行的工作，將 Session 切換為 ON。
+
+- 不需要顯示器時，讓 Monitor 保持 OFF。只有 Session 開啟時才能選擇 Monitor。
+
+- 闔上蓋子後，pika 才套用闔蓋後的螢幕設定。請在通風良好的桌面使用。
+
+- 工作結束後關閉 Session，還原 pika 管理的睡眠設定。Monitor 也會顯示 OFF，但不會立即關閉螢幕。
+
+## 如何確認工作沒有暫停
+
+先做短時間測試：記下進度或紀錄時間，開啟 Session 後闔蓋，稍後打開並查看闔蓋期間是否有進展。出現鎖定畫面不等於工作停止。若 App 等待輸入或登入，pika 無法代替操作。關閉控制視窗只會隱藏視窗；選單列圖示被擋住時，可從「應用程式」重新開啟控制視窗。
+
+## 電池、溫度與網路限制
+
+電量不足或 macOS 熱狀態達到保護門檻時，pika 可能結束階段。闔蓋且未連接外接顯示器時採用較保守的門檻，但這不代表能安全地在密閉包包中執行。防睡眠無法保證 Wi-Fi、VPN 或遠端 API 連線；長時間工作請搭配工具的重試與檢查點功能。目前下載沒有 Developer ID 簽章或公證，macOS 可能阻擋安裝。請在自己的系統與設備上確認。
+
+[更多安裝、連線與疑難排解步驟 · English →](https://no-sleep-pika.online/guide/)
+
+## 如何讓 MacBook 闔上蓋子後繼續執行
+
+pika 是 macOS 選單列 App，以 Session 和 Monitor 兩個開關控制。支援 macOS 13 以上、Apple Silicon 與 Intel。
+
+[下載 pika →](https://no-sleep-pika.online/zh-TW/)[安裝說明（英文）](https://no-sleep-pika.online/install/)[MCP 連線指南（英文）](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/ja/macbook-lid-closed/
+Language: ja
+
+[← 使い方](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# MacBookを閉じても作業を続ける方法
+
+画面を閉じても、作業は続けたい。外部ディスプレイで操作する場合と、バックグラウンド処理だけを続ける場合を分けて説明します。
+
+no-sleep-pika · 2026-10-01
+
+バックグラウンド処理だけを続ける**pikaを開く → Session ON → Monitor OFF → 蓋を閉じる**
+
+蓋が開いている間は、SessionやMonitorを切り替えても画面をすぐに消したりロックしたりしません。
+
+## 蓋を閉じると電源が切れる？
+
+通常、MacBookの蓋を閉じるとシャットダウンではなくスリープに入ります。開き直してアプリが残っていても、ダウンロードやビルド、AI処理がその間ずっと動いていたとは限りません。画面の消灯、画面ロック、システムのスリープは別の状態です。
+
+[Appleの公式案内](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## 外部ディスプレイを使う場合
+
+外部画面で作業するなら、まずMacが対応するクラムシェル構成を確認し、ディスプレイ・キーボード・マウスを接続してください。この用途には追加のスリープ防止アプリが不要な場合があります。Apple Silicon Macでアクセサリ接続の許可を求められたら、蓋を閉じる前に許可します。電源や画面構成の条件は機種ごとの案内を確認してください。
+
+[Appleの公式案内](https://support.apple.com/en-us/102282)
+
+## pikaでバックグラウンド処理を続ける
+
+- ホームページから統合PKGをインストールし、「アプリケーション」のpikaを開いて補助サービスの接続を確認します。
+
+- 続けたい作業を開始し、SessionをONにします。
+
+- 画面が不要ならMonitorをOFFにします。MonitorはSessionがONの間だけ選択できます。
+
+- 蓋を閉じると、その状態に合わせた画面設定が適用されます。通気のよい机の上で使用してください。
+
+- 終わったらSessionをOFFにし、pikaが管理したスリープ設定を戻します。Monitorの表示もOFFになりますが、画面は直ちに消えません。
+
+## 処理が続いているか確認する
+
+まず短い作業で試しましょう。進捗やログの時刻を記録してから蓋を閉じ、開き直してその間に処理が進んだか確認します。ロック画面だけでは処理停止と判断できません。アプリが入力やログインを待っている場合はpikaが代行することはできません。×は操作ウィンドウを閉じるだけです。メニューバーのアイコンが隠れた場合は「アプリケーション」からpikaを開き直せます。
+
+## バッテリー・発熱・ネットワーク
+
+バッテリー残量やmacOSの熱状態が保護基準に達すると、pikaはセッションを終了することがあります。蓋を閉じて外部画面がない場合は基準が厳しくなりますが、密閉したバッグ内で安全に動かせるという意味ではありません。Wi-Fi、VPN、外部APIの接続は保証されないため、長い作業にはツール側の再試行や途中保存も利用してください。現在の配布ファイルはDeveloper ID署名・公証がなく、macOSがインストールをブロックする場合があります。実際の環境で確認してください。
+
+[インストール・接続・トラブル対処の詳細 · English →](https://no-sleep-pika.online/guide/)
+
+## MacBookを閉じても作業を続ける方法
+
+pikaはSessionとMonitorの2つのスイッチで操作するmacOSメニューバーアプリです。macOS 13以降、Apple Silicon・Intelに対応しています。
+
+[pikaをダウンロード →](https://no-sleep-pika.online/ja/)[インストール案内（英語）](https://no-sleep-pika.online/install/)[MCP接続手順（英語）](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/hi/macbook-lid-closed/
+Language: hi
+
+[← उपयोग गाइड](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# ढक्कन बंद होने पर भी MacBook पर काम कैसे जारी रखें
+
+स्क्रीन बंद करें, काम जारी रखें। पहले तय करें कि आपको बाहरी डिस्प्ले पर काम करना है या केवल बैकग्राउंड कार्य चलाना है।
+
+no-sleep-pika · 2026-10-01
+
+केवल बैकग्राउंड कार्य के लिए**pika खोलें → Session ON → Monitor OFF → ढक्कन बंद करें**
+
+ढक्कन खुला होने पर Session या Monitor बदलने से स्क्रीन तुरंत बंद या लॉक नहीं होती।
+
+## ढक्कन बंद करने पर स्लीप या शटडाउन?
+
+MacBook का ढक्कन बंद करने पर आम तौर पर सिस्टम पूरी तरह बंद होने के बजाय स्लीप में जाता है। दोबारा खोलने पर ऐप मौजूद हों, तो भी इसका मतलब नहीं कि डाउनलोड, बिल्ड या AI कार्य लगातार चलते रहे। स्क्रीन बंद होना, स्क्रीन लॉक और सिस्टम स्लीप अलग स्थितियाँ हैं।
+
+[Apple के आधिकारिक निर्देश](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## क्या आप बाहरी डिस्प्ले इस्तेमाल करते हैं?
+
+बाहरी स्क्रीन पर काम करने के लिए पहले अपने Mac का समर्थित क्लैमशेल सेटअप देखें और डिस्प्ले, कीबोर्ड व माउस जोड़ें। इसके लिए अलग स्लीप रोकने वाले ऐप की आवश्यकता नहीं भी हो सकती है। Apple Silicon Mac पर एक्सेसरी की अनुमति माँगी जाए तो ढक्कन बंद करने से पहले दें। पावर और डिस्प्ले की शर्तें अपने मॉडल के निर्देशों में देखें।
+
+[Apple के आधिकारिक निर्देश](https://support.apple.com/en-us/102282)
+
+## pika के साथ बैकग्राउंड काम जारी रखें
+
+- होमपेज से पूरा PKG इंस्टॉल करें, Applications में pika खोलें और सहायक सेवा का कनेक्शन जाँचें।
+
+- अपना कार्य शुरू करें और Session को ON करें।
+
+- स्क्रीन की ज़रूरत न हो तो Monitor को OFF रखें। Monitor केवल Session ON होने पर चुना जा सकता है।
+
+- ढक्कन बंद करें। बंद ढक्कन के लिए डिस्प्ले सेटिंग तब लागू होगी। हवादार मेज़ पर इस्तेमाल करें।
+
+- काम खत्म होने पर Session OFF करें। pika द्वारा नियंत्रित स्लीप सेटिंग वापस होगी और Monitor भी OFF दिखेगा, पर स्क्रीन तुरंत बंद नहीं होगी।
+
+## पुष्टि करें कि काम जारी है
+
+पहले छोटा परीक्षण करें। प्रगति या लॉग का समय नोट करें, Session ON करके ढक्कन बंद करें और थोड़ी देर बाद खोलकर देखें कि उस अंतराल में काम बढ़ा या नहीं। लॉक स्क्रीन दिखना विफलता का प्रमाण नहीं है। ऐप को इनपुट या लॉगिन चाहिए तो pika उसे पूरा नहीं कर सकता। × केवल नियंत्रण विंडो बंद करता है। मेनू बार आइकन छिप जाए तो Applications से pika फिर खोलें।
+
+## बैटरी, तापमान और नेटवर्क की सीमाएँ
+
+बैटरी या macOS की तापीय स्थिति सुरक्षा सीमा तक पहुँचने पर pika सत्र समाप्त कर सकता है। बिना बाहरी डिस्प्ले के बंद ढक्कन पर सीमाएँ अधिक सख्त हैं, लेकिन इससे बंद बैग में इस्तेमाल सुरक्षित नहीं हो जाता। स्लीप रोकना Wi-Fi, VPN या API कनेक्शन की गारंटी नहीं है। लंबे काम के लिए अपने टूल के रीट्राई और चेकपॉइंट विकल्प इस्तेमाल करें। मौजूदा डाउनलोड पर Developer ID हस्ताक्षर या नोटराइज़ेशन नहीं है, इसलिए macOS इंस्टॉलेशन रोक सकता है। अपने उपकरण और सिस्टम पर जाँचें।
+
+[इंस्टॉलेशन, कनेक्शन और समस्या समाधान के विस्तृत चरण · English →](https://no-sleep-pika.online/guide/)
+
+## ढक्कन बंद होने पर भी MacBook पर काम कैसे जारी रखें
+
+pika, macOS मेनू बार का ऐप है जिसमें Session और Monitor के दो स्विच हैं। macOS 13 या बाद के संस्करण, Apple Silicon और Intel के लिए।
+
+[pika डाउनलोड करें →](https://no-sleep-pika.online/hi/)[इंस्टॉलेशन सहायता (अंग्रेज़ी)](https://no-sleep-pika.online/install/)[MCP कनेक्शन गाइड (अंग्रेज़ी)](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/id/macbook-lid-closed/
+Language: id
+
+[← Panduan](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# Cara agar MacBook tetap bekerja saat layar ditutup
+
+Tutup layar, lanjutkan pekerjaan. Pilih cara untuk bekerja dengan monitor eksternal atau hanya menjalankan tugas di latar belakang.
+
+no-sleep-pika · 2026-10-01
+
+Untuk tugas latar belakang**Buka pika → Session ON → Monitor OFF → tutup layar**
+
+Mengubah Session atau Monitor saat layar terbuka tidak langsung mematikan atau mengunci layar.
+
+## Tidur atau mati saat ditutup?
+
+Menutup MacBook biasanya membuatnya tidur, bukan mematikannya sepenuhnya. Aplikasi yang masih terbuka setelahnya tidak membuktikan unduhan, build, atau tugas AI terus berjalan. Layar mati, layar terkunci, dan sistem tidur adalah keadaan yang berbeda.
+
+[Petunjuk resmi Apple](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## Memakai monitor eksternal?
+
+Untuk bekerja di layar eksternal, periksa konfigurasi clamshell yang didukung Mac, lalu hubungkan monitor, keyboard, dan mouse. Cara ini mungkin tidak memerlukan aplikasi pencegah tidur tambahan. Jika Mac Apple Silicon meminta izin aksesori, berikan sebelum menutup layar. Periksa persyaratan daya dan monitor untuk model Anda.
+
+[Petunjuk resmi Apple](https://support.apple.com/en-us/102282)
+
+## Menjalankan tugas dengan pika
+
+- Pasang PKG lengkap dari beranda, buka pika di Applications, lalu pastikan layanan pembantu terhubung.
+
+- Mulai tugas dan ubah Session menjadi ON.
+
+- Biarkan Monitor OFF jika tidak memerlukan layar. Monitor hanya dapat dipilih saat Session ON.
+
+- Tutup layar untuk menerapkan pengaturan layar dalam keadaan tertutup. Gunakan di meja dengan ventilasi baik.
+
+- Setelah selesai, ubah Session menjadi OFF untuk memulihkan pengaturan tidur yang dikelola pika. Monitor juga tampil OFF tanpa langsung mematikan layar.
+
+## Pastikan pekerjaan tetap berjalan
+
+Lakukan uji singkat: catat kemajuan atau waktu log, tutup layar dengan Session ON, lalu buka lagi dan periksa kemajuan selama interval tersebut. Layar terkunci bukan bukti tugas berhenti. pika tidak dapat menggantikan masukan atau login yang ditunggu aplikasi. Tombol × hanya menutup jendela kontrol. Jika ikon bar menu tersembunyi, buka pika dari Applications.
+
+## Batas baterai, suhu, dan jaringan
+
+pika dapat mengakhiri sesi ketika baterai atau kondisi termal macOS mencapai batas perlindungan. Batas lebih ketat saat layar ditutup tanpa monitor eksternal, tetapi ini tidak membuat penggunaan dalam tas tertutup aman. Pencegahan tidur tidak menjamin Wi-Fi, VPN, atau API tetap terhubung; gunakan fitur percobaan ulang dan checkpoint untuk tugas panjang. Unduhan saat ini belum ditandatangani Developer ID atau dinotarisasi, sehingga macOS dapat memblokir instalasi. Uji pada perangkat dan sistem Anda.
+
+[Panduan lengkap instalasi, koneksi, dan pemecahan masalah · English →](https://no-sleep-pika.online/guide/)
+
+## Cara agar MacBook tetap bekerja saat layar ditutup
+
+pika adalah aplikasi bar menu macOS dengan dua sakelar: Session dan Monitor. Untuk macOS 13 ke atas, Apple Silicon dan Intel.
+
+[Unduh pika →](https://no-sleep-pika.online/id/)[Bantuan instalasi (Inggris)](https://no-sleep-pika.online/install/)[Panduan MCP (Inggris)](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/es/macbook-lid-closed/
+Language: es
+
+[← Guía de uso](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# Cómo mantener el MacBook funcionando con la tapa cerrada
+
+Cierra la pantalla y continúa el trabajo. Distingue entre trabajar con un monitor externo y mantener solo tareas en segundo plano.
+
+no-sleep-pika · 2026-10-01
+
+Para tareas en segundo plano**Abrir pika → Session ON → Monitor OFF → cerrar la tapa**
+
+Cambiar Session o Monitor con la tapa abierta no apaga ni bloquea la pantalla de inmediato.
+
+## ¿Reposo o apagado al cerrar la tapa?
+
+Cerrar el MacBook normalmente lo pone en reposo, no lo apaga por completo. Encontrar las apps abiertas después no demuestra que las descargas, compilaciones o tareas de IA continuaran. Apagar la pantalla, bloquearla y poner el sistema en reposo son estados distintos.
+
+[Documentación oficial de Apple](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## ¿Usas una pantalla externa?
+
+Para trabajar con una pantalla externa, revisa la configuración con tapa cerrada que admite tu Mac y conecta monitor, teclado y ratón. Puede que no necesites una app adicional. Si un Mac con Apple Silicon pide autorizar accesorios, hazlo antes de cerrar la tapa. Consulta los requisitos de alimentación y pantallas de tu modelo.
+
+[Documentación oficial de Apple](https://support.apple.com/en-us/102282)
+
+## Mantener tareas con pika
+
+- Instala el PKG completo de la página principal, abre pika en Aplicaciones y comprueba la conexión del servicio auxiliar.
+
+- Inicia tu trabajo y activa Session ON.
+
+- Deja Monitor OFF si no necesitas pantalla. Solo puedes elegir Monitor con Session activado.
+
+- Cierra la tapa para aplicar el comportamiento de pantalla correspondiente. Usa una mesa bien ventilada.
+
+- Al terminar, desactiva Session para restaurar el ajuste de reposo gestionado por pika. Monitor también mostrará OFF, sin apagar la pantalla de inmediato.
+
+## Comprobar que el trabajo continúa
+
+Haz una prueba breve: anota el progreso o la hora del registro, cierra la tapa con Session ON y vuelve a abrirla para comprobar avances durante ese intervalo. Una pantalla bloqueada no demuestra un fallo. pika no puede responder a entradas o inicios de sesión pendientes. El botón × solo cierra los controles; si el icono está oculto, abre pika desde Aplicaciones.
+
+## Batería, temperatura y conexión
+
+pika puede finalizar la sesión si la batería o el estado térmico de macOS alcanzan los límites de protección. Son más conservadores con la tapa cerrada y sin monitor externo, pero no hacen seguro usar el Mac dentro de una bolsa cerrada. Evitar el reposo no garantiza Wi-Fi, VPN ni API; usa reintentos y puntos de guardado para trabajos largos. La descarga actual no tiene firma Developer ID ni notarización, por lo que macOS puede bloquear la instalación. Comprueba tu equipo y sistema.
+
+[Más ayuda de instalación, conexión y diagnóstico · English →](https://no-sleep-pika.online/guide/)
+
+## Cómo mantener el MacBook funcionando con la tapa cerrada
+
+pika es una app de la barra de menús con dos controles: Session y Monitor. Para macOS 13 o posterior, Apple Silicon e Intel.
+
+[Descargar pika →](https://no-sleep-pika.online/es/)[Instalación (inglés)](https://no-sleep-pika.online/install/)[Conectar MCP (inglés)](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/fr/macbook-lid-closed/
+Language: fr
+
+[← Guide](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# Comment garder un MacBook actif avec le capot fermé
+
+Fermez l’écran et laissez le travail continuer. Choisissez entre un écran externe et des tâches exécutées uniquement en arrière-plan.
+
+no-sleep-pika · 2026-10-01
+
+Pour les tâches en arrière-plan**Ouvrir pika → Session ON → Monitor OFF → fermer le capot**
+
+Changer Session ou Monitor avec le capot ouvert n’éteint ni ne verrouille immédiatement l’écran.
+
+## Veille ou arrêt à la fermeture ?
+
+Fermer un MacBook le met normalement en veille, sans l’éteindre complètement. Retrouver les apps ouvertes ne prouve pas que les téléchargements, compilations ou tâches IA ont continué. Écran éteint, écran verrouillé et veille du système sont des états différents.
+
+[Documentation officielle Apple](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## Utilisez-vous un écran externe ?
+
+Pour travailler sur un écran externe, vérifiez la configuration capot fermé prise en charge par votre Mac, puis branchez écran, clavier et souris. Une app supplémentaire n’est pas forcément nécessaire. Si un Mac Apple Silicon demande l’autorisation d’un accessoire, accordez-la avant de fermer le capot. Consultez les conditions d’alimentation et d’affichage propres au modèle.
+
+[Documentation officielle Apple](https://support.apple.com/en-us/102282)
+
+## Poursuivre une tâche avec pika
+
+- Installez le PKG complet depuis l’accueil, ouvrez pika dans Applications et vérifiez la connexion du service auxiliaire.
+
+- Lancez votre tâche et activez Session ON.
+
+- Laissez Monitor OFF si vous n’avez pas besoin d’écran. Ce choix est disponible uniquement avec Session ON.
+
+- Fermez le capot pour appliquer le comportement d’affichage correspondant. Utilisez une table bien ventilée.
+
+- À la fin, désactivez Session pour restaurer le réglage de veille géré par pika. Monitor affiche aussi OFF sans éteindre immédiatement l’écran.
+
+## Vérifier que le travail continue
+
+Faites un essai court : notez la progression ou l’heure du journal, fermez le capot avec Session ON, puis rouvrez et cherchez une progression pendant cet intervalle. L’écran verrouillé n’est pas une preuve d’arrêt. pika ne peut pas répondre aux demandes de saisie ou de connexion d’une app. Le bouton × ferme seulement les commandes. Si l’icône est masquée, rouvrez pika depuis Applications.
+
+## Batterie, chaleur et réseau
+
+pika peut arrêter la session lorsque la batterie ou l’état thermique macOS atteint les seuils de protection. Ils sont plus prudents sans écran externe et capot fermé, mais ne rendent pas sûr l’usage dans un sac fermé. Empêcher la veille ne garantit ni Wi-Fi, ni VPN, ni API ; utilisez les reprises et sauvegardes intermédiaires de votre outil. Le téléchargement actuel n’a ni signature Developer ID ni notarisation : macOS peut bloquer l’installation. Vérifiez sur votre matériel et votre système.
+
+[Aide détaillée pour l’installation, la connexion et le dépannage · English →](https://no-sleep-pika.online/guide/)
+
+## Comment garder un MacBook actif avec le capot fermé
+
+pika est une app de la barre des menus avec deux commandes : Session et Monitor. Pour macOS 13 ou ultérieur, Apple Silicon et Intel.
+
+[Télécharger pika →](https://no-sleep-pika.online/fr/)[Installation (anglais)](https://no-sleep-pika.online/install/)[Connexion MCP (anglais)](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/de/macbook-lid-closed/
+Language: de
+
+[← Anleitung](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# MacBook zugeklappt weiterlaufen lassen: So geht’s
+
+Bildschirm schließen, Arbeit fortsetzen. Wähle zwischen einem externen Monitor und reinen Hintergrundaufgaben.
+
+no-sleep-pika · 2026-10-01
+
+Für Hintergrundaufgaben**pika öffnen → Session ON → Monitor OFF → Deckel schließen**
+
+Bei offenem Deckel schaltet ein Wechsel von Session oder Monitor den Bildschirm nicht sofort aus und sperrt ihn nicht.
+
+## Ruhezustand oder ausgeschaltet?
+
+Das Schließen des MacBooks aktiviert normalerweise den Ruhezustand statt den Mac vollständig auszuschalten. Weiterhin geöffnete Apps beweisen nicht, dass Downloads, Builds oder KI-Aufgaben durchgehend liefen. Bildschirm aus, Bildschirmsperre und Systemruhezustand sind verschiedene Zustände.
+
+[Offizielle Apple-Anleitung](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## Nutzt du einen externen Monitor?
+
+Für die Arbeit am externen Bildschirm prüfe zuerst die unterstützte Konfiguration bei geschlossenem Deckel und verbinde Monitor, Tastatur und Maus. Dafür ist möglicherweise keine zusätzliche App nötig. Erlaube angefragte Zubehörverbindungen auf Apple-Silicon-Macs vor dem Schließen. Beachte die Stromversorgungs- und Displayanforderungen deines Modells.
+
+[Offizielle Apple-Anleitung](https://support.apple.com/en-us/102282)
+
+## Mit pika Aufgaben weiterlaufen lassen
+
+- Installiere das vollständige PKG von der Startseite, öffne pika unter Programme und prüfe die Verbindung zum Hilfsdienst.
+
+- Starte deine Aufgabe und schalte Session auf ON.
+
+- Lass Monitor auf OFF, wenn du keinen Bildschirm brauchst. Monitor ist nur bei eingeschalteter Session wählbar.
+
+- Schließe den Deckel. Jetzt wird das passende Bildschirmverhalten angewendet. Verwende einen gut belüfteten Arbeitsplatz.
+
+- Schalte Session danach auf OFF, um die von pika verwaltete Ruhezustandseinstellung wiederherzustellen. Monitor zeigt ebenfalls OFF, ohne den Bildschirm sofort auszuschalten.
+
+## Den tatsächlichen Fortschritt prüfen
+
+Teste zunächst kurz: Notiere Fortschritt oder Protokollzeit, schließe den Deckel mit Session ON und prüfe nach dem Öffnen die Fortschritte währenddessen. Ein Sperrbildschirm beweist keinen Stillstand. Wartet eine App auf Eingabe oder Anmeldung, kann pika dies nicht übernehmen. × schließt nur das Steuerfenster. Ist das Menüleistensymbol verdeckt, öffne pika unter Programme erneut.
+
+## Akku, Wärme und Netzwerk
+
+pika kann die Session beenden, wenn Akku oder macOS-Wärmezustand Schutzgrenzen erreichen. Ohne externen Monitor gelten bei geschlossenem Deckel strengere Grenzen; der Betrieb in einer geschlossenen Tasche wird dadurch nicht sicher. Wachhalten garantiert weder WLAN noch VPN oder API-Verfügbarkeit. Nutze Wiederholungsversuche und Zwischenstände für lange Aufgaben. Der aktuelle Download ist nicht mit Developer ID signiert oder notarisiert; macOS kann die Installation blockieren. Prüfe deine konkrete Umgebung.
+
+[Weitere Hilfe zu Installation, Verbindung und Problemen · English →](https://no-sleep-pika.online/guide/)
+
+## MacBook zugeklappt weiterlaufen lassen: So geht’s
+
+pika ist eine macOS-Menüleisten-App mit zwei Schaltern: Session und Monitor. Für macOS 13 oder neuer, Apple Silicon und Intel.
+
+[pika herunterladen →](https://no-sleep-pika.online/de/)[Installation (Englisch)](https://no-sleep-pika.online/install/)[MCP verbinden (Englisch)](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/pt-BR/macbook-lid-closed/
+Language: pt-BR
+
+[← Guia de uso](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# Como manter o MacBook funcionando com a tampa fechada
+
+Feche a tela e continue o trabalho. Escolha entre usar um monitor externo ou manter apenas tarefas em segundo plano.
+
+no-sleep-pika · 2026-10-01
+
+Para tarefas em segundo plano**Abrir pika → Session ON → Monitor OFF → fechar a tampa**
+
+Alterar Session ou Monitor com a tampa aberta não apaga nem bloqueia a tela imediatamente.
+
+## Repouso ou desligamento?
+
+Fechar o MacBook normalmente ativa o repouso, em vez de desligá-lo por completo. Encontrar os apps abertos depois não prova que downloads, compilações ou tarefas de IA continuaram. Tela apagada, tela bloqueada e repouso do sistema são estados diferentes.
+
+[Instruções oficiais da Apple](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## Você usa um monitor externo?
+
+Para trabalhar em uma tela externa, confira a configuração de tampa fechada compatível com seu Mac e conecte monitor, teclado e mouse. Talvez não seja necessário um app adicional. Se um Mac com Apple Silicon pedir autorização para um acessório, autorize antes de fechar. Veja os requisitos de energia e telas do seu modelo.
+
+[Instruções oficiais da Apple](https://support.apple.com/en-us/102282)
+
+## Manter tarefas com o pika
+
+- Instale o PKG completo da página inicial, abra pika em Aplicativos e confirme a conexão do serviço auxiliar.
+
+- Inicie sua tarefa e ative Session ON.
+
+- Mantenha Monitor OFF se não precisar de tela. Monitor só pode ser escolhido com Session ativado.
+
+- Feche a tampa para aplicar o comportamento de tela correspondente. Use uma mesa bem ventilada.
+
+- Ao terminar, desative Session para restaurar a configuração de repouso gerenciada pelo pika. Monitor também mostrará OFF sem apagar a tela imediatamente.
+
+## Verificar se o trabalho continua
+
+Faça um teste curto: anote o progresso ou horário do log, feche a tampa com Session ON e depois verifique se houve avanço nesse intervalo. Uma tela bloqueada não prova que a tarefa parou. pika não pode responder a entradas ou logins pendentes. O botão × fecha apenas os controles. Se o ícone estiver escondido, abra pika em Aplicativos.
+
+## Bateria, temperatura e rede
+
+pika pode encerrar a sessão quando a bateria ou o estado térmico do macOS atingir os limites de proteção. Eles são mais conservadores com a tampa fechada e sem monitor externo, mas não tornam seguro usar o Mac dentro de uma bolsa fechada. Evitar o repouso não garante Wi-Fi, VPN ou API; use novas tentativas e salvamento de progresso em trabalhos longos. O download atual não tem assinatura Developer ID nem notarização, então o macOS pode bloquear a instalação. Confira no seu equipamento e sistema.
+
+[Mais ajuda para instalação, conexão e diagnóstico · English →](https://no-sleep-pika.online/guide/)
+
+## Como manter o MacBook funcionando com a tampa fechada
+
+pika é um app da barra de menus com dois controles: Session e Monitor. Para macOS 13 ou posterior, Apple Silicon e Intel.
+
+[Baixar pika →](https://no-sleep-pika.online/pt-BR/)[Instalação (inglês)](https://no-sleep-pika.online/install/)[Conectar MCP (inglês)](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/ru/macbook-lid-closed/
+Language: ru
+
+[← Руководство](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# Как оставить MacBook работающим с закрытой крышкой
+
+Закройте экран и продолжайте работу. Выберите внешний монитор или выполнение задач только в фоне.
+
+no-sleep-pika · 2026-10-01
+
+Для фоновых задач**Открыть pika → Session ON → Monitor OFF → закрыть крышку**
+
+При открытой крышке переключение Session или Monitor не выключает и не блокирует экран немедленно.
+
+## Сон или выключение?
+
+Закрытие крышки обычно переводит MacBook в сон, а не полностью выключает его. Открытые после этого приложения не доказывают, что загрузки, сборка или задачи ИИ выполнялись всё время. Выключение экрана, блокировка и сон системы — разные состояния.
+
+[Официальная документация Apple](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## Используете внешний монитор?
+
+Для работы на внешнем экране проверьте поддерживаемую вашим Mac конфигурацию с закрытой крышкой и подключите монитор, клавиатуру и мышь. Дополнительное приложение может не понадобиться. Если Mac с Apple Silicon запрашивает разрешение для аксессуара, дайте его до закрытия крышки. Требования к питанию и экранам уточните для своей модели.
+
+[Официальная документация Apple](https://support.apple.com/en-us/102282)
+
+## Продолжение задач с pika
+
+- Установите полный PKG с главной страницы, откройте pika в «Программах» и проверьте подключение вспомогательной службы.
+
+- Запустите задачу и включите Session ON.
+
+- Если экран не нужен, оставьте Monitor OFF. Monitor доступен только при включённой Session.
+
+- Закройте крышку: настройки экрана для этого состояния применятся теперь. Работайте на хорошо проветриваемом столе.
+
+- После завершения выключите Session, чтобы восстановить настройку сна, управляемую pika. Monitor тоже покажет OFF, но экран не выключится немедленно.
+
+## Как проверить выполнение
+
+Сначала проведите короткий тест: запишите прогресс или время журнала, закройте крышку с Session ON, затем откройте и проверьте выполнение за этот период. Экран блокировки не доказывает остановку. pika не может выполнить ожидаемый приложением ввод или вход в учётную запись. Кнопка × закрывает только окно управления. Если значок скрыт, откройте pika из «Программ».
+
+## Батарея, нагрев и сеть
+
+pika может завершить сеанс при достижении защитных порогов батареи или теплового состояния macOS. При закрытой крышке без внешнего экрана пороги строже, но это не делает работу в закрытой сумке безопасной. Защита от сна не гарантирует Wi-Fi, VPN или API: используйте повторы и сохранение промежуточных результатов. Текущая загрузка не имеет подписи Developer ID и нотариального заверения Apple; macOS может заблокировать установку. Проверьте свою систему и оборудование.
+
+[Подробнее об установке, подключении и устранении неполадок · English →](https://no-sleep-pika.online/guide/)
+
+## Как оставить MacBook работающим с закрытой крышкой
+
+pika — приложение строки меню macOS с двумя переключателями: Session и Monitor. Для macOS 13 и новее, Apple Silicon и Intel.
+
+[Скачать pika →](https://no-sleep-pika.online/ru/)[Установка (английский)](https://no-sleep-pika.online/install/)[Подключение MCP (английский)](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/ar/macbook-lid-closed/
+Language: ar
+
+[← دليل الاستخدام](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# كيف تُبقي MacBook يعمل والغطاء مغلق
+
+أغلق الشاشة ودع العمل يستمر. اختر بين العمل على شاشة خارجية أو تشغيل المهام في الخلفية فقط.
+
+no-sleep-pika · 2026-10-01
+
+لمهام الخلفية فقط**افتح pika، ثم Session ON، ثم Monitor OFF، ثم أغلق الغطاء**
+
+تغيير Session أو Monitor والغطاء مفتوح لا يطفئ الشاشة أو يقفلها فورًا.
+
+## هل يغلق الجهاز أم يدخل في السكون؟
+
+إغلاق غطاء MacBook يضعه عادة في السكون بدل إيقاف تشغيله بالكامل. بقاء التطبيقات مفتوحة بعد ذلك لا يثبت استمرار التنزيل أو البناء أو مهام الذكاء الاصطناعي طوال الوقت. إطفاء الشاشة وقفلها وسكون النظام حالات مختلفة.
+
+[إرشادات Apple الرسمية](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## هل تستخدم شاشة خارجية؟
+
+للعمل على شاشة خارجية، راجع إعداد الغطاء المغلق الذي يدعمه طراز Mac لديك، ثم صِل الشاشة ولوحة المفاتيح والفأرة. قد لا تحتاج تطبيقًا إضافيًا لمنع السكون. إذا طلب Mac المزود بـApple Silicon السماح باتصال ملحق، فوافق قبل إغلاق الغطاء. راجع متطلبات الطاقة والشاشات الخاصة بطرازك.
+
+[إرشادات Apple الرسمية](https://support.apple.com/en-us/102282)
+
+## متابعة المهام باستخدام pika
+
+- ثبّت حزمة PKG الكاملة من الصفحة الرئيسية، وافتح pika من التطبيقات، وتحقق من اتصال الخدمة المساعدة.
+
+- ابدأ مهمتك ثم فعّل Session ON.
+
+- اترك Monitor OFF إذا لم تحتج إلى شاشة. يتاح اختيار Monitor فقط عندما تكون Session مفعّلة.
+
+- أغلق الغطاء لتطبيق سلوك الشاشة المناسب. استخدم الجهاز على مكتب جيد التهوية.
+
+- عند الانتهاء، أوقف Session لاستعادة إعداد السكون الذي يديره pika. سيظهر Monitor أيضًا بحالة OFF دون إطفاء الشاشة فورًا.
+
+## التحقق من استمرار العمل
+
+ابدأ باختبار قصير: سجّل التقدم أو وقت آخر سجل، ثم أغلق الغطاء مع Session ON. افتحه لاحقًا وتحقق من وجود تقدم خلال تلك الفترة. شاشة القفل وحدها لا تثبت توقف المهمة. لا يستطيع pika إكمال إدخال أو تسجيل دخول ينتظره تطبيق. زر × يغلق نافذة التحكم فقط. إذا اختفت الأيقونة بين عناصر شريط القوائم، افتح pika من التطبيقات.
+
+## البطارية والحرارة والشبكة
+
+قد ينهي pika الجلسة عند وصول البطارية أو الحالة الحرارية في macOS إلى حدود الحماية. الحدود أكثر تحفظًا مع غطاء مغلق ودون شاشة خارجية، لكنها لا تجعل التشغيل داخل حقيبة مغلقة آمنًا. منع السكون لا يضمن اتصال Wi-Fi أو VPN أو API؛ استخدم إعادة المحاولة وحفظ التقدم للمهام الطويلة. التنزيل الحالي غير موقّع بـDeveloper ID وغير موثّق لدى Apple، وقد يمنع macOS تثبيته. تحقق على جهازك ونظامك.
+
+[مزيد من تفاصيل التثبيت والاتصال وحل المشكلات · English →](https://no-sleep-pika.online/guide/)
+
+## كيف تُبقي MacBook يعمل والغطاء مغلق
+
+pika تطبيق لشريط قوائم macOS بمفتاحين: Session وMonitor. يدعم macOS 13 والإصدارات الأحدث، وApple Silicon وIntel.
+
+[تنزيل pika →](https://no-sleep-pika.online/ar/)[مساعدة التثبيت (بالإنجليزية)](https://no-sleep-pika.online/install/)[دليل MCP (بالإنجليزية)](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/vi/macbook-lid-closed/
+Language: vi
+
+[← Hướng dẫn](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# Cách giữ MacBook chạy khi gập màn hình
+
+Gập màn hình, tiếp tục công việc. Phân biệt nhu cầu dùng màn hình ngoài với việc chỉ chạy tác vụ nền.
+
+no-sleep-pika · 2026-10-01
+
+Chỉ chạy tác vụ nền**Mở pika → Session ON → Monitor OFF → gập màn hình**
+
+Đổi Session hoặc Monitor khi nắp mở không tắt hay khóa màn hình ngay lập tức.
+
+## Gập máy là ngủ hay tắt nguồn?
+
+Gập MacBook thường đưa máy vào chế độ ngủ, không phải tắt nguồn hoàn toàn. Các ứng dụng vẫn mở sau đó không chứng minh rằng tải xuống, biên dịch hoặc tác vụ AI đã chạy liên tục. Tắt màn hình, khóa màn hình và ngủ hệ thống là những trạng thái khác nhau.
+
+[Hướng dẫn chính thức của Apple](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## Bạn có dùng màn hình ngoài?
+
+Để làm việc trên màn hình ngoài, hãy kiểm tra cấu hình gập máy mà Mac hỗ trợ rồi kết nối màn hình, bàn phím và chuột. Bạn có thể không cần ứng dụng chống ngủ riêng. Nếu Mac dùng Apple Silicon yêu cầu cho phép phụ kiện, hãy chấp thuận trước khi gập máy. Xem yêu cầu nguồn điện và màn hình của đúng mẫu Mac.
+
+[Hướng dẫn chính thức của Apple](https://support.apple.com/en-us/102282)
+
+## Duy trì tác vụ bằng pika
+
+- Cài PKG đầy đủ từ trang chủ, mở pika trong Applications và xác nhận dịch vụ hỗ trợ đã kết nối.
+
+- Bắt đầu tác vụ rồi bật Session ON.
+
+- Giữ Monitor OFF nếu không cần màn hình. Chỉ chọn được Monitor khi Session đang bật.
+
+- Gập màn hình để áp dụng cách hiển thị tương ứng. Sử dụng trên bàn thoáng khí.
+
+- Khi xong, tắt Session để khôi phục thiết lập ngủ do pika quản lý. Monitor cũng hiển thị OFF nhưng không tắt màn hình ngay.
+
+## Kiểm tra công việc có tiếp tục không
+
+Thử ngắn trước: ghi lại tiến độ hoặc thời gian nhật ký, gập máy khi Session ON rồi mở lại để xem có tiến triển trong khoảng đó không. Màn hình khóa không chứng minh tác vụ đã dừng. pika không thể nhập dữ liệu hoặc đăng nhập thay ứng dụng. Nút × chỉ đóng cửa sổ điều khiển. Nếu biểu tượng thanh menu bị che, mở pika từ Applications.
+
+## Pin, nhiệt độ và kết nối mạng
+
+pika có thể kết thúc phiên khi pin hoặc trạng thái nhiệt macOS chạm ngưỡng bảo vệ. Ngưỡng chặt hơn khi gập máy không có màn hình ngoài, nhưng không làm việc chạy trong túi kín trở nên an toàn. Chống ngủ không bảo đảm Wi-Fi, VPN hay API luôn kết nối; dùng thử lại và lưu tiến độ cho tác vụ dài. Bản tải hiện tại chưa có chữ ký Developer ID hoặc công chứng Apple nên macOS có thể chặn cài đặt. Hãy kiểm tra trên thiết bị và hệ thống của bạn.
+
+[Chi tiết cài đặt, kết nối và xử lý sự cố · English →](https://no-sleep-pika.online/guide/)
+
+## Cách giữ MacBook chạy khi gập màn hình
+
+pika là ứng dụng thanh menu macOS với hai công tắc: Session và Monitor. Dành cho macOS 13 trở lên, Apple Silicon và Intel.
+
+[Tải pika →](https://no-sleep-pika.online/vi/)[Cài đặt (tiếng Anh)](https://no-sleep-pika.online/install/)[Kết nối MCP (tiếng Anh)](https://no-sleep-pika.online/guide/#mcp)
+
+
+---
+
+Source: https://no-sleep-pika.online/guide/th/macbook-lid-closed/
+Language: th
+
+[← คู่มือ](https://no-sleep-pika.online/guide/)
+
+no-sleep-pika
+
+# วิธีให้ MacBook ทำงานต่อแม้พับฝาเครื่อง
+
+พับหน้าจอแล้วให้งานทำต่อ เลือกวิธีให้เหมาะกับการใช้จอภายนอกหรือการรันงานเบื้องหลังเท่านั้น
+
+no-sleep-pika · 2026-10-01
+
+สำหรับงานเบื้องหลัง**เปิด pika → Session ON → Monitor OFF → พับฝาเครื่อง**
+
+การเปลี่ยน Session หรือ Monitor ขณะเปิดฝาอยู่จะไม่ดับหรือล็อกหน้าจอทันที
+
+## พับฝาแล้วพักเครื่องหรือปิดเครื่อง?
+
+ปกติการพับ MacBook จะทำให้เข้าสู่โหมดพักเครื่อง ไม่ใช่ปิดเครื่องทั้งหมด การเปิดมาแล้วยังเห็นแอปอยู่ไม่ได้แปลว่าการดาวน์โหลด บิลด์ หรือ AI ทำงานต่อเนื่องตลอดเวลา หน้าจอดับ หน้าจอล็อก และระบบพักเครื่องเป็นคนละสถานะ
+
+[คำแนะนำอย่างเป็นทางการจาก Apple](https://support.apple.com/en-gb/guide/mac-help/mh10330/mac)
+
+## ใช้จอภายนอกอยู่หรือไม่?
+
+ถ้าจะทำงานบนจอภายนอก ให้ตรวจสอบการใช้งานแบบพับฝาที่ Mac รุ่นนั้นรองรับ แล้วต่อจอ คีย์บอร์ด และเมาส์ อาจไม่จำเป็นต้องใช้แอปป้องกันการพักเครื่องเพิ่ม หาก Mac ที่ใช้ Apple Silicon ขออนุญาตเชื่อมต่ออุปกรณ์เสริม ให้ยอมรับก่อนพับฝา ตรวจสอบเงื่อนไขด้านไฟเลี้ยงและจอของรุ่นที่ใช้ด้วย
+
+[คำแนะนำอย่างเป็นทางการจาก Apple](https://support.apple.com/en-us/102282)
+
+## ให้งานทำต่อด้วย pika
+
+- ติดตั้ง PKG แบบครบชุดจากหน้าแรก เปิด pika ใน Applications และตรวจสอบว่าบริการเสริมเชื่อมต่อแล้ว
+
+- เริ่มงานที่ต้องการ แล้วเปิด Session ON
+
+- ตั้ง Monitor OFF หากไม่ต้องการหน้าจอ โดยเลือก Monitor ได้เมื่อ Session เปิดอยู่เท่านั้น
+
+- พับฝาเครื่องเพื่อใช้การตั้งค่าหน้าจอสำหรับสถานะนั้น วางบนโต๊ะที่ระบายอากาศได้ดี
+
+- เมื่อเสร็จแล้วปิด Session เพื่อคืนการตั้งค่าพักเครื่องที่ pika จัดการ Monitor จะแสดง OFF ด้วย แต่ไม่ดับหน้าจอทันที
+
+## ตรวจสอบว่างานยังเดินต่อ
+
+ทดลองสั้น ๆ ก่อน โดยจดความคืบหน้าหรือเวลาในบันทึก พับฝาขณะ Session ON แล้วเปิดดูว่ามีความคืบหน้าในช่วงนั้นหรือไม่ การเห็นหน้าจอล็อกไม่ได้ยืนยันว่างานหยุด หากแอปรอข้อมูลหรือการเข้าสู่ระบบ pika ไม่สามารถทำแทนได้ ปุ่ม × ปิดเฉพาะหน้าต่างควบคุม ถ้าไอคอนแถบเมนูถูกบัง ให้เปิด pika จาก Applications อีกครั้ง
+
+## ข้อจำกัดด้านแบตเตอรี่ ความร้อน และเครือข่าย
+
+pika อาจจบเซสชันเมื่อแบตเตอรี่หรือสถานะความร้อนของ macOS ถึงเกณฑ์ป้องกัน เกณฑ์จะเข้มงวดขึ้นเมื่อพับฝาโดยไม่มีจอภายนอก แต่ไม่ได้ทำให้การรันในกระเป๋าปิดปลอดภัย การป้องกันพักเครื่องไม่รับประกัน Wi-Fi, VPN หรือ API ให้ใช้การลองใหม่และบันทึกความคืบหน้าสำหรับงานยาว ไฟล์ปัจจุบันยังไม่มีลายเซ็น Developer ID หรือการรับรองจาก Apple จึงอาจถูก macOS บล็อกการติดตั้ง ควรตรวจสอบกับเครื่องและระบบของคุณ
+
+[รายละเอียดการติดตั้ง การเชื่อมต่อ และแก้ปัญหา · English →](https://no-sleep-pika.online/guide/)
+
+## วิธีให้ MacBook ทำงานต่อแม้พับฝาเครื่อง
+
+pika เป็นแอปแถบเมนู macOS ที่มีสองสวิตช์คือ Session และ Monitor รองรับ macOS 13 ขึ้นไป ทั้ง Apple Silicon และ Intel
+
+[ดาวน์โหลด pika →](https://no-sleep-pika.online/th/)[วิธีติดตั้ง (ภาษาอังกฤษ)](https://no-sleep-pika.online/install/)[เชื่อมต่อ MCP (ภาษาอังกฤษ)](https://no-sleep-pika.online/guide/#mcp)
