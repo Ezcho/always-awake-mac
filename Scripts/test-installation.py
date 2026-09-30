@@ -15,12 +15,9 @@ for argv0 in [str(helper), "Contents/Library/HelperTools/AlwaysAwakeHelper", "Al
     assert Path(result.stdout.strip()[len(prefix):]).samefile(app), result.stdout
     print(f"PASS: signed app discovery with argv[0]={argv0!r}")
 
-# Verify the updater is nested signed code for both supported architectures.
-updater = app / "Contents/MacOS/pika-updater"
-subprocess.run(["/usr/bin/codesign", "--verify", "--strict", str(updater)], check=True)
-archs = subprocess.check_output(["/usr/bin/lipo", "-archs", str(updater)], text=True)
-assert "arm64" in archs and "x86_64" in archs
-print("PASS: Universal signed standalone updater")
+# Updates use Apple's Installer; do not ship a separately blocked executable.
+assert not (app / "Contents/MacOS/pika-updater").exists()
+print("PASS no standalone updater executable in bundle")
 
 info = plistlib.loads((app/'Contents/Info.plist').read_bytes())
 assert info['CFBundleExecutable'] == 'pika'

@@ -74,36 +74,6 @@ struct UpdateRelease: Equatable {
     }
 }
 
-// The privileged shell sees only a private snapshot whose digest is checked again.
-// No password is collected/stored and no resident service accepts an update command.
-enum UpdateInstallCommand {
-    static func quote(_ value: String) -> String { "'" + value.replacingOccurrences(of: "'", with: "'\\''") + "'" }
-    static func script(package: URL, hash: String) throws -> String {
-        guard package.isFileURL, UpdateRelease.validHash(hash) else { throw UpdateError("잘못된 업데이트 요청입니다.") }
-        return """
-        set -eu
-        umask 077
-        stage=$(/usr/bin/mktemp -d /private/tmp/pika-install.XXXXXXXX)
-        trap '/bin/rm -rf "$stage"' EXIT
-        /bin/cp \(quote(package.path)) "$stage/update.pkg"
-        actual=$(/usr/bin/shasum -a 256 "$stage/update.pkg")
-        actual=${actual%% *}
-        [ "$actual" = \(quote(hash)) ] || { echo 'Update checksum mismatch' >&2; exit 1; }
-        if /usr/sbin/installer -pkg "$stage/update.pkg" -target / >"$stage/install.log" 2>&1; then
-            echo 'PIKA_UPDATE_OK'
-        else
-            /usr/bin/tail -c 4000 "$stage/install.log" >&2
-            exit 1
-        fi
-        """
-    }
-    static func appleScript(package: URL, hash: String) throws -> String {
-        let command = "/bin/bash -c " + quote(try script(package: package, hash: hash))
-        let literal = command.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\"").replacingOccurrences(of: "\n", with: "\\n")
-        return "do shell script \"\(literal)\" with administrator privileges"
-    }
-}
-
 // Bundle caches Info.plist; updates must read fresh bytes before and after replacement.
 enum UpdateInstalledApp {
     static func version(at app: URL) -> String? {

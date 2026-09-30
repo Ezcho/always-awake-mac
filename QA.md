@@ -215,3 +215,11 @@ GitHub Actions의 macos-15 환경에서도 소스 `b128f09`의 테스트·Univer
 - 정적 feed 생성기는 이미 공개된 릴리스의 digest·크기·URL과 로컬 PKG를 대조하며 버전별 feed 변경과 latest 다운그레이드를 거절합니다. release 원문이나 토큰을 정적 사이트에 복사하지 않습니다.
 - 1.0.10/1.0.11 바이너리의 조회 경로를 원격으로 바꿀 수는 없습니다. 해당 앱은 한도 해제 후 앱 내 업데이트 또는 수정 PKG의 1회 수동 설치가 필요합니다. 실제 관리자 설치·세션·덮개 상태는 이번 점검에서 변경하지 않았습니다.
 - 소스 `40ebd27a082cf18eb5673413f14a493379c14688`의 macOS CI `36743247323` 전체 통과. Universal 빌드·서명, MCP 메모리/수명, 웹 회귀, PKG 전체 검사를 포함합니다. 공개 1.0.12 PKG는 2,342,933 bytes, SHA256 `3691ff33f0f24ae6bc1b39602d6896ffdc40cbf0dd2a0f3c1d97fe067965c154`이며 공개 GitHub 자산과 일치 확인 후 정적 feed를 생성했습니다.
+
+### 2026-10-01 · 1.0.13 / Gatekeeper 이후 멈춘 업데이트
+
+- 설치 앱은 여전히 1.0.10 build 13. 01:24:43~01:26:40 macOS amfid 로그에서 임시 폴더의 pika-updater가 AppleMobileFileIntegrityError -423 (ad-hoc/unknown certificate)로 반복 차단되는 것을 확인했습니다. 실패 뒤 임시 도우미·PKG를 삭제하던 코드 때문에 나중의 사용자 허용이 진행 중 업데이트를 복구할 수 없었습니다. 설치 결과 파일도 생성되지 않았습니다.
+- 임시 독립 실행 파일, AppleScript 관리자 설치 스크립트, ready/go 및 부모 PID 전달 경로를 제거했습니다. 새 번들에는 pika-updater가 없습니다. 앱에서 공식 PKG를 다운로드·검증하고 고정된 Apple Installer.app에 전달합니다. 열기 성공 시 pika가 종료되며 설치는 사용자가 완료하고 앱을 다시 엽니다. 열기 성공을 설치 성공으로 간주하지 않습니다.
+- PKG는 사용자 캐시의 버전별 고정 경로에 보존합니다. 차단/취소 시 파일을 삭제하지 않으며 ‘설치 파일 보기’와 재시도를 제공합니다. 매번 크기·SHA256을 다시 검증하고 최신 버전이 이미 설치되었다면 이전 파일 전달을 거절합니다. 별도 관리자 실행 코드나 인증 수단 강제 설정은 없습니다.
+- 기본 Installer의 인증 UI를 그대로 사용합니다. Touch ID 사용 가능 여부는 macOS 정책·계정·하드웨어에 달려 있습니다. unsigned PKG 자체의 Gatekeeper 경고는 여전히 가능하며, 이를 없앤다고 보장하지 않습니다. Developer ID Application/Installer 서명과 공증은 별도 선행 조건입니다.
+- 업데이트 파일 검증 35개, 가상 네트워크 21개, 정적 feed 생성 5개, Native Installer handoff 14개 검사를 통과했습니다. handoff 검사는 Apple Installer 열기 성공/실패를 주입해 수행했고 실제 설치·Touch ID·관리자 인증을 실행하지 않았습니다. 전원/세션 회귀 검사도 통과했습니다.

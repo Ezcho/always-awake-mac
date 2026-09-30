@@ -5,7 +5,7 @@ enum AppIdentity {
     static let helperID = "com.alwaysawake.mac.helper"
     static let serviceName = "com.alwaysawake.mac.helper"
     static let helperPlist = "com.alwaysawake.mac.helper.plist"
-    static let version = "1.0.12"
+    static let version = "1.0.13"
 }
 
 // Only fixed power operations cross the privileged boundary. No commands or paths.

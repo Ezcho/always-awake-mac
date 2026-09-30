@@ -22,3 +22,8 @@
 
 - 1.0.10 실제 로그와 API 응답에서 GitHub 무인증 조회 한도 소진을 확인했습니다. 공식 홈페이지 정적 feed 우선 조회, API fallback, 자동 실패 재조회 간격, HTTP 진단 로그 및 수동 다운로드 진입점을 추가했습니다.
 - 배포 시 `Scripts/publish-update-feed.py`로 공개 PKG를 검증한 뒤 `docs/updates`를 Pages에 함께 배포해야 합니다. 기존 1.0.10/1.0.11은 새 조회 경로를 모르므로 한도 해제 후 앱 업데이트 또는 한 번의 PKG 설치가 필요합니다.
+
+## 1.0.13 배포 경로 수정
+
+- Gatekeeper가 독립 ad-hoc pika-updater를 차단한 실제 -423 로그를 확인하여 해당 실행 파일 및 사용자 정의 관리자 설치 코드를 제거했습니다. Apple Installer로 검증 PKG를 전달하고 파일을 보존합니다. 자동 재실행은 약속하지 않으며 설치 후 사용자가 pika를 다시 엽니다.
+- 설정 진입을 더 줄이기 위한 다음 배포 요건: Developer ID Application + Developer ID Installer 서명, notarization/stapling. 사용자 Mac 보안 설정 완화나 quarantine 제거는 적용하지 않았습니다. Touch ID 표시 여부는 기본 macOS 인증 정책에 맡깁니다.

@@ -49,14 +49,6 @@ rejected("symlink package") { try fixture.verify(link) }
 try Data(repeating: 65, count: content.count).write(to: file)
 rejected("tampered same-size package") { try fixture.verify(file) }
 try content.write(to: file)
-let shell = try UpdateInstallCommand.script(package: file, hash: hash)
-check(shell.range(of: "actual=${actual%% *}")!.lowerBound < shell.range(of: "/usr/sbin/installer")!.lowerBound, "root snapshot checked before installer")
-check(shell.contains("trap '") && shell.contains("umask 077"), "private staging and cleanup")
-try shell.write(to: root.appendingPathComponent("install.sh"), atomically: true, encoding: .utf8)
-try UpdateInstallCommand.appleScript(package: file, hash: hash).write(to: root.appendingPathComponent("authorize.applescript"), atomically: true, encoding: .utf8)
-rejected("digest injection") { _ = try UpdateInstallCommand.script(package: file, hash: "';id") }
-rejected("remote package path") { _ = try UpdateInstallCommand.script(package: URL(string: "https://example.invalid/a")!, hash: hash) }
-
 let mockApp = root.appendingPathComponent("pika.app")
 try FileManager.default.createDirectory(at: mockApp.appendingPathComponent("Contents"), withIntermediateDirectories: true)
 let info = mockApp.appendingPathComponent("Contents/Info.plist")

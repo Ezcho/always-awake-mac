@@ -28,19 +28,16 @@ for ARCH in arm64 x86_64; do
     xcrun swiftc "${FLAGS[@]}" "${SHARED[@]}" Sources/Helper/*.swift -o "$BUILD/AlwaysAwakeHelper-$ARCH"
     xcrun swiftc "${FLAGS[@]}" "${SHARED[@]}" Sources/Control/*.swift Sources/Shared/UpdateRelease.swift Sources/App/*.swift -o "$BUILD/pika-$ARCH"
     xcrun swiftc "${FLAGS[@]}" Sources/Shared/Protocol.swift Sources/Control/*.swift Sources/MCP/*.swift -o "$BUILD/pika-mcp-$ARCH"
-    xcrun swiftc "${FLAGS[@]}" Sources/Shared/Protocol.swift Sources/Shared/UpdateRelease.swift Sources/Updater/main.swift -o "$BUILD/pika-updater-$ARCH"
 done
 xcrun lipo -create "$BUILD/pika-arm64" "$BUILD/pika-x86_64" -output "$APP/Contents/MacOS/pika"
 xcrun lipo -create "$BUILD/AlwaysAwakeHelper-arm64" "$BUILD/AlwaysAwakeHelper-x86_64" -output "$APP/Contents/Library/HelperTools/AlwaysAwakeHelper"
 xcrun lipo -create "$BUILD/pika-mcp-arm64" "$BUILD/pika-mcp-x86_64" -output "$APP/Contents/MacOS/pika-mcp"
-xcrun lipo -create "$BUILD/pika-updater-arm64" "$BUILD/pika-updater-x86_64" -output "$APP/Contents/MacOS/pika-updater"
 xcrun swift -module-cache-path "$BUILD/module-cache" Scripts/make-icon.swift "$BUILD/AppIcon.iconset" "$APP/Contents/Resources/AppIcon.icns"
 
 SIGN_FLAGS=(--force --options runtime --sign "$IDENTITY")
 if [[ "$IDENTITY" != "-" ]]; then SIGN_FLAGS+=(--timestamp); fi
 codesign "${SIGN_FLAGS[@]}" --identifier com.alwaysawake.mac.helper "$APP/Contents/Library/HelperTools/AlwaysAwakeHelper"
 codesign "${SIGN_FLAGS[@]}" --identifier com.alwaysawake.mac.mcp "$APP/Contents/MacOS/pika-mcp"
-codesign "${SIGN_FLAGS[@]}" --identifier com.alwaysawake.mac.updater "$APP/Contents/MacOS/pika-updater"
 codesign "${SIGN_FLAGS[@]}" "$APP"
 codesign --verify --deep --strict --verbose=2 "$APP"
 # Never overwrite an executable in place: a running process may still map it.
