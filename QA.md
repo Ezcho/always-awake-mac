@@ -223,3 +223,4 @@ GitHub Actions의 macos-15 환경에서도 소스 `b128f09`의 테스트·Univer
 - PKG는 사용자 캐시의 버전별 고정 경로에 보존합니다. 차단/취소 시 파일을 삭제하지 않으며 ‘설치 파일 보기’와 재시도를 제공합니다. 매번 크기·SHA256을 다시 검증하고 최신 버전이 이미 설치되었다면 이전 파일 전달을 거절합니다. 별도 관리자 실행 코드나 인증 수단 강제 설정은 없습니다.
 - 기본 Installer의 인증 UI를 그대로 사용합니다. Touch ID 사용 가능 여부는 macOS 정책·계정·하드웨어에 달려 있습니다. unsigned PKG 자체의 Gatekeeper 경고는 여전히 가능하며, 이를 없앤다고 보장하지 않습니다. Developer ID Application/Installer 서명과 공증은 별도 선행 조건입니다.
 - 업데이트 파일 검증 35개, 가상 네트워크 21개, 정적 feed 생성 5개, Native Installer handoff 14개 검사를 통과했습니다. handoff 검사는 Apple Installer 열기 성공/실패를 주입해 수행했고 실제 설치·Touch ID·관리자 인증을 실행하지 않았습니다. 전원/세션 회귀 검사도 통과했습니다.
+- 소스 `4cf0dba64c16a9fa27410fe0b43f4c96babe47e8`의 CI `36744930838` 전체 통과. 배포 PKG에 별도 updater가 없는 것과 앱 번들 upgrade 설정, helper signature pin을 확인했습니다. 공개 1.0.13은 2,213,951 bytes, SHA256 `5baa2790ece33efad185393d0878b9344711728d066d92f5a0f0a5aef5950c19`. 기존 사용자의 설치 앱과 세션은 변경하지 않았습니다.

@@ -4,20 +4,20 @@
 
 macOS 메뉴 막대에서 Session과 Monitor를 제어하는 네이티브 앱입니다. Swift / AppKit으로 만들었으며 외부 패키지나 서버 없이 실행됩니다.
 
-[다운로드 페이지](https://no-sleep-pika.online/) · [공개 릴리스](https://github.com/Ezcho/always-awake-mac/releases/tag/v1.0.12)
+[다운로드 페이지](https://no-sleep-pika.online/) · [공개 릴리스](https://github.com/Ezcho/always-awake-mac/releases/tag/v1.0.13)
 
 웹페이지의 다운로드 수는 공개 GitHub Release의 DMG·ZIP·설치 PKG 다운로드 합계입니다. 제거 패키지와 체크섬 파일은 제외합니다. 고유 사용자 수나 설치 성공 횟수는 아닙니다. 브라우저는 공개 API에서 갱신하고 1시간 캐시합니다. API 연결 실패 시 마지막 집계값을 유지하며, 표시값에 마우스를 올리면 집계 시각을 볼 수 있습니다. 배포용 기본 집계는 `python3 Scripts/update-downloads.py` 후 `python3 Scripts/build-site.py`로 갱신합니다.
 
-> **공개 다운로드: 1.0.12 (build 15).** 통합 PKG에 앱·보조 서비스와 MCP와 덮개 대기 동작이 포함됩니다. 덮개 기능에는 관리자 보조 서비스가 필요하며, 보조 서비스가 없거나 서명이 맞지 않으면 설치를 안내합니다. 새 빌드의 실제 덮개 동작은 사용자 검증 대상입니다. 현재 빌드는 Developer ID 서명·Apple 공증 전입니다.
+> **공개 다운로드: 1.0.13 (build 16).** 통합 PKG에 앱·보조 서비스와 MCP와 덮개 대기 동작이 포함됩니다. 덮개 기능에는 관리자 보조 서비스가 필요하며, 보조 서비스가 없거나 서명이 맞지 않으면 설치를 안내합니다. 새 빌드의 실제 덮개 동작은 사용자 검증 대상입니다. 현재 빌드는 Developer ID 서명·Apple 공증 전입니다.
 
-1.0.12에서는 GitHub API 요청 제한으로 업데이트 조회가 실패하던 문제를 수정했습니다. 공식 홈페이지의 정적 업데이트 정보를 우선 사용하고 API를 예비 경로로 둡니다.
+1.0.13에서는 별도 `pika-updater` 실행 파일을 제거하고 앱에서 검증한 PKG를 macOS 기본 설치 프로그램으로 엽니다. 보안 차단 뒤에도 PKG를 보존합니다. 업데이트 정보는 공식 홈페이지 정적 feed를 우선 사용하고 GitHub API를 예비 경로로 둡니다.
 
 이전 1.0.11에서는 본체 프로세스 이름을 `pika`로 정리하고, MCP 클라이언트가 종료돼도 입력 파이프 때문에 서버가 남던 경로를 수정했습니다. MCP 연결 명령은 동일하며, 이미 연결된 클라이언트는 재연결해야 새 MCP가 적용됩니다. 여러 정상 연결은 독립적으로 유지됩니다.
 
 ## 사용
 
 1. 기존 pika에서 **Session OFF → 메뉴 막대 pika → 종료**를 선택합니다. 창의 ×는 종료가 아닙니다.
-2. 홈페이지의 **pika PKG**를 열고 관리자 승인을 거쳐 앱과 보조 서비스를 함께 설치합니다. 드래그 설치나 별도 helper 설치가 필요 없습니다. 응용 프로그램에서 pika를 열고 제어창의 **pika · 1.0.12**을 확인하세요.
+2. 홈페이지의 **pika PKG**를 열고 관리자 승인을 거쳐 앱과 보조 서비스를 함께 설치합니다. 드래그 설치나 별도 helper 설치가 필요 없습니다. 응용 프로그램에서 pika를 열고 제어창의 **pika · 1.0.13**을 확인하세요.
 3. 덮개 모드에서는 **Session ON → 대기 → 덮개 닫기** 순서로 동작합니다. ON을 누르거나 대기 중 Monitor를 바꿔도 현재 화면을 끄거나 깨우지 않습니다.
 
 메뉴 막대 아이콘 **클릭**으로 Session·Monitor 스위치를 엽니다. **Option+클릭**은 Session을 바로 전환합니다. 실행하면 작은 제어창이 표시됩니다. 창의 X를 눌러 닫아도 Session과 메뉴 막대는 유지됩니다. 앱을 다시 실행하거나 메뉴의 **제어창 열기**로 창을 다시 엽니다. Dock 아이콘은 없습니다. 종료는 메뉴의 **종료**를 사용합니다.
@@ -31,13 +31,15 @@ macOS 메뉴 막대에서 Session과 Monitor를 제어하는 네이티브 앱입
 
 ## 앱 내 업데이트
 
-메뉴 막대의 **업데이트 확인…** 또는 제어창의 **업데이트…**에서 최신 공개 버전을 확인하고 **업데이트 후 재실행**을 누릅니다. 1.0.9 이하는 PKG 설치가 필요합니다. 1.0.10/1.0.11에서 조회 오류가 나면 GitHub 요청 한도가 풀린 뒤 재시도하거나 **1.0.12 PKG를 한 번 설치**하세요. 1.0.12부터 공식 홈페이지 정적 feed를 먼저 조회해 GitHub API 한도 의존을 줄였습니다.
+메뉴 막대의 **업데이트 확인…** 또는 제어창의 **업데이트…**에서 최신 공개 버전을 확인하고 **업데이트 설치…**를 누릅니다. 1.0.10~1.0.12에서 별도 도우미가 차단된 경우 **1.0.13 PKG를 한 번 직접 설치**하세요. 기존 앱의 실행 경로를 원격으로 바꿀 수는 없습니다.
 
-- 앱을 시작하거나 활성화할 때 마지막 성공 확인으로부터 24시간이 지났으면 새 버전을 확인합니다. 백그라운드 확인은 메뉴 제목만 갱신하며, 다운로드·설치는 사용자가 시작합니다. 실패 후 자동 재조회는 15분 간격으로 제한하고 수동 재시도는 유지합니다.
-- 승인하면 Session을 종료하고 잠자기 설정을 복구합니다. 다운로드·검증 후 별도 도우미가 앱 종료를 확인하고 macOS 관리자 승인으로 앱과 보조 서비스를 함께 업데이트합니다. 설치 마법사나 Finder 조작 없이 완료 후 pika를 다시 엽니다. Session은 OFF로 유지합니다.
-- 관리자 비밀번호를 저장하지 않으며 업데이트 전용 상주 root 서비스를 추가하지 않습니다. GitHub HTTPS의 고정 저장소·버전별 자산과 SHA-256을 확인하고, 관리자 설치 직전 root 전용 임시 복사본의 해시도 다시 확인합니다. 공식 홈페이지·GitHub 릴리스와 HTTPS에 대한 신뢰에 의존하며 별도 개발자 릴리스 서명은 아직 없습니다.
-- 네트워크 오류, 세션 복구 실패, 검증 실패 시 설치를 시작하지 않습니다. 승인 취소 시 다시 시도하거나 앱을 열 수 있습니다. 설치 중 실패하면 일부 파일이 교체되었을 수 있으므로 재시도하며, 설치 결과는 `~/Library/Caches/com.alwaysawake.mac/updates/last-update.log`에 남깁니다. 설치 전 조회 결과는 macOS 로그의 `com.alwaysawake.mac` / `Update`에서 호스트와 HTTP 상태로 확인합니다.
-- `/Applications/pika.app` 설치를 대상으로 합니다. 실행 중인 MCP 클라이언트는 업데이트 후 연결을 다시 시작해야 새 실행 파일을 사용합니다. 실제 관리자 승인·교체·재실행은 사용자 Mac에서 확인해야 합니다.
+- 마지막 성공 확인으로부터 24시간이 지났으면 앱 시작/활성화 시 새 버전을 확인합니다. 실패 후 자동 재조회는 15분 간격으로 제한하며 수동 재시도는 유지합니다.
+- 사용자가 업데이트를 승인하면 Session을 종료하고 잠자기 설정을 복구합니다. PKG 다운로드·검증 후 고정된 Apple Installer.app으로 엽니다. 설치 프로그램이 열리면 pika가 종료됩니다. 설치를 마친 후 응용 프로그램에서 pika를 다시 여세요. Session은 OFF로 유지합니다.
+- 기본 Installer의 관리자 인증을 사용합니다. Touch ID 표시 여부는 macOS 정책·계정·하드웨어에 따릅니다. 앱에서 비밀번호를 받거나 저장하지 않습니다. 별도 업데이트 실행 파일, 관리자 AppleScript 및 업데이트용 상주 root 서비스는 없습니다.
+- 고정된 공식 GitHub 자산 URL, 정식 버전, 크기, SHA-256을 검증합니다. PKG는 `~/Library/Caches/com.alwaysawake.mac/updates/packages/pika-VERSION.pkg`에 보존하며 재시도 직전 다시 검증합니다. 열기 실패 시 앱을 유지하고 **설치 파일 보기**를 제공합니다. 설치기 열기를 설치 완료로 간주하지 않습니다.
+- 조회와 Installer 열기 결과는 macOS 로그의 `com.alwaysawake.mac` / `Update`에 남깁니다. 실제 설치 결과는 **설치 프로그램 → 윈도우 → 설치 프로그램 로그**에서 확인합니다. 이전 별도 도우미의 `last-update.log`는 더 이상 생성하지 않습니다.
+- 현재 Developer ID Application/Installer 서명·공증 전이므로 PKG 자체의 Gatekeeper 경고는 발생할 수 있습니다. 보안 설정 완화나 quarantine 제거를 하지 않습니다. 정식 서명·공증은 설정 진입을 더 줄이기 위한 별도 배포 요건입니다. 참고: [Apple Developer ID](https://developer.apple.com/developer-id/).
+- `/Applications/pika.app` 설치를 대상으로 합니다. 연결 중인 MCP 클라이언트는 설치 후 재연결해야 새 실행 파일을 사용합니다. 실제 관리자 인증·설치·재실행은 사용자 Mac에서 확인해야 합니다.
 
 ## 과열·방전 보호
 
@@ -85,7 +87,7 @@ python3 Scripts/test-installer-package.py
 open 'dist/pika.app'
 ```
 
-`dist/pika.app`과 기본 배포 파일 `dist/pika-1.0.12.pkg`가 생성됩니다. `Scripts/package.sh`는 선택적으로 DMG/ZIP을 생성하는 개발용 경로입니다. arm64와 x86_64를 모두 포함합니다. 빌드 스크립트는 기본적으로 로컬 ad-hoc 서명을 합니다. ad-hoc 빌드는 앱과 보조 서비스를 함께 설치하는 `.pkg`가 필요합니다. 정식 서명 빌드에서 덮개 닫힘 모드를 쓰려면 앱을 `/Applications`에 설치하고 macOS에서 helper를 승인해야 합니다.
+`dist/pika.app`과 기본 배포 파일 `dist/pika-1.0.13.pkg`가 생성됩니다. `Scripts/package.sh`는 선택적으로 DMG/ZIP을 생성하는 개발용 경로입니다. arm64와 x86_64를 모두 포함합니다. 빌드 스크립트는 기본적으로 로컬 ad-hoc 서명을 합니다. ad-hoc 빌드는 앱과 보조 서비스를 함께 설치하는 `.pkg`가 필요합니다. 정식 서명 빌드에서 덮개 닫힘 모드를 쓰려면 앱을 `/Applications`에 설치하고 macOS에서 helper를 승인해야 합니다.
 
 자동 테스트는 fake power driver로 소유권, lease 만료, crash 복구, 실패 rollback, 안전 기준 및 상태 전환을 검증합니다. UI의 초 단위 시계·유휴 센서 조회는 없으며 세션 또는 복구가 진행 중일 때만 10초 heartbeat 타이머가 실행됩니다. 타이머는 메뉴를 펼친 동안에도 동작합니다. 실제 시스템 전원 설정은 바꾸지 않습니다. 수동 실기기 검증 목록은 [QA.md](QA.md)를 참고하세요.
 
@@ -154,7 +156,7 @@ command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
 
 ## 관리자 보조 서비스 설치 패키지
 
-`./Scripts/package-helper.sh`는 빌드된 앱으로 보조 서비스 전용 `dist/pika-helper-1.0.12.pkg`와 `dist/pika-1.0.12.pkg`와 `dist/pika-helper-uninstall-1.0.12.pkg`를 만듭니다. `.pkg`는 앱과 root 소유의 별도 LaunchDaemon을 함께 설치합니다. 앱/보조 서비스 서명은 서로 정확히 일치해야 하므로 서로 다른 빌드의 DMG와 PKG를 섞지 마세요.
+`./Scripts/package-helper.sh`는 빌드된 앱으로 보조 서비스 전용 `dist/pika-helper-1.0.13.pkg`와 `dist/pika-1.0.13.pkg`와 `dist/pika-helper-uninstall-1.0.13.pkg`를 만듭니다. `.pkg`는 앱과 root 소유의 별도 LaunchDaemon을 함께 설치합니다. 앱/보조 서비스 서명은 서로 정확히 일치해야 하므로 서로 다른 빌드의 DMG와 PKG를 섞지 마세요.
 
 설치 전에 Session을 OFF로 하고 기존 앱 관리형 보조 서비스를 제거한 다음 앱을 종료합니다. 이전 버전에서 제거가 안 되면 새 앱의 `--unregister-service` 명령으로 안전 상태를 확인하고 정상 SMAppService API를 통해 제거할 수 있습니다. macOS Installer의 관리자 인증은 사용자가 직접 진행합니다. 설치/제거 스크립트는 복구 기록이나 전원 설정을 임의로 초기화하지 않습니다.
 
