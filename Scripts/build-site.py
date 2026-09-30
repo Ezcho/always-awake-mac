@@ -5,6 +5,7 @@ import html
 import json
 from install_page import build as build_install
 from support_page import build as build_support, UPDATED as SUPPORT_UPDATED
+from lid_article import build as build_article, UPDATED as ARTICLE_UPDATED, PATHS as ARTICLE_PATHS, COPY as ARTICLE_COPY
 from mcp_guide import render as render_mcp_guide
 from pika_motion import render as render_pika_motion
 
@@ -869,6 +870,7 @@ def render(locale):
     options = '\n'.join(f'<option value="{code}" lang="{code}"{(" selected" if code == locale else "")}>{name}</option>' for code, name in LANGUAGES)
     language_links = ' '.join(f'<a href="{page_path(code)}" hreflang="{code}" lang="{code}">{name}</a>' for code, name in LANGUAGES)
     guide_path = '/guide/ko/' if locale == 'ko' else '/guide/'
+    article_path = ARTICLE_PATHS[locale]
     install_path = '/install/ko/' if locale == 'ko' else '/install/'
     schema = {'@context':'https://schema.org','@type':'SoftwareApplication','@id':BASE+'/#app','name':'no-sleep-pika','alternateName':'pika','url':page_url(locale),'applicationCategory':'UtilitiesApplication','operatingSystem':'macOS 13 or later','description':t['description'],'softwareVersion':RELEASE[1:],'downloadUrl':DOWNLOAD,'image':BASE+'/assets/pika-working.png','sameAs':REPO,'inLanguage':locale,'softwareHelp':{'@type':'WebPage','url':BASE+guide_path},'installUrl':BASE+install_path}
     snapshot = json.loads((OUT / 'downloads.json').read_text())
@@ -913,7 +915,7 @@ def render(locale):
 <p class="download-meta"><span id="download-count" data-label="{h('downloads')}" data-updated-at="{updated}" title="GitHub · {updated}" aria-live="polite">{count:,} {h('downloads')}</span></p><p class="release">{h('release')}</p></div>
 <section id="mcp" class="mcp" aria-labelledby="mcp-title"><div class="mcp-heading"><h2 id="mcp-title">{h('connect')}</h2><span>STDIO</span></div><p class="mcp-note">{h('mcpnote')} <a href="{REPO}#mcp">{h('source')} ↗</a></p>
 <div class="terminal-body"><div class="command" dir="ltr"><code id="mcp-command">/Applications/pika.app/Contents/MacOS/pika-mcp</code><button class="copy" data-copy="mcp-command" data-copied="{h('copied')}" data-failed="{h('copyfail')}">{h('copy')}</button></div><span class="copy-status sr-only" role="status" aria-live="polite"></span></div>{render_mcp_guide(locale, t["copy"], t["copied"], t["copyfail"])}</section>
-<nav class="help-link" aria-label="{"도움말" if locale == "ko" else "Help"}"><a href="{install_path}">{"설치 도움말" if locale == "ko" else "Installation help" if locale == "en" else h("compatibility")} ↗</a> · <a href="{guide_path}" lang="{"ko" if locale == "ko" else "en"}">{"덮개·잠금·연결 안내" if locale == "ko" else "Lid, lock & connection guide" if locale == "en" else "User guide · English"} ↗</a><span class="visitor-counter" title="{"누적 방문 · 집계 준비 중" if locale == "ko" else "Total visits · not available yet"}"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 10s3-5 8-5 8 5 8 5-3 5-8 5-8-5-8-5Z" stroke="currentColor" stroke-width="1.4"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.4"/></svg><span class="sr-only">{"누적 방문" if locale == "ko" else "Total visits"}</span><span id="visitor-count" data-label="{"누적 방문" if locale == "ko" else "Total visits"}" aria-live="polite">—</span></span></nav>
+<nav class="help-link" aria-label="{"도움말" if locale == "ko" else "Help"}"><a href="{install_path}">{"설치 도움말" if locale == "ko" else "Installation help" if locale == "en" else h("compatibility")} ↗</a> · <a href="{article_path}" lang="{locale}">{esc(ARTICLE_COPY[locale]["guide"])} ↗</a><span class="visitor-counter" title="{"누적 방문 · 집계 준비 중" if locale == "ko" else "Total visits · not available yet"}"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 10s3-5 8-5 8 5 8 5-3 5-8 5-8-5-8-5Z" stroke="currentColor" stroke-width="1.4"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.4"/></svg><span class="sr-only">{"누적 방문" if locale == "ko" else "Total visits"}</span><span id="visitor-count" data-label="{"누적 방문" if locale == "ko" else "Total visits"}" aria-live="polite">—</span></span></nav>
 </main>
 <noscript><nav class="language-fallback" aria-label="{h('language')}">{language_links}</nav></noscript>
 </div></body></html>'''
@@ -921,6 +923,7 @@ def render(locale):
 
 def main():
     assert set(TEXT) == {code for code, _ in LANGUAGES}
+    assert set(ARTICLE_PATHS) == set(TEXT)
     for locale, _ in LANGUAGES:
         dest = OUT if locale == 'en' else OUT / locale
         dest.mkdir(parents=True, exist_ok=True)
@@ -930,14 +933,15 @@ def main():
     entries = ''.join(f'<url><loc>{page_url(code)}</loc><lastmod>{HOME_UPDATED}</lastmod>{alternatives}</url>' for code, _ in LANGUAGES)
     install_urls = build_install(OUT, BASE, REPO)
     support_urls = build_support(OUT, BASE, REPO)
-    for urls, updated in ((install_urls, INSTALL_UPDATED), (support_urls, SUPPORT_UPDATED)):
-        alternates = ''.join(f'<xhtml:link rel="alternate" hreflang="{language}" href="{url}"/>' for language, url in zip(('en', 'ko'), urls))
+    article_urls = build_article(OUT, BASE, REPO)
+    for urls, updated, languages in ((install_urls, INSTALL_UPDATED, ('en', 'ko')), (support_urls, SUPPORT_UPDATED, ('en', 'ko')), (article_urls, ARTICLE_UPDATED, tuple(ARTICLE_PATHS))):
+        alternates = ''.join(f'<xhtml:link rel="alternate" hreflang="{language}" href="{url}"/>' for language, url in zip(languages, urls))
         alternates += f'<xhtml:link rel="alternate" hreflang="x-default" href="{urls[0]}"/>'
         entries += ''.join(f'<url><loc>{url}</loc><lastmod>{updated}</lastmod>{alternates}</url>' for url in urls)
     (OUT / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' + entries + '</urlset>\n', encoding='utf-8')
     (OUT / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n', encoding='utf-8')
     (OUT / '.nojekyll').touch()
-    print(f'Built {len(LANGUAGES)} localized homepages, 4 guides, sitemap.xml and robots.txt.')
+    print(f'Built {len(LANGUAGES)} localized homepages, 4 guides, 15 articles, sitemap.xml and robots.txt.')
 
 if __name__ == '__main__':
     main()

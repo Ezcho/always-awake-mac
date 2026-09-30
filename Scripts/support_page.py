@@ -28,8 +28,8 @@ COPY = {
                 'For Wi-Fi problems, Option-click the Wi-Fi menu and open Wireless Diagnostics. For long remote jobs, use the agent’s supported retry and checkpoint features when available.'
             ]),
             ('updates', 'Update without downloading another installer', [
-                'Install pika 1.0.11 once if you are using 1.0.9 or earlier. After that, choose Check for Updates in the menu bar or the update button in the control window. Automatic checks only notify through the menu; installation starts when you choose it.',
-                'Keep the lid open and finish your work before updating. pika stops the Session, verifies the download, asks for macOS administrator approval, updates the app and helper together, and reopens the app. Session stays OFF. If authorization is cancelled, you can retry or reopen pika. Restart MCP client connections after updating.'
+                'If an older version cannot check for updates or macOS blocks pika-updater, install pika 1.0.13 or later once using the full PKG. After that, choose Check for Updates in the menu bar or the update button in the control window. Automatic checks only notify through the menu; installation starts when you choose it.',
+                'Keep the lid open and finish your work before updating. pika stops the Session, verifies the download, and opens the standard macOS Installer. Complete its authorization and installation steps, then reopen pika from Applications. The PKG updates the app and helper together. Session stays OFF. If installation is cancelled, reopen pika and try again. Restart MCP client connections after updating.'
             ]),
             ('menu', 'The menu bar icon is missing', [
                 'Open pika from Applications to bring its controls to the foreground. Closing that window leaves the app running. If many status items crowd the menu bar, reduce other menu bar items or switch to an app with fewer menus, then check again.',
@@ -70,8 +70,8 @@ COPY = {
                 'Wi-Fi 문제는 Option 키를 누른 채 Wi-Fi 메뉴를 클릭해 무선 진단을 여세요. 장시간 원격 작업에는 Agent가 제공하는 재시도와 중간 저장 기능을 함께 사용하세요.'
             ]),
             ('updates', '앱 안에서 업데이트하기', [
-                '1.0.9 이하라면 1.0.11을 한 번 PKG로 설치하세요. 그 이후에는 메뉴 막대의 업데이트 확인… 또는 제어창의 업데이트…에서 진행할 수 있습니다. 자동 확인은 메뉴에 새 버전을 표시하며, 설치는 사용자가 시작합니다.',
-                '덮개를 열고 작업을 마친 뒤 업데이트하세요. Session을 종료하고 파일을 검증한 다음, macOS 관리자 승인으로 앱과 보조 서비스를 함께 교체하고 pika를 다시 엽니다. Session은 OFF로 유지됩니다. 승인 취소 시 다시 시도하거나 앱을 열 수 있습니다. 업데이트 후 MCP 클라이언트 연결도 다시 시작하세요.'
+                '이전 버전에서 업데이트 조회가 실패하거나 macOS가 pika-updater를 차단하면, 통합 PKG로 1.0.13 이상을 한 번 설치하세요. 그 이후에는 메뉴 막대의 업데이트 확인… 또는 제어창의 업데이트…에서 진행할 수 있습니다. 자동 확인은 메뉴에 새 버전을 표시하며, 설치는 사용자가 시작합니다.',
+                '덮개를 열고 작업을 마친 뒤 업데이트하세요. Session을 종료하고 파일을 검증한 다음 macOS 기본 설치 프로그램을 엽니다. 승인과 설치를 마친 뒤 응용 프로그램에서 pika를 다시 여세요. PKG는 앱과 보조 서비스를 함께 교체하며 Session은 OFF로 유지됩니다. 설치를 취소했다면 pika를 다시 열어 재시도할 수 있습니다. 업데이트 후 MCP 클라이언트 연결도 다시 시작하세요.'
             ]),
             ('menu', '메뉴 막대 아이콘이 보이지 않을 때', [
                 '응용 프로그램에서 pika를 열면 제어창이 전면에 나타납니다. 이 창을 닫아도 앱은 계속 실행됩니다. 아이콘이 많아 메뉴 막대가 붐비면 다른 메뉴 막대 항목을 줄이거나 메뉴가 적은 앱으로 전환한 뒤 다시 확인하세요.',
@@ -98,6 +98,8 @@ def render(locale, base, repo):
     url = base + ('/guide/ko/' if locale == 'ko' else '/guide/')
     home = '/ko/' if locale == 'ko' else '/'
     install = '/install/ko/' if locale == 'ko' else '/install/'
+    article_path = '/guide/ko/macbook-lid-closed/' if locale == 'ko' else '/guide/macbook-lid-closed/'
+    article_title = '맥북 덮어도 안꺼지게 하는법' if locale == 'ko' else 'How to keep a MacBook running with the lid closed'
     sections = ''.join(f'<section id="{key}"><h2>{e(title)}</h2>' + ''.join(f'<p>{e(p)}</p>' for p in paragraphs) + '</section>' for key, title, paragraphs in t['sections'])
     contents = ''.join(f'<a href="#{key}">{e(title)}</a>' for key, title, _ in t['sections'])
     schema = {'@context': 'https://schema.org', '@graph': [
@@ -116,6 +118,7 @@ def render(locale, base, repo):
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script src="/visitors.js" defer></script></head>
 <body><a class="skip" href="#main">{e(t['title'])}</a><div class="shell"><header><a class="brand" href="{home}"><img src="/assets/favicon.svg" alt="" width="30" height="30">no-sleep-pika.</a><nav aria-label="{e(t['language'])}"><a href="/guide/" lang="en"{' aria-current="page"' if locale == 'en' else ''}>English</a><a href="/guide/ko/" lang="ko"{' aria-current="page"' if locale == 'ko' else ''}>한국어</a></nav></header>
 <main id="main"><a class="back" href="{home}">← {e(t['home'])}</a><h1>{e(t['title'])}</h1><p class="intro">{e(t['intro'])}</p><p class="muted"><time datetime="{UPDATED}">{e(t['updated'])}</time></p>
+<p class="related-article"><a href="{article_path}">{e(article_title)} →</a></p>
 <nav class="contents" aria-label="{e(t['title'])}">{contents}<a href="#mcp">{e(t['mcp'])}</a></nav>
 <div class="guide-layout"><article>{sections}<section id="mcp"><h2>{e(t['mcp'])}</h2><p>{e(t['mcp_intro'])}</p><p>{e(t['mcp_cli'])}</p><pre><code>codex mcp add pika -- {COMMAND}</code></pre><p>{e(t['mcp_manual'])}</p><pre><code>[mcp_servers.pika]
 command = "{COMMAND}"</code></pre><p>{e(t['mcp_check'])}</p><p>{e(t['mcp_tools'])}</p><pre><code>{COMMAND}</code></pre><p>{e(t['mcp_stop'])}</p></section></article>

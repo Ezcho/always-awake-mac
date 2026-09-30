@@ -38,7 +38,7 @@ class Page(HTMLParser):
   if tag=='title':self.in_title=False
   if tag=='script' and self.in_json:self.structured.append(json.loads(self.buffer));self.in_json=False
 pages=sorted(ROOT.rglob('index.html'))
-assert len(pages)==19, f'Expected 15 locale pages, 2 installation guides and 2 usage guides, got {len(pages)}'
+assert len(pages)==34, f'Expected 15 locale pages, 2 installation guides, 2 usage guides and 15 articles, got {len(pages)}'
 canonical=set()
 parsed={}
 titles=set()
@@ -57,7 +57,7 @@ for path in pages:
  assert 'index' in page.robots and 'noindex' not in page.robots,(path,'indexability')
  assert page.title_text not in titles,(path,'duplicate title')
  titles.add(page.title_text)
- expected_alternates = 3 if set(('install','guide')) & set(relative.parts) else 16
+ expected_alternates = 16 if 'macbook-lid-closed' in relative.parts else 3 if set(('install','guide')) & set(relative.parts) else 16
  assert len(page.alternates)==expected_alternates and 'x-default' in page.alternates,(path,'hreflang')
  assert page.structured,(path,'structured data')
  entities=[entity for block in page.structured for entity in block.get('@graph',[block])]
@@ -67,6 +67,11 @@ for path in pages:
    assert entity['downloadUrl'].endswith('/pika-'+entity['softwareVersion']+'.pkg'),(path,'release mismatch')
    assert entity['downloadUrl'] in page.links,(path,'structured data must match visible download')
    assert entity['url']==page.canonical,(path,'localized app URL')
+  if entity.get('@type')=='Article':
+   assert entity['url']==entity['mainEntityOfPage']==page.canonical,(path,'article canonical')
+   assert entity['inLanguage']==page.lang,(path,'article language')
+   assert entity['headline'] in page.title_text,(path,'article title')
+   assert date.fromisoformat(entity['datePublished'])<=date.fromisoformat(entity['dateModified'])<=TODAY,(path,'article dates')
  canonical.add(page.canonical)
  for href in page.links+page.assets+list(page.alternates.values()):
   if not href or href.startswith(('#','data:','mailto:')):continue
@@ -78,6 +83,10 @@ for path in pages:
   assert target.exists(),(path,href,target)
  print('PASS',path.relative_to(ROOT),page.lang)
 for url,page in parsed.items():
+ if '/macbook-lid-closed/' in url:
+  home=BASE+('/' if page.lang=='en' else '/'+page.lang+'/')
+  assert url.removeprefix(BASE) in parsed[home].links,(url,'missing localized homepage link')
+  assert len(page.alternates)==16,(url,'article language coverage')
  assert page.alternates.get(page.lang)==url,(url,'missing self hreflang')
  for language,alternate in page.alternates.items():
   assert alternate in parsed,(url,'unknown alternate',alternate)
@@ -114,4 +123,4 @@ while pending:
 assert reachable==canonical,('orphaned pages',canonical-reachable)
 assert 'Sitemap: '+BASE+'/sitemap.xml' in (ROOT/'robots.txt').read_text()
 assert (ROOT/'CNAME').read_text().strip()=='no-sleep-pika.online'
-print('PASS 19 pages: reciprocal hreflang, sitemap dates, canonical/OG consistency, schema release, crawlable guides, assets and anchors')
+print('PASS 34 pages: reciprocal hreflang, sitemap dates, canonical/OG consistency, schema release, crawlable guides, assets and anchors')
