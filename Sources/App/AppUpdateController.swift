@@ -12,6 +12,8 @@ final class AppUpdateController: NSObject {
     private let label = NSTextField(wrappingLabelWithString: "")
     private let button = NSButton(title: "업데이트 확인", target: nil, action: nil)
     private let progress = NSProgressIndicator()
+    private let downloadLink = NSButton(title: "다운로드 페이지", target: nil, action: nil)
+    private var nextAutomaticCheck = Date.distantPast
 
     var menuTitle: String { available.map { "pika \($0.version) 업데이트…" } ?? "업데이트 확인…" }
 
@@ -22,7 +24,9 @@ final class AppUpdateController: NSObject {
 
     func checkAutomatically() {
         let last = UserDefaults.standard.double(forKey: "lastUpdateCheck")
-        guard Date().timeIntervalSince1970 - last > 86_400 else { return }
+        guard !working, Date() >= nextAutomaticCheck, Date().timeIntervalSince1970 - last > 86_400 else { return }
+        // Activation after a failed check must not repeatedly consume the fallback API quota.
+        nextAutomaticCheck = Date().addingTimeInterval(900)
         check()
     }
 
@@ -42,7 +46,11 @@ final class AppUpdateController: NSObject {
             progress.frame = NSRect(x: 24, y: 29, width: 20, height: 20)
             progress.style = .spinning
             progress.isDisplayedWhenStopped = false
-            for view in [label, button, progress] { window.contentView?.addSubview(view) }
+            downloadLink.frame = NSRect(x: 22, y: 22, width: 122, height: 32)
+            downloadLink.bezelStyle = .rounded
+            downloadLink.target = self
+            downloadLink.action = #selector(openDownloadPage)
+            for view in [label, button, progress, downloadLink] { window.contentView?.addSubview(view) }
             self.window = window
         }
         render()
@@ -55,12 +63,17 @@ final class AppUpdateController: NSObject {
         label.stringValue = status
         button.title = available == nil ? "다시 확인" : "업데이트 후 재실행"
         button.isEnabled = !working
+        downloadLink.isHidden = working
         if working { progress.startAnimation(nil) } else { progress.stopAnimation(nil) }
         onChange?()
     }
 
     @objc private func action() {
         if available != nil { beginUpdate() } else { check() }
+    }
+
+    @objc private func openDownloadPage() {
+        NSWorkspace.shared.open(URL(string: "https://no-sleep-pika.online/")!)
     }
 
     private func check() {

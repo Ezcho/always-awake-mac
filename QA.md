@@ -205,3 +205,12 @@ GitHub Actions의 macos-15 환경에서도 소스 `b128f09`의 테스트·Univer
 - 전체 로직·MCP·UI diagnostics·status icon lifecycle 검사 및 39개 업데이트 검증과 fake installer 3케이스 통과. AppleScript는 샌드박스의 표준 명령 해석 제한 때문에 외부에서 문법 컴파일만 수행했고 성공했습니다. 실제 관리자 스크립트는 실행하지 않았습니다.
 - Universal arm64/x86_64 앱·updater 서명 검사, helper discovery, PKG payload·버전·정확한 서명 pin·must-close 검사 통과. 신규 프로세스 이름과 번들 진입점 일치 확인. 실제 관리자 설치, 재실행, 덮개 동작은 사용자 테스트 대상입니다.
 - 소스 커밋 `5e0763368e2017b9c41a500fbcde2c667c1059c4`의 GitHub CI `36741733948` 전체 성공. 공개 v1.0.11의 실제 최신 릴리스 조회와 PKG 다운로드를 앱과 같은 UpdateDownload 코드로 검증했으며, 1.0.10보다 새 버전으로 인식했습니다. 다운로드 2,329,801 bytes, SHA256 `7a62303b5de3dd2b523ab5995eb52b30554c2d016a62004547d95f402b5c4424` 일치. 관리자 설치는 실행하지 않았습니다.
+
+### 2026-10-01 · 1.0.10 업데이트 조회 실패 / 1.0.12 수정
+
+- 설치된 앱은 1.0.10 build 13. 해당 프로세스의 macOS CFNetwork 로그에서 01:12:15~01:12:28 TLS 성공 후 HTTP 403 응답을 6회 확인했습니다. 같은 GitHub latest API 응답의 rate-limit은 60/60 사용, remaining 0이었습니다. 설치기 실행 전 메타데이터 조회 실패이며, last-update.log는 아직 생성되지 않았습니다. 원래 코드는 이 HTTP 오류를 일반 인터넷 연결 오류로만 표시했습니다.
+- 공식 홈페이지 `/updates/latest.json` 및 버전 고정 `/updates/vVERSION.json`을 우선 조회하고 GitHub REST API는 예비 경로로 사용합니다. 두 경로 모두 기존 정식 버전·고정 저장소 PKG URL·크기·SHA256 검증을 거칩니다. 응답 본문이나 사용자 IP, 인증 토큰을 로그에 남기지 않습니다.
+- 실패 후 앱 활성화가 반복돼도 자동 확인은 15분 간격으로 제한합니다. 수동 재시도는 유지하고 업데이트 창에서 다운로드 페이지를 열 수 있습니다. `com.alwaysawake.mac` / `Update` 로그에 조회 호스트·HTTP 상태·검증 성공 버전을 기록합니다.
+- 기존 39개 검증, 가상 네트워크 21개 검사(사이트 우선, API 미사용, 404/timeout/잘못된 JSON·해시·버전 fallback, 403/429, offline, 취소), feed 생성 5개 검사 및 fake installer 3개 케이스 통과. 관리자 AppleScript는 문법만 컴파일했습니다.
+- 정적 feed 생성기는 이미 공개된 릴리스의 digest·크기·URL과 로컬 PKG를 대조하며 버전별 feed 변경과 latest 다운그레이드를 거절합니다. release 원문이나 토큰을 정적 사이트에 복사하지 않습니다.
+- 1.0.10/1.0.11 바이너리의 조회 경로를 원격으로 바꿀 수는 없습니다. 해당 앱은 한도 해제 후 앱 내 업데이트 또는 수정 PKG의 1회 수동 설치가 필요합니다. 실제 관리자 설치·세션·덮개 상태는 이번 점검에서 변경하지 않았습니다.
