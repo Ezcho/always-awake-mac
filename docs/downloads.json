@@ -1,8 +1,64 @@
 {
-  "total": 11,
-  "updatedAt": "2026-09-29T13:15:56.799928+00:00",
+  "total": 36,
+  "updatedAt": "2026-09-30T16:09:36.647775+00:00",
   "source": "GitHub release assets",
   "assets": [
+    {
+      "name": "pika-1.0.11.pkg",
+      "downloads": 0
+    },
+    {
+      "name": "pika-helper-1.0.11.pkg",
+      "downloads": 0
+    },
+    {
+      "name": "pika-1.0.10.pkg",
+      "downloads": 3
+    },
+    {
+      "name": "pika-1.0.9.pkg",
+      "downloads": 3
+    },
+    {
+      "name": "pika-1.0.8.pkg",
+      "downloads": 3
+    },
+    {
+      "name": "pika-1.0.7.pkg",
+      "downloads": 1
+    },
+    {
+      "name": "pika-1.0.6.pkg",
+      "downloads": 5
+    },
+    {
+      "name": "pika-1.0.5.dmg",
+      "downloads": 3
+    },
+    {
+      "name": "pika-1.0.5.pkg",
+      "downloads": 0
+    },
+    {
+      "name": "pika-1.0.5.zip",
+      "downloads": 0
+    },
+    {
+      "name": "pika-helper-1.0.5.pkg",
+      "downloads": 2
+    },
+    {
+      "name": "pika-1.0.4.dmg",
+      "downloads": 2
+    },
+    {
+      "name": "pika-1.0.4.pkg",
+      "downloads": 0
+    },
+    {
+      "name": "pika-1.0.4.zip",
+      "downloads": 0
+    },
     {
       "name": "Always-Awake-1.0.3.dmg",
       "downloads": 7
@@ -13,7 +69,7 @@
     },
     {
       "name": "pika-1.0.3.dmg",
-      "downloads": 0
+      "downloads": 3
     },
     {
       "name": "Always-Awake-1.0.2.dmg",
