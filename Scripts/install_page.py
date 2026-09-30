@@ -4,7 +4,7 @@ import json
 
 COPY = {
 'en': {
-    'title': 'Install pika', 'description': 'Install pika and its helper together with one PKG, then open the app.',
+    'title': 'Install pika on Mac: PKG and helper setup', 'description': 'Install pika in Applications with its helper using one PKG. Follow macOS security prompts, quit older versions, and troubleshoot helper installation failures.',
     'back': 'Back', 'skip': 'Skip to instructions', 'language': 'Guide language',
     'intro': 'A home in Applications. Controls in your menu bar.',
     'languages': 'This guide is available in English and Korean. Other languages use English.',
@@ -23,7 +23,7 @@ COPY = {
     'github': 'GitHub installation documentation', 'ready': 'When ready: Session ON → close your MacBook’s lid.',
 },
 'ko': {
-    'title': 'pika 설치하기', 'description': 'PKG 하나로 pika와 보조 서비스를 함께 설치하고 앱을 여세요.',
+    'title': 'Mac에 pika 설치하기: PKG와 보조 서비스', 'description': 'PKG 하나로 pika와 보조 서비스를 응용 프로그램에 설치하세요. 기존 앱 종료, macOS 보안 경고와 보조 서비스 설치 실패 해결 방법을 안내합니다.',
     'back': '홈으로', 'skip': '설치 안내로 이동', 'language': '안내 언어',
     'intro': '응용 프로그램에 설치하고, 메뉴 막대에서 사용하세요.',
     'languages': '이 안내는 한국어와 영어를 지원합니다. 그 외 언어는 영어로 표시됩니다.',
@@ -48,6 +48,7 @@ def render(locale, base, repo):
     e = html.escape
     url = base + ('/install/ko/' if locale == 'ko' else '/install/')
     home = '/ko/' if locale == 'ko' else '/'
+    guide = '/guide/ko/' if locale == 'ko' else '/guide/'
     def visual(index):
         # Abstract diagrams, not screenshots or interactive system controls.
         if index == 0:
@@ -57,10 +58,11 @@ def render(locale, base, repo):
         return '<div class="diagram"><span class="app-icon">pika</span><span class="arrow" aria-hidden="true">→</span><div class="mini-window"><span class="window-dots">● ● ●</span><strong>pika</strong><span>Session <i></i></span><span>Monitor <i></i></span></div></div>'
     steps = ''.join(f'<li><span class="step-number">{i+1:02}</span>{visual(i)}<h2>{e(title)}</h2><p>{e(body)}</p></li>' for i, (title, body) in enumerate(t['steps']))
     helper = ''.join(f'<li>{e(step)}</li>' for step in t['helper_steps'])
-    schema = {'@context': 'https://schema.org', '@type': 'WebPage', 'name': t['title'], 'description': t['description'], 'url': url, 'inLanguage': locale}
+    schema = {'@context': 'https://schema.org', '@type': 'WebPage', 'name': t['title'], 'description': t['description'], 'url': url, 'inLanguage': locale, 'dateModified': '2026-09-30', 'isPartOf': {'@id': base + '/#website'}, 'about': {'@id': base + '/#app'}}
     return f'''<!doctype html>
 <html lang="{locale}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(t['title'])} — no-sleep-pika</title><meta name="description" content="{e(t['description'])}">
+<meta name="robots" content="index,follow,max-image-preview:large"><meta property="og:type" content="article"><meta property="og:site_name" content="no-sleep-pika"><meta property="og:title" content="{e(t['title'])}"><meta property="og:description" content="{e(t['description'])}"><meta property="og:url" content="{url}"><meta property="og:image" content="{base}/assets/pika-working.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="{url}"><link rel="alternate" hreflang="en" href="{base}/install/"><link rel="alternate" hreflang="ko" href="{base}/install/ko/"><link rel="alternate" hreflang="x-default" href="{base}/install/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/install/install.css"><script src="/install/install.js" defer></script>
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script></head>
@@ -68,7 +70,7 @@ def render(locale, base, repo):
 <main id="main"><a class="back" href="{home}">← {e(t['back'])}</a><h1>{e(t['title'])}</h1><p class="intro">{e(t['intro'])}</p><ol class="steps">{steps}</ol>
 <aside class="notice"><p>{e(t['warning'])}</p><p>{e(t['do_not'])}</p><a href="https://support.apple.com/{'ko-kr' if locale == 'ko' else 'en-us'}/102445">{e(t['apple'])} ↗</a></aside>
 <section class="helper" aria-labelledby="helper-title"><h2 id="helper-title">{e(t['helper_title'])}</h2><p>{e(t['helper_intro'])}</p><ol>{helper}</ol><p class="muted">{e(t['helper_note'])}</p><p class="ready">{e(t['ready'])}</p></section>
-</main><footer><a href="{repo}#readme">{e(t['github'])} ↗</a><p>{e(t['languages'])}</p></footer></div></body></html>'''
+</main><footer><a href="{guide}">{'덮개·잠금·네트워크·MCP 사용 안내' if locale == 'ko' else 'Lid, lock, network & MCP guide'} →</a><a href="{repo}#readme">{e(t['github'])} ↗</a><p>{e(t['languages'])}</p></footer></div></body></html>'''
 
 
 def build(out, base, repo):

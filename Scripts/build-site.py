@@ -3,8 +3,8 @@
 from pathlib import Path
 import html
 import json
-from datetime import date
 from install_page import build as build_install
+from support_page import build as build_support, UPDATED as SUPPORT_UPDATED
 from mcp_guide import render as render_mcp_guide
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -12,8 +12,11 @@ OUT = ROOT / 'docs'
 BASE = 'https://no-sleep-pika.online'
 REPO = 'https://github.com/Ezcho/always-awake-mac'
 # Keep this aligned with the published release, not the unreleased source version.
-RELEASE = 'v1.0.7'
-DOWNLOAD = f'{REPO}/releases/download/{RELEASE}/pika-1.0.7.pkg'
+RELEASE = 'v1.0.8'
+DOWNLOAD = f'{REPO}/releases/download/{RELEASE}/pika-{RELEASE[1:]}.pkg'
+# Content dates are intentional, not the time the generator happened to run.
+HOME_UPDATED = '2026-09-30'
+INSTALL_UPDATED = '2026-09-30'
 LANGUAGES = [('en','English'),('ko','한국어'),('zh-CN','简体中文'),('zh-TW','繁體中文'),('ja','日本語'),('hi','हिन्दी'),('id','Bahasa Indonesia'),('es','Español'),('fr','Français'),('de','Deutsch'),('pt-BR','Português'),('ru','Русский'),('ar','العربية'),('vi','Tiếng Việt'),('th','ไทย')]
 KEYS = '''title description skip features connect download eyebrow headline intro source release compatibility scroll feature1 body1 feature2 body2 feature3 body3 controls controlstitle controlsbody window mcp mcptitle mcpbody buildstep addstep toolstep copy copied copyfail installation installtitle install1 install2 install3 limitation safety faq q1 a1 q2 a2 q3 a3 footer language screenshot buildlabel configlabel'''.split()
 TEXT = {}
@@ -23,8 +26,8 @@ def add(locale, values):
     TEXT[locale] = dict(zip(KEYS, values))
 
 add('en', '''
-no-sleep-pika — Mac sleep & display controls
-Meet no-sleep-pika: a lightweight macOS menu bar app for session and display controls, with battery and thermal monitoring and an MCP interface for AI agents.
+no-sleep-pika — Keep your MacBook awake with the lid closed
+Keep MacBook work running with the lid closed. pika offers Session and Monitor controls, battery and thermal monitoring, and local MCP tools for AI agents.
 Skip to content
 The app
 Connect MCP
@@ -33,7 +36,7 @@ A SMALL APP FOR LONGER SESSIONS
 A little pika.<br>A longer session.
 Session and display controls, right in your Mac’s menu bar. A quiet companion for work that takes a little longer.
 View source
-Public release 1.0.7 · macOS 13+ · Apple Silicon & Intel
+Public release 1.0.8 · macOS 13+ · Apple Silicon & Intel
 Check installation requirements
 Meet your night-shift companion
 One session switch.
@@ -76,8 +79,8 @@ Build from source
 MCP command
 ''')
 add('ko', '''
-no-sleep-pika — Mac 잠자기·화면 제어
-no-sleep-pika는 메뉴 막대에서 세션과 화면을 제어하는 가벼운 macOS 앱입니다. 배터리·열 상태 모니터링과 AI 에이전트용 MCP 인터페이스를 제공합니다.
+no-sleep-pika — 맥북 덮개 닫고 작업하는 잠자기 방지 앱
+맥북 덮개를 닫아도 작업을 이어가세요. pika는 Session·Monitor 제어, 배터리·열 상태 감시와 AI 에이전트용 로컬 MCP 연결을 제공하는 macOS 메뉴 막대 앱입니다.
 본문으로 이동
 앱 소개
 MCP 연결
@@ -86,7 +89,7 @@ Mac용 다운로드
 작은 피카.<br>조금 더 긴 작업.
 Mac 메뉴 막대에서 세션과 화면을 간편하게 제어하세요. 시간이 더 필요한 작업 곁에 조용히 머뭅니다.
 소스코드 보기
-공개 버전 1.0.7 · macOS 13+ · Apple Silicon 및 Intel
+공개 버전 1.0.8 · macOS 13+ · Apple Silicon 및 Intel
 설치 요구사항 확인
 야근을 함께할 작은 친구
 세션은 스위치 하나로.
@@ -139,7 +142,7 @@ no-sleep-pika 是轻量级 macOS 菜单栏应用，提供会话与显示控制�
 小小鼠兔。<br>陪你多做一会儿。
 在 Mac 菜单栏轻松控制会话和屏幕。为需要更多时间的工作，留一个安静的伙伴。
 查看源代码
-公开版本 1.0.7 · macOS 13+ · Apple Silicon 与 Intel
+公开版本 1.0.8 · macOS 13+ · Apple Silicon 与 Intel
 查看安装要求
 认识你的夜班伙伴
 一个开关，管理会话。
@@ -192,7 +195,7 @@ no-sleep-pika 是輕量 macOS 選單列應用程式，提供工作階段與螢�
 小小鼠兔。<br>陪你多做一會兒。
 在 Mac 選單列輕鬆控制工作階段與螢幕。為需要更多時間的工作，留一位安靜的夥伴。
 查看原始碼
-公開版本 1.0.7 · macOS 13+ · Apple Silicon 與 Intel
+公開版本 1.0.8 · macOS 13+ · Apple Silicon 與 Intel
 查看安裝需求
 認識你的夜班夥伴
 一個開關，管理工作階段。
@@ -245,7 +248,7 @@ Mac 版をダウンロード
 小さなナキウサギ。<br>もう少し、作業のそばに。
 Mac のメニューバーからセッションと画面を操作。時間のかかる作業に、静かな相棒を。
 ソースを見る
-公開版 1.0.7 · macOS 13+ · Apple Silicon / Intel
+公開版 1.0.8 · macOS 13+ · Apple Silicon / Intel
 インストール要件を見る
 夜の作業の小さな相棒
 セッションはスイッチひとつ。
@@ -298,7 +301,7 @@ Mac के लिए डाउनलोड
 नन्हा पिका।<br>काम के लिए थोड़ा और समय।
 Mac के मेनू बार से सेशन और स्क्रीन नियंत्रित करें। समय लेने वाले काम के लिए एक शांत साथी।
 सोर्स कोड देखें
-सार्वजनिक संस्करण 1.0.7 · macOS 13+ · Apple Silicon और Intel
+सार्वजनिक संस्करण 1.0.8 · macOS 13+ · Apple Silicon और Intel
 इंस्टॉल करने की ज़रूरतें देखें
 रात के काम का छोटा साथी
 सेशन के लिए एक स्विच।
@@ -351,7 +354,7 @@ APLIKASI KECIL, SESI LEBIH PANJANG
 Pika kecil.<br>Waktu kerja lebih panjang.
 Kontrol sesi dan layar langsung dari bilah menu Mac. Teman tenang untuk pekerjaan yang butuh sedikit waktu lagi.
 Lihat kode sumber
-Rilis publik 1.0.7 · macOS 13+ · Apple Silicon & Intel
+Rilis publik 1.0.8 · macOS 13+ · Apple Silicon & Intel
 Lihat persyaratan instalasi
 Kenali teman kerja malam Anda
 Satu sakelar untuk sesi.
@@ -404,7 +407,7 @@ UNA PEQUEÑA APP PARA SESIONES MÁS LARGAS
 Una pequeña pika.<br>Un poco más de tiempo.
 Controla las sesiones y la pantalla desde la barra de menús del Mac. Una compañía discreta para el trabajo que necesita un poco más de tiempo.
 Ver código fuente
-Versión pública 1.0.7 · macOS 13+ · Apple Silicon e Intel
+Versión pública 1.0.8 · macOS 13+ · Apple Silicon e Intel
 Consultar requisitos de instalación
 Tu compañía para el turno de noche
 Un interruptor para la sesión.
@@ -457,7 +460,7 @@ UNE PETITE APP POUR PRENDRE SON TEMPS
 Un petit pika.<br>Un peu plus de temps.
 Contrôlez les sessions et l’écran depuis la barre des menus du Mac. Un compagnon discret pour les tâches qui demandent un peu plus de temps.
 Voir le code source
-Version publique 1.0.7 · macOS 13+ · Apple Silicon et Intel
+Version publique 1.0.8 · macOS 13+ · Apple Silicon et Intel
 Consulter les prérequis
 Votre compagnon de nuit
 Un seul interrupteur pour la session.
@@ -510,7 +513,7 @@ KLEINE APP, LÄNGERE SITZUNGEN
 Ein kleiner Pfeifhase.<br>Ein bisschen mehr Zeit.
 Sitzungen und Display direkt über die Menüleiste steuern. Ein stiller Begleiter für Arbeit, die etwas länger dauert.
 Quellcode ansehen
-Öffentliche Version 1.0.7 · macOS 13+ · Apple Silicon & Intel
+Öffentliche Version 1.0.8 · macOS 13+ · Apple Silicon & Intel
 Installationsvoraussetzungen
 Dein Begleiter für die Nachtschicht
 Ein Schalter für die Sitzung.
@@ -563,7 +566,7 @@ UM APP PEQUENO PARA SESSÕES MAIS LONGAS
 Uma pequena pika.<br>Um pouco mais de tempo.
 Controle a sessão e a tela direto da barra de menus do Mac. Uma companhia discreta para o trabalho que precisa de mais um tempinho.
 Ver código-fonte
-Versão pública 1.0.7 · macOS 13+ · Apple Silicon e Intel
+Versão pública 1.0.8 · macOS 13+ · Apple Silicon e Intel
 Conferir requisitos de instalação
 Sua companhia no turno da noite
 Um interruptor para a sessão.
@@ -616,7 +619,7 @@ no-sleep-pika — лёгкое приложение для строки меню
 Маленькая пищуха.<br>Чуть больше времени.
 Управляйте сеансом и экраном из строки меню Mac. Тихий спутник для работы, которой нужно немного больше времени.
 Исходный код
-Публичная версия 1.0.7 · macOS 13+ · Apple Silicon и Intel
+Публичная версия 1.0.8 · macOS 13+ · Apple Silicon и Intel
 Требования к установке
 Ваш спутник в ночную смену
 Один переключатель сеанса.
@@ -669,7 +672,7 @@ no-sleep-pika تطبيق خفيف لشريط قوائم macOS للتحكم في 
 بيكا صغير.<br>وقت أطول للعمل.
 تحكّم في الجلسة والشاشة مباشرة من شريط قوائم Mac. رفيق هادئ للعمل الذي يحتاج إلى مزيد من الوقت.
 عرض الشيفرة المصدرية
-الإصدار العام 1.0.7 · macOS 13+ · Apple Silicon وIntel
+الإصدار العام 1.0.8 · macOS 13+ · Apple Silicon وIntel
 متطلبات التثبيت
 تعرّف إلى رفيق العمل الليلي
 مفتاح واحد للجلسة.
@@ -722,7 +725,7 @@ Tải cho Mac
 Pika bé nhỏ.<br>Thêm thời gian làm việc.
 Điều khiển phiên và màn hình ngay trên thanh menu Mac. Người bạn yên lặng cho những công việc cần thêm chút thời gian.
 Xem mã nguồn
-Bản công khai 1.0.7 · macOS 13+ · Apple Silicon & Intel
+Bản công khai 1.0.8 · macOS 13+ · Apple Silicon & Intel
 Xem yêu cầu cài đặt
 Người bạn đồng hành ca đêm
 Một công tắc cho phiên.
@@ -775,7 +778,7 @@ no-sleep-pika เป็นแอปแถบเมนู macOS ขนาดเ�
 พิกาตัวน้อย<br>เพิ่มเวลาทำงานอีกนิด
 ควบคุมเซสชันและหน้าจอจากแถบเมนู Mac เพื่อนเงียบ ๆ สำหรับงานที่ต้องการเวลาเพิ่มอีกหน่อย
 ดูซอร์สโค้ด
-รุ่นสาธารณะ 1.0.7 · macOS 13+ · Apple Silicon และ Intel
+รุ่นสาธารณะ 1.0.8 · macOS 13+ · Apple Silicon และ Intel
 ดูข้อกำหนดการติดตั้ง
 เพื่อนร่วมงานยามค่ำคืน
 สวิตช์เดียวสำหรับเซสชัน
@@ -844,13 +847,18 @@ def render(locale):
     alternate = '\n'.join(f'<link rel="alternate" hreflang="{code}" href="{page_url(code)}">' for code, _ in LANGUAGES)
     options = '\n'.join(f'<option value="{code}" lang="{code}"{(" selected" if code == locale else "")}>{name}</option>' for code, name in LANGUAGES)
     language_links = ' '.join(f'<a href="{page_path(code)}" hreflang="{code}" lang="{code}">{name}</a>' for code, name in LANGUAGES)
-    schema = {'@context':'https://schema.org','@type':'SoftwareApplication','name':'no-sleep-pika','alternateName':'pika','url':BASE,'applicationCategory':'UtilitiesApplication','operatingSystem':'macOS 13 or later','description':t['description'],'softwareVersion':'1.0.7','downloadUrl':DOWNLOAD,'image':BASE+'/assets/pika-working.png','codeRepository':REPO,'inLanguage':locale}
+    guide_path = '/guide/ko/' if locale == 'ko' else '/guide/'
+    install_path = '/install/ko/' if locale == 'ko' else '/install/'
+    schema = {'@context':'https://schema.org','@type':'SoftwareApplication','@id':BASE+'/#app','name':'no-sleep-pika','alternateName':'pika','url':page_url(locale),'applicationCategory':'UtilitiesApplication','operatingSystem':'macOS 13 or later','description':t['description'],'softwareVersion':RELEASE[1:],'downloadUrl':DOWNLOAD,'image':BASE+'/assets/pika-working.png','sameAs':REPO,'inLanguage':locale,'softwareHelp':{'@type':'WebPage','url':BASE+guide_path},'installUrl':BASE+install_path}
     snapshot = json.loads((OUT / 'downloads.json').read_text())
     count = snapshot['total']
     assert isinstance(count, int) and count >= 0
     updated = esc(snapshot['updatedAt'])
     schema['offers'] = {'@type': 'Offer', 'price': '0', 'priceCurrency': 'USD'}
     schema['isAccessibleForFree'] = True
+    metadata = {'@context':'https://schema.org','@graph':[
+        {'@type':'WebSite','@id':BASE+'/#website','url':BASE+'/','name':'no-sleep-pika','alternateName':'pika'},
+        {'@type':'WebPage','@id':page_url(locale)+'#page','url':page_url(locale),'name':t['title'],'description':t['description'],'inLanguage':locale,'dateModified':HOME_UPDATED,'isPartOf':{'@id':BASE+'/#website'},'mainEntity':{'@id':BASE+'/#app'}}]}
     return f'''<!doctype html>
 <html lang="{locale}" dir="{'rtl' if locale == 'ar' else 'ltr'}">
 <head>
@@ -869,6 +877,7 @@ def render(locale):
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/style.css"><script src="/site.js" defer></script><script src="/downloads.js" defer></script>
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
+<script type="application/ld+json">{json.dumps(metadata, ensure_ascii=False)}</script>
 </head>
 <body data-locale="{locale}">
 <a class="skip" href="#main">{h('skip')}</a>
@@ -884,7 +893,7 @@ def render(locale):
 <p class="download-meta"><span id="download-count" data-label="{h('downloads')}" data-updated-at="{updated}" title="GitHub · {updated}" aria-live="polite">{count:,} {h('downloads')}</span></p><p class="release">{h('release')}</p></div>
 <section id="mcp" class="mcp" aria-labelledby="mcp-title"><div class="mcp-heading"><h2 id="mcp-title">{h('connect')}</h2><span>STDIO</span></div><p class="mcp-note">{h('mcpnote')} <a href="{REPO}#mcp">{h('source')} ↗</a></p>
 <div class="terminal-body"><div class="command" dir="ltr"><code id="mcp-command">/Applications/pika.app/Contents/MacOS/pika-mcp</code><button class="copy" data-copy="mcp-command" data-copied="{h('copied')}" data-failed="{h('copyfail')}">{h('copy')}</button></div><span class="copy-status sr-only" role="status" aria-live="polite"></span></div>{render_mcp_guide(locale, t["copy"], t["copied"], t["copyfail"])}</section>
-<a class="help-link" href="/install/?lang={locale}">{"설치 도움말" if locale == "ko" else "Installation help" if locale == "en" else h("compatibility")} ↗</a>
+<nav class="help-link" aria-label="{"도움말" if locale == "ko" else "Help"}"><a href="{install_path}">{"설치 도움말" if locale == "ko" else "Installation help" if locale == "en" else h("compatibility")} ↗</a> · <a href="{guide_path}" lang="{"ko" if locale == "ko" else "en"}">{"덮개·잠금·연결 안내" if locale == "ko" else "Lid, lock & connection guide" if locale == "en" else "User guide · English"} ↗</a></nav>
 </main>
 <noscript><nav class="language-fallback" aria-label="{h('language')}">{language_links}</nav></noscript>
 </div></body></html>'''
@@ -898,14 +907,17 @@ def main():
         (dest / 'index.html').write_text(render(locale), encoding='utf-8')
     alternatives = ''.join(f'<xhtml:link rel="alternate" hreflang="{code}" href="{page_url(code)}"/>' for code, _ in LANGUAGES)
     alternatives += f'<xhtml:link rel="alternate" hreflang="x-default" href="{BASE}/"/>'
-    # No fabricated lastmod date: source changes determine deploy dates.
-    entries = ''.join(f'<url><loc>{page_url(code)}</loc>{alternatives}</url>' for code, _ in LANGUAGES)
+    entries = ''.join(f'<url><loc>{page_url(code)}</loc><lastmod>{HOME_UPDATED}</lastmod>{alternatives}</url>' for code, _ in LANGUAGES)
     install_urls = build_install(OUT, BASE, REPO)
-    entries += ''.join(f'<url><loc>{url}</loc></url>' for url in install_urls)
+    support_urls = build_support(OUT, BASE, REPO)
+    for urls, updated in ((install_urls, INSTALL_UPDATED), (support_urls, SUPPORT_UPDATED)):
+        alternates = ''.join(f'<xhtml:link rel="alternate" hreflang="{language}" href="{url}"/>' for language, url in zip(('en', 'ko'), urls))
+        alternates += f'<xhtml:link rel="alternate" hreflang="x-default" href="{urls[0]}"/>'
+        entries += ''.join(f'<url><loc>{url}</loc><lastmod>{updated}</lastmod>{alternates}</url>' for url in urls)
     (OUT / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' + entries + '</urlset>\n', encoding='utf-8')
     (OUT / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n', encoding='utf-8')
     (OUT / '.nojekyll').touch()
-    print(f'Built {len(LANGUAGES)} localized pages, sitemap.xml and robots.txt.')
+    print(f'Built {len(LANGUAGES)} localized homepages, 4 guides, sitemap.xml and robots.txt.')
 
 if __name__ == '__main__':
     main()

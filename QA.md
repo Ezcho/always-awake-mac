@@ -145,3 +145,12 @@ GitHub Actions의 macos-15 환경에서도 소스 `b128f09`의 테스트·Univer
 - 메뉴 막대는 22×22 단색 template 이미지입니다. OFF 정지, ON 타이핑 4fps, 복구 필요 시 ! 표시. 동작 줄이기 및 화면/시스템 잠자기에서는 애니메이션을 멈춥니다. 애니메이션은 장식이며 Session/Monitor의 덮개 조건과 전원 동작을 변경하지 않습니다.
 - 1×/2× 프레임을 한 번 만들어 재사용합니다. 1,000 tick 이미지 재사용, 10,000 동일 상태 갱신 시 단일 타이머 유지, 100 ON/OFF 반복, 잠자기/깨우기, observer 및 활성 타이머 teardown 검사를 통과했습니다. 실제 설치 앱의 Session은 조작하지 않았습니다.
 - 최종 1.0.8 Universal 앱·PKG, 기존 로직 검사 101개, 설치 시뮬레이션 23개, helper 경로 검사 3개, 아이콘 리소스 수명 검사를 통과했습니다. 배포 바이너리의 MCP 20,000회 검사도 2,720,224 bytes로 일정했습니다. 앱 아이콘의 실제 256px ICNS 원본과 메뉴 22px/확대 프레임을 시각 확인했습니다.
+- 소스 02c4dd9의 macOS 15 CI에서도 메모리 회귀 검사와 아이콘 수명 검사를 포함한 테스트·빌드·패키징이 통과했습니다: https://github.com/Ezcho/always-awake-mac/actions/runs/36726178804
+
+### 검색 노출 및 실제 Google 등록 상태
+
+- EN/KO 검색 제목·설명을 실제 덮개 사용 목적에 맞추고, 짧은 홈페이지에서 설치 및 사용 안내로 이어지는 HTML 링크를 추가했습니다. /guide/ 및 /guide/ko/는 덮개·화면 잠금·네트워크·메뉴 아이콘·MCP 질문에 답합니다.
+- 총 19개 페이지의 self-canonical, OG URL, reciprocal hreflang, 사이트맵과 HTML 대체 언어 일치, 실제 수정일, 내부 링크·앵커·고립 페이지 여부를 검사합니다. 가짜 평점이나 리뷰를 만들지 않았습니다.
+- Search Console에서 인증된 도메인 소유자, 사이트맵 성공, 기존 17개 페이지 발견을 확인했습니다. 영어 홈과 /ko/ 모두 개별 URL 검사에서 Google 등록/색인 생성/HTTPS 제공 상태를 확인했습니다. 전체 색인 보고서는 아직 데이터 처리 중입니다.
+- robots.txt의 실제 HTTPS 응답은 200이며 Allow: / 및 정식 sitemap URL을 제공합니다. Search Console 설정의 아직 수집되지 않은 robots 표시를 실제 파일 부재로 해석하지 않습니다.
+- Google 공식 참고: https://developers.google.com/search/docs/specialty/international/localized-versions , https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap , https://developers.google.com/search/docs/appearance/structured-data/software-app , https://developers.google.com/search/docs/fundamentals/creating-helpful-content
