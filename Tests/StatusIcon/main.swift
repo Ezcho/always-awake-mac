@@ -18,8 +18,8 @@ MainActor.assumeIsolated {
     }
     NSGraphicsContext.restoreGraphicsState()
     try! bitmap.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: ".build/status-icon-preview/preview.png"))
-    precondition(Set(PikaStatusArtwork.working.map { $0.tiffRepresentation! }).count == 4)
-    print("4 unique cached working frames, idle and recovery; 1×/2× template representations verified")
+    precondition(Set(PikaStatusArtwork.working.map { $0.tiffRepresentation! }).count == 2)
+    print("2 unique cached working frames, idle and recovery; 1×/2× template representations verified")
 }
 
 MainActor.assumeIsolated {
@@ -43,7 +43,7 @@ MainActor.assumeIsolated {
         let originalTimer = animationTimer(icon!)!
         for index in 1...1_000 {
             originalTimer.fire()
-            precondition(button.image === PikaStatusArtwork.working[index % 4], "Ticks must reuse cached images")
+            precondition(button.image === PikaStatusArtwork.working[index % PikaStatusArtwork.working.count], "Ticks must reuse cached images")
         }
         for _ in 0..<10_000 { icon!.update(.on) }
         precondition(animationTimer(icon!) === originalTimer)

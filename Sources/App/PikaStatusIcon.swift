@@ -4,7 +4,7 @@ import AppKit
 @MainActor
 enum PikaStatusArtwork {
     static let idle = image(frame: 0)
-    static let working = (0..<4).map { image(frame: $0 + 1) }
+    static let working = (1...2).map { image(frame: $0) }
     static let recovery = image(frame: 0, recovery: true)
 
     private static func image(frame: Int, recovery: Bool = false) -> NSImage {
@@ -28,53 +28,34 @@ enum PikaStatusArtwork {
                 if clear { context.clear(rect) } else { context.fill(rect) }
             }
 
-            // Short round ears, a rounded cheek and a compact body distinguish a pika from a rabbit.
-            let bob = frame == 2 || frame == 3 ? 1 : 0
-            let head = [
-                "..##..##...",
+            // B concept: each logical pixel is 2×2 points. Keep the face and
+            // laptop readable without widening the crowded 22-point status item.
+            let silhouette = [
+                "..##.##....",
+                ".#######...",
                 ".########..",
+                ".#####.##..",
                 ".########..",
-                "..########.",
-                ".##########",
-                ".##########",
-                "..########.",
-                "...######.."
+                "..######...",
+                "..#####....",
+                "..#####....",
+                "..#####....",
+                "...####...."
             ]
-            for (y, row) in head.enumerated() {
-                for (x, mark) in row.enumerated() where mark == "#" { pixel(x + 1, y + 3 + bob) }
+            for (y, row) in silhouette.enumerated() {
+                for (x, mark) in row.enumerated() where mark == "#" {
+                    pixel(x * 2, y * 2, 2, 2)
+                }
             }
-            pixel(4, 5 + bob, clear: true)
-            pixel(8, 5 + bob, clear: true)
-            pixel(9, 7 + bob, clear: true)
-            pixel(3, 11, 7, 1)
-            pixel(2, 12, 8, 5)
-            pixel(3, 17, 7, 2)
-            pixel(1, 15, 2, 2)
-            pixel(5, 14, 1, 3, clear: true)
-            pixel(7, 18, 4, 1)
-
-            // Angled open laptop and a one-pixel desk. The screen stays hollow at menu-bar size.
-            pixel(15, 10, 6)
-            pixel(14, 11, 1, 3)
-            pixel(13, 14, 1, 3)
-            pixel(20, 11, 1, 3)
-            pixel(19, 14, 1, 3)
-            pixel(14, 16, 5)
-            pixel(11, 17, 9)
-            pixel(2, 20, 19)
-            if frame == 0 {
-                pixel(10, 15, 3)
-            } else if frame % 2 == 1 {
-                pixel(10, 13, 3)
-                pixel(10, 16, 2)
-            } else {
-                pixel(10, 14, 2)
-                pixel(11, 15, 2)
-            }
+            // Bold laptop screen, base and alternating typing paw.
+            pixel(18, 10, 4, 2)
+            pixel(20, 12, 2, 8)
+            pixel(12, 18, 8, 2)
+            pixel(2, 20, 20, 2)
+            pixel(12, frame == 2 ? 16 : 14, 6, 2)
             if recovery {
-                // A separate exclamation badge remains legible without relying on color.
-                pixel(18, 2, 1, 3)
-                pixel(18, 6)
+                pixel(20, 2, 2, 4)
+                pixel(20, 8, 2, 2)
             }
             image.addRepresentation(bitmap)
         }

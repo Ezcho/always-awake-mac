@@ -156,3 +156,10 @@ GitHub Actions의 macos-15 환경에서도 소스 `b128f09`의 테스트·Univer
 - 58e4ef5의 Pages 배포와 macOS CI가 성공했습니다. 공개 사이트맵의 19개 URL 및 새 가이드 본문을 HTTPS로 확인했습니다. 한국어 홈은 1280×720 및 390×844에서 한 화면 구성과 가로 넘침 없음을 확인했고, 가이드는 데스크톱 본문·사이드바 및 모바일 단일 열 배치를 확인했습니다.
 - 신규 /guide/ 및 /guide/ko/는 Google 실제 URL 테스트에서 색인 가능 및 유효한 탐색경로를 확인한 뒤 각각 한 번 색인 요청했습니다. 두 URL 모두 우선순위 크롤링 대기열 추가를 확인했습니다. 이는 요청 접수이며 실제 색인 완료나 검색 순위를 뜻하지 않습니다. 기존 사이트맵과 이미 색인된 홈은 중복 제출하지 않았습니다.
 - Google 공식 참고: https://developers.google.com/search/docs/specialty/international/localized-versions , https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap , https://developers.google.com/search/docs/appearance/structured-data/software-app , https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+## 2026-09-30 / 1.0.9 build 12 — 승인된 B안 메뉴 막대 아이콘
+
+- 사용자가 선택한 옆모습 피카 시안을 22×22pt 템플릿 이미지로 적용했습니다. 2×2pt 픽셀과 굵은 노트북/앞발로 실제 크기 식별성을 개선합니다. 앱 아이콘 및 Session/Monitor/안전 정책은 변경하지 않습니다.
+- 고유 타이핑 프레임 두 개를 캐시하고 기존 4fps 타이머를 사용합니다. OFF/복구/동작 줄이기/화면·시스템 잠자기 처리와 타이머 해제 정책을 유지합니다.
+- 실제 22px 및 확대 프레임을 시각 확인했습니다. 기존 로직 검사 101개, 1,000 tick 캐시 재사용, 10,000 동일 상태 갱신, 100 ON/OFF, observer·timer 해제 검사를 통과했습니다.
+- arm64/x86_64 Universal 빌드·서명 무결성, PKG payload·서명 pin·버전 검사, 설치 시뮬레이션 23개, helper 경로 검사 3개 및 웹 19페이지 검사를 통과했습니다. 설치된 사용자 앱 실행/종료·관리자 설치·실제 Session 변경은 수행하지 않았습니다.
