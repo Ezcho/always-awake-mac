@@ -21,6 +21,7 @@
     const saved = readChoice();
     const preferred = locales.includes(saved) ? saved : (navigator.languages || [navigator.language]).map(resolveLocale).find(Boolean) || 'en';
     if (preferred !== 'en') {
+      window.pikaLanguageRedirect = true;
       location.replace(pathFor(preferred) + location.search + location.hash);
       return;
     }

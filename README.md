@@ -173,9 +173,10 @@ command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
 ## 홈페이지 방문 집계와 애니메이션
 
 - 홈페이지는 `Scripts/pika_motion.py`에서 같은 원본을 공유하는 16방향 시선·상체 자세를 만듭니다. 마우스가 움직이는 동안 손을 쉬고, 방향 전환은 최대 12Hz로 중간 자세를 순서대로 거칩니다. 350ms 동안 마우스 움직임이 없으면 약 83ms의 중간 복귀 자세를 거쳐 타이핑을 재개합니다. 고개·상체는 작은 범위로 기울며 노트북과 발 위치는 변형 가중치를 0으로 유지합니다. 유휴 폴링은 없고, 동작 줄이기·터치 입력에서는 시선을 추적하지 않으며 숨긴 탭에서는 타이핑도 멈춥니다. 원본 래스터 그림은 변경하지 않았습니다. 기존 이미지 생성 기록은 `docs/assets/pika-motion-prompt.txt`에 있습니다.
-- 작은 눈 아이콘은 다운로드 수와 별개의 누적 방문 집계입니다. `docs/analytics.json`의 `goatcounter`에 소유한 `사이트코드.goatcounter.com` 호스트를 넣고 GoatCounter 설정의 **Allow adding visitor counts on your website**를 켜야 실제 집계가 시작됩니다. 현재 null이면 연결 전이며 **—**로 표시합니다. 가짜 초기값이나 로컬 브라우저 누적 숫자를 사용하지 않습니다.
-- 공식 tracking pixel과 `counter/TOTAL.json`만 사용하며 외부 JavaScript나 API 비밀키를 싣지 않습니다. 공개 페이지 경로만 보내고 쿼리·유입주소는 생략합니다. 통계 서비스는 요청 IP/User-Agent를 받습니다. GPC 요청 및 로컬 미리보기는 집계하지 않습니다. 과거 방문 수는 복원하지 않으며 광고 차단·봇·서비스 집계 방식에 따른 차이가 있습니다. 공개 합계는 서비스 캐시 때문에 최대 4시간 늦게 갱신될 수 있습니다.
-- 참고: https://www.goatcounter.com/help/pixel 및 https://www.goatcounter.com/help/visitor-counter
+- Google Analytics 4로 방문·신규 사용자·유입 경로를 집계합니다. 측정 ID는 `docs/analytics.json`의 `measurementId`에 저장하며, `docs/ga.js`를 모든 34개 페이지에 공통으로 삽입합니다. 로컬 미리보기, GPC 활성 브라우저, 언어 자동 이동 직전의 중간 페이지는 제외합니다.
+- GitHub 설치 파일 링크 클릭은 `pika_download_click` 이벤트로 기록합니다. 이는 다운로드 완료나 설치 사용자 수가 아니며 GitHub 릴리스 다운로드 횟수와 별개입니다. Google signals 및 광고 개인화 신호는 사용하지 않습니다.
+- 통계는 소유자의 GA 대시보드에서 확인합니다. GA는 사이트에 공개할 누적 카운터 API를 제공하지 않으므로 기존 눈 아이콘은 `—`로 유지합니다. GoatCounter는 연결하지 않았으며 요청을 보내지 않습니다. GA 비밀키나 계정 인증 정보를 홈페이지에 넣지 않습니다.
+- 집계는 태그 배포 이후부터 시작하며 과거 방문을 복원하지 않습니다. 광고 차단·사용자 설정 등에 따라 실제 방문과 차이가 날 수 있습니다.
 
 ## 업데이트 정보 배포
 

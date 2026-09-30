@@ -934,6 +934,12 @@ def main():
     install_urls = build_install(OUT, BASE, REPO)
     support_urls = build_support(OUT, BASE, REPO)
     article_urls = build_article(OUT, BASE, REPO)
+    # Apply the same analytics loader to every generated language and guide.
+    for url in [page_url(code) for code, _ in LANGUAGES] + install_urls + support_urls + article_urls:
+        page = OUT / url.removeprefix(BASE).lstrip('/') / 'index.html'
+        content = page.read_text(encoding='utf-8')
+        content = content.replace('</head>', '<script src="/ga.js" defer></script></head>')
+        page.write_text(content, encoding='utf-8')
     for urls, updated, languages in ((install_urls, INSTALL_UPDATED, ('en', 'ko')), (support_urls, SUPPORT_UPDATED, ('en', 'ko')), (article_urls, ARTICLE_UPDATED, tuple(ARTICLE_PATHS))):
         alternates = ''.join(f'<xhtml:link rel="alternate" hreflang="{language}" href="{url}"/>' for language, url in zip(languages, urls))
         alternates += f'<xhtml:link rel="alternate" hreflang="x-default" href="{urls[0]}"/>'
