@@ -102,3 +102,11 @@
 - 앱 내 복구 다운로드는 통합 PKG를 검증해 Finder에 표시합니다. Installer를 연 뒤 앱 자동 종료가 완료됐다고 가정하는 경로를 제거하고, 명시적 pika 종료 버튼을 제공합니다.
 - 실제 관리자 설치, Session 및 덮개 동작은 사용자 테스트 대상으로 남깁니다.
 - 63개 기존 로직 테스트, 3개 프로세스 검사 회귀 사례, Universal 빌드, 설치 파일 내 앱/보조 서비스 payload·서명 pin·must-close·안내 리소스 확인 및 17개 웹 페이지 검사를 통과했습니다.
+
+## 2026-09-30 / 1.0.7 build 10 — 초기 전원 설정 호환성
+
+- M2/Sequoia 15.5에서 1.0.6 설치 실패 제보를 받았으나 대상 Mac의 로그에는 접근할 수 없습니다. 해당 실패의 원인은 확정하지 않았습니다.
+- 별도 코드 점검에서 설치기·앱·helper가 `pmset -g`의 SleepDisabled 행을 필수로 간주하는 결함을 확인했습니다. 유효한 system settings에 키가 없는 기본 상태에서는 행이 생략됩니다.
+- Apple 공개 소스의 show_system_power_settings 및 PMActivateSystemPowerSettings에 맞춰, 정상 System-wide power settings 헤더가 있고 키만 없는 경우 기본값 false로 읽습니다. 빈 출력·명령 실패·헤더 없는 미확인 상태·손상/중복 키는 계속 거부합니다. 시스템 설정을 강제로 0으로 초기화하지 않습니다.
+- 참고: https://github.com/apple-oss-distributions/PowerManagement/blob/main/pmset/pmset.m 및 https://github.com/apple-oss-distributions/PowerManagement/blob/main/pmconfigd/PMSettings.m
+- 설치기와 Swift 파서에 각각 초기값·명시적 ON/OFF·잘못된 출력 회귀 검사를 추가했습니다. 대상 Sequoia 실기 설치는 미검증이며 사용자 재시험이 필요합니다.

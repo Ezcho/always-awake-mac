@@ -7,13 +7,7 @@ import Darwin
 final class SystemSleepDriver: SleepDriver {
     func sleepIsDisabled() throws -> Bool {
         let text = try runPMSet(["-g"])
-        for line in text.split(separator: "\n") {
-            let fields = line.split(whereSeparator: { $0.isWhitespace })
-            if fields.first == "SleepDisabled", fields.count == 2, let value = Int(fields[1]), [0, 1].contains(value) {
-                return value == 1
-            }
-        }
-        throw AwakeError("이 macOS에서 잠자기 상태를 확인할 수 없습니다.")
+        return try SleepSetting.disabled(in: text)
     }
 
     func setSleepDisabled(_ disabled: Bool) throws {

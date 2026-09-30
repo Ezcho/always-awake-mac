@@ -33,14 +33,10 @@ final class SystemSleepController {
             throw AwakeError("잠자기 설정 확인 시간이 초과되었습니다. 다시 시도해 주세요.")
         }
         let text = String(decoding: output.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
-        let disabled = text.split(separator: "\n").compactMap { line -> Bool? in
-            let parts = line.split(whereSeparator: { $0.isWhitespace })
-            guard parts.count == 2, parts[0] == "SleepDisabled", ["0", "1"].contains(parts[1]) else { return nil }
-            return parts[1] == "1"
-        }.first
-        guard process.terminationStatus == 0, let disabled else {
+        guard process.terminationStatus == 0 else {
             throw AwakeError("현재 잠자기 설정을 확인할 수 없어 세션을 시작하지 않았습니다.")
         }
+        let disabled = try SleepSetting.disabled(in: text)
         guard !disabled else {
             throw AwakeError("기존 시스템 잠자기 차단 설정이 남아 있습니다. 해당 설정을 복구한 뒤 다시 시작해 주세요.")
         }

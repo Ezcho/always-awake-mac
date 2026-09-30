@@ -9,3 +9,5 @@ xcrun swiftc -swift-version 5 -module-cache-path .build/module-cache Sources/Sha
 .build/MCPTests
 xcrun swiftc -swift-version 5 -module-cache-path .build/module-cache Sources/Shared/Protocol.swift Sources/Shared/SafetyPolicy.swift Sources/Control/LocalControl.swift Sources/App/AutomationControl.swift Tests/Automation/main.swift -o .build/AutomationTests
 .build/AutomationTests
+xcrun swiftc -swift-version 5 -module-cache-path .build/module-cache Sources/Shared/Protocol.swift Sources/Shared/SessionEngine.swift Sources/Shared/SleepSetting.swift Tests/SleepSetting/main.swift -o .build/SleepSettingTests
+.build/SleepSettingTests

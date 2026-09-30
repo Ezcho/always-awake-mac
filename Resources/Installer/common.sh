@@ -40,9 +40,22 @@ validate_paths() {
     [[ ! -e "$APP" || -d "$APP" ]] || fail 'App destination is not a directory.'
 }
 sleep_enabled() {
-    local value
-    value="$(/usr/bin/pmset -g | /usr/bin/awk '$1 == "SleepDisabled" && NF == 2 {print $2}')"
-    [[ "$value" == 0 ]]
+    local output
+    output="$(/usr/bin/pmset -g)" || return 1
+    # A valid system settings dictionary can omit the unset override. Never
+    # treat failed/empty output or a malformed value as permission to proceed.
+    printf '%s\n' "$output" | /usr/bin/awk '
+        $0 == "System-wide power settings:" { header = 1 }
+        $1 == "SleepDisabled" {
+            count++
+            if (NF != 2 || ($2 != "0" && $2 != "1")) invalid = 1
+            value = $2
+        }
+        END {
+            if (invalid || count > 1) exit 1
+            if (count == 1) exit (value != "0")
+            exit (!header)
+        }'
 }
 require_sleep_enabled() {
     sleep_enabled || fail 'Turn Session OFF in pika before installing or removing its helper. The installer will not override system power settings.'

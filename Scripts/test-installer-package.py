@@ -11,6 +11,26 @@ for status, expected in [(0,1),(1,0),(2,1)]:
     result = subprocess.run(['/bin/bash','-c',script],capture_output=True,text=True)
     assert result.returncode == expected, (status,result.stderr)
 print('PASS process preflight: running app rejected, closed app allowed, inspection failure rejected')
+# Exercise the production installer parser with fake pmset output only.
+sleep_function = 'sleep_enabled() {' + common.split('sleep_enabled() {',1)[1].split('\nrequire_sleep_enabled()',1)[0]
+sleep_function = sleep_function.replace('/usr/bin/pmset -g', 'fake_pmset')
+import shlex
+cases = [
+    ('System-wide power settings:\n SleepDisabled 0\n',0,0),
+    ('System-wide power settings:\n SleepDisabled 1\n',0,1),
+    ('System-wide power settings:\nCurrently in use:\n sleep 1\n',0,0),
+    ('System-wide power settings:\n DestroyFVKeyOnStandby 1\n',0,0),
+    ('',0,1), ('permission denied',1,1),
+    ('Currently in use:\n sleep 1\n',0,1),
+    ('System-wide power settings:\n SleepDisabled unknown\n',0,1),
+    ('System-wide power settings:\n SleepDisabled 0\n SleepDisabled 1\n',0,1),
+    ('System-wide power settings:\n SleepDisabled 0\n',1,1),
+]
+for output, exit_status, expected in cases:
+    script = "set -euo pipefail\nfake_pmset() { printf '%s' " + shlex.quote(output) + f'; return {exit_status}; }}\n' + sleep_function + '\nsleep_enabled\n'
+    result = subprocess.run(['/bin/bash','-c',script],capture_output=True,text=True)
+    assert result.returncode == expected, (output,result.stderr)
+print('PASS 10 installer power preflight cases without reading or changing host power settings')
 version = plistlib.loads((root/'Resources/Info.plist').read_bytes())['CFBundleShortVersionString']
 with tempfile.TemporaryDirectory(dir=root/'.build') as tmp:
     expanded = Path(tmp)/'product'

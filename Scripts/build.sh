@@ -22,7 +22,7 @@ cp Resources/com.alwaysawake.mac.helper.plist "$APP/Contents/Library/LaunchDaemo
 cp Resources/Guide.html "$APP/Contents/Resources/Guide.html"
 
 SDK="$(xcrun --sdk macosx --show-sdk-path)"
-SHARED=(Sources/Shared/Protocol.swift Sources/Shared/SessionEngine.swift Sources/Shared/Signature.swift Sources/Shared/InstalledHelper.swift Sources/Shared/SafetyPolicy.swift Sources/Shared/HardwareReading.swift)
+SHARED=(Sources/Shared/SleepSetting.swift Sources/Shared/Protocol.swift Sources/Shared/SessionEngine.swift Sources/Shared/Signature.swift Sources/Shared/InstalledHelper.swift Sources/Shared/SafetyPolicy.swift Sources/Shared/HardwareReading.swift)
 for ARCH in arm64 x86_64; do
     FLAGS=(-O -swift-version 5 -sdk "$SDK" -target "${ARCH}-apple-macosx13.0" -module-cache-path "$BUILD/module-cache")
     xcrun swiftc "${FLAGS[@]}" "${SHARED[@]}" Sources/Helper/*.swift -o "$BUILD/AlwaysAwakeHelper-$ARCH"
