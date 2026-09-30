@@ -8,11 +8,11 @@ final class HelperClient {
 
     private var connectionFailureMessage: String {
         if InstalledHelper.isPresent {
-            return "설치된 보조 서비스에 연결할 수 없습니다. pika 설치 패키지로 다시 설치한 후 실행해 주세요."
+            return "설치된 보조 서비스에 연결할 수 없습니다. 앱의 설치 안내에서 현재 버전의 보조 서비스를 다시 설치해 주세요."
         }
         let helper = Bundle.main.bundleURL.appendingPathComponent("Contents/Library/HelperTools/AlwaysAwakeHelper")
         if Signature.isAdHoc(helper) {
-            return "보조 서비스를 실행할 수 없습니다. 이 테스트 빌드는 정식 서명이 없어 macOS에서 차단될 수 있습니다. 정식 서명된 pika로 업데이트해 주세요."
+            return "보조 서비스에 연결할 수 없습니다. 앱 실행 허용과는 별도의 단계입니다. 설치 안내에서 현재 버전의 보조 서비스를 설치해 주세요."
         }
         return "보조 서비스에 연결할 수 없습니다. 시스템 설정 → 로그인 항목 및 확장 프로그램에서 pika 허용 여부를 확인해 주세요. 업데이트 직후라면 앱을 종료한 뒤 다시 실행해 주세요."
     }

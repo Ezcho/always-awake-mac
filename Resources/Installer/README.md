@@ -1,8 +1,9 @@
 # Native helper installer
 
-`Scripts/package-helper.sh` builds two **unsigned** native Installer packages from the already-built `dist/pika.app`. It does not install anything or execute privileged commands.
+`Scripts/package-helper.sh` builds three **unsigned** native Installer packages from the already-built `dist/pika.app`. It does not install anything or execute privileged commands.
 
 - `pika-VERSION.pkg` installs `/Applications/pika.app`, its standalone helper, launchd plist, and a root-protected client-signature requirement.
+- `pika-helper-VERSION.pkg` installs only the helper, launchd plist and client pin for the matching app already dragged into Applications. Its preflight verifies that app before changing the helper.
 - `pika-helper-uninstall-VERSION.pkg` unloads the helper and removes only its three fixed files. It preserves the app and power-recovery data.
 
 The helper must support the installed paths and Mach service before distributing these packages. Rebuild the app after any source change, then rebuild the packages; an ad-hoc signature pins the exact binaries in this release. Do not replace the app with a different build without updating its helper package.

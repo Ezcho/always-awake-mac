@@ -50,6 +50,13 @@ cat > "$STAGE/components.plist" <<'PLIST'
 </dict></array></plist>
 PLIST
 /usr/bin/pkgbuild --root "$PAYLOAD" --ownership recommended --install-location / --identifier com.alwaysawake.mac.installer --version "$VERSION" --component-plist "$STAGE/components.plist" --scripts "$STAGE/install-scripts" "$ROOT/dist/pika-$VERSION.pkg"
+# DMG users already installed the matching app. Keep that app in place and ask
+# Installer to install only the privileged helper, launchd plist and client pin.
+mkdir -p "$STAGE/helper-root"
+/usr/bin/ditto "$PAYLOAD/Library" "$STAGE/helper-root/Library"
+/usr/bin/ditto "$STAGE/install-scripts" "$STAGE/helper-only-scripts"
+printf '%s\n' "$REQUIREMENT" > "$STAGE/helper-only-scripts/expected-client.requirement"
+/usr/bin/pkgbuild --root "$STAGE/helper-root" --ownership recommended --install-location / --identifier com.alwaysawake.mac.helper-installer --version "$VERSION" --scripts "$STAGE/helper-only-scripts" "$ROOT/dist/pika-helper-$VERSION.pkg"
 /usr/bin/pkgbuild --nopayload --identifier com.alwaysawake.mac.helper-uninstaller --version "$VERSION" --scripts "$STAGE/uninstall-scripts" "$ROOT/dist/pika-helper-uninstall-$VERSION.pkg"
-(cd dist && /usr/bin/shasum -a 256 "pika-$VERSION.pkg" "pika-helper-uninstall-$VERSION.pkg" > SHA256SUMS-pkg.txt)
+(cd dist && /usr/bin/shasum -a 256 "pika-$VERSION.pkg" "pika-helper-$VERSION.pkg" "pika-helper-uninstall-$VERSION.pkg" > SHA256SUMS-pkg.txt)
 echo "Created dist/pika-$VERSION.pkg and helper uninstaller. These packages are unsigned; no privileged installation was performed."

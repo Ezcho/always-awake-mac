@@ -29,7 +29,7 @@ enum InstalledHelper {
             guard lstat(path, &info) == 0,
                   info.st_uid == 0, info.st_mode & 0o022 == 0,
                   info.st_mode & S_IFMT == (index == components.count - 1 ? S_IFREG : S_IFDIR) else {
-                throw AwakeError("설치 파일의 소유자·권한·경로 검증에 실패했습니다. pika 설치 패키지로 다시 설치해 주세요.")
+                throw AwakeError("설치 파일의 소유자·권한·경로 검증에 실패했습니다. 앱의 설치 안내에서 보조 서비스를 다시 설치해 주세요.")
             }
         }
     }
@@ -76,7 +76,7 @@ enum InstalledHelper {
         guard SecStaticCodeCreateWithPath(url as CFURL, [], &code) == errSecSuccess, let code,
               SecStaticCodeCheckValidity(code, SecCSFlags(rawValue: kSecCSStrictValidate | kSecCSCheckNestedCode),
                                         try requirement(text)) == errSecSuccess else {
-            throw AwakeError("앱과 설치된 보조 서비스의 버전·서명이 일치하지 않습니다. pika 설치 패키지로 함께 업데이트해 주세요.")
+            throw AwakeError("앱과 설치된 보조 서비스의 버전·서명이 일치하지 않습니다. 앱의 설치 안내에서 현재 버전의 보조 서비스를 설치해 주세요.")
         }
     }
 }

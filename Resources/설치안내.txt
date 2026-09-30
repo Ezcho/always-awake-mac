@@ -1,4 +1,4 @@
-pika 1.0.4 — macOS 13 이상 / Apple Silicon + Intel
+pika 1.0.5 — macOS 13 이상 / Apple Silicon + Intel
 
 1. pika.app을 Applications(응용 프로그램) 폴더로 드래그합니다.
 2. 응용 프로그램 폴더에서 pika를 실행합니다.
@@ -7,10 +7,10 @@ pika 1.0.4 — macOS 13 이상 / Apple Silicon + Intel
 
 웹 다운로드는 일반 모드로 동작합니다. 관리자 보조 서비스 없이 Mac의 유휴 잠자기를
 방지합니다. 덮개를 닫거나 Mac을 직접 잠자기로 전환하면 세션이 끝납니다.
-덮개를 닫은 채 실행하려면 pika-1.0.4.pkg를 설치하세요. macOS 설치창에서 관리자 승인이 필요합니다.
+덮개를 닫은 채 실행하려면 앱의 설치 안내에서 보조 서비스 설치를 선택하세요. macOS 설치창에서 관리자 승인이 필요합니다.
 설치 전 Session OFF 후 앱을 종료하세요. 이전 보조 서비스가 있다면 먼저 제거하세요.
 패키지는 앱과 보조 서비스를 함께 업데이트합니다. 설치 후 앱에서 덮개 모드가 확인되어야 합니다.
-설치형 보조 서비스는 pika-helper-uninstall-1.0.4.pkg로 제거합니다.
+설치형 보조 서비스는 pika-helper-uninstall-1.0.5.pkg로 제거합니다.
 현재 다운로드는 Developer ID 서명·Apple 공증이 없어 macOS에서 앱 실행 확인이 필요할 수 있습니다.
 
 메뉴 막대 아이콘 클릭 = Session / Monitor 스위치

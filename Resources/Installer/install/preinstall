@@ -4,6 +4,10 @@ source "$(dirname "$0")/common.sh"
 validate_paths
 require_sleep_enabled
 require_app_closed
+expected="$(dirname "$0")/expected-client.requirement"
+if [[ -f "$expected" ]]; then
+    /usr/bin/codesign --verify --deep --strict -R="$(/bin/cat "$expected")" "$APP" || fail 'Install the matching pika DMG in Applications before installing this helper. No helper files were changed.'
+fi
 if /bin/launchctl print system/com.alwaysawake.mac.helper >/dev/null 2>&1; then
     fail 'The previous app-managed helper is still registered. Remove the old helper from pika first, quit the app, then rerun this installer.'
 fi

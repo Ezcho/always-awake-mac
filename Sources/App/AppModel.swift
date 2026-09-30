@@ -11,6 +11,9 @@ final class AppModel {
     var recoveryRequired = false { didSet { updateMaintenance(); onChange?() } }
     var serviceReady = false { didSet { onChange?() } }
     var needsApproval = false { didSet { onChange?() } }
+    var helperConnected = false { didSet { onChange?() } }
+    var setupStatus: String? { didSet { onChange?() } }
+    var onSetupRequested: (() -> Void)?
     private let requiresInstalledHelper = Signature.isAdHoc(Bundle.main.bundleURL.appendingPathComponent("Contents/Library/HelperTools/AlwaysAwakeHelper"))
     private(set) var installedHelperReady = false
     // Retained in the MCP status schema for older clients. Sessions require lid support.
@@ -33,6 +36,7 @@ final class AppModel {
     private var timer: Timer?
     private var lidTimer: Timer?
     private var heartbeatInFlight = false
+    private var checkingHelper = false
     private var activity: NSObjectProtocol?
     var onChange: (() -> Void)?
 
@@ -41,6 +45,7 @@ final class AppModel {
         display.onError = { [weak self] message in self?.error = message }
         client.onDisconnect = { [weak self] in
             guard let self else { return }
+            self.helperConnected = false
             let wasActive = self.active
             self.localStop()
             self.refreshService()
@@ -67,6 +72,13 @@ final class AppModel {
             return
         }
         installedHelperReady = false
+        // The ad-hoc app-managed daemon can be registered yet rejected by
+        // launchd. Use the separate, user-authorized helper installer instead.
+        if requiresInstalledHelper {
+            serviceReady = false
+            needsApproval = false
+            return
+        }
         serviceReady = service.status == .enabled
         needsApproval = service.status == .requiresApproval
     }
@@ -74,11 +86,12 @@ final class AppModel {
     func prepareService() {
         if InstalledHelper.isPresent {
             do { try InstalledHelper.validateForClient() }
-            catch { self.error = error.localizedDescription }
+            catch { self.error = error.localizedDescription; onSetupRequested?() }
             return
         }
         guard !requiresInstalledHelper else {
-            error = "덮개 모드는 보조 서비스가 필요합니다. pika 설치 패키지(.pkg)를 실행해 주세요."
+            error = "덮개 모드에는 보조 서비스가 필요합니다. 설치 안내에서 보조 서비스만 설치해 주세요."
+            onSetupRequested?()
             return
         }
         // A stable installation path is required by ServiceManagement and app updates.
@@ -124,10 +137,15 @@ final class AppModel {
                     return
                 }
                 self.sessionMode = "closedLid"
+                self.helperConnected = true
                 self.active = true
                 self.activity = ProcessInfo.processInfo.beginActivity(options: [.userInitiated, .idleSystemSleepDisabled], reason: "pika session heartbeat")
                 self.startLidObservation()
-            case .failure(let failure): self.error = failure.localizedDescription; self.refreshService()
+            case .failure(let failure):
+                self.error = failure.localizedDescription
+                self.helperConnected = false
+                self.refreshService()
+                self.onSetupRequested?()
             }
             self.onChange?()
         }
@@ -174,6 +192,72 @@ final class AppModel {
         }
         catch { self.error = error.localizedDescription }
         onChange?()
+    }
+
+    func checkHelperConnection() {
+        guard !busy, !active, !checkingHelper else { return }
+        refreshService()
+        guard serviceReady else { helperConnected = false; return }
+        checkingHelper = true
+        client.call(.status) { [weak self] result in
+            guard let self else { return }
+            self.checkingHelper = false
+            guard !self.busy, !self.active else { return }
+            switch result {
+            case .success(let reply):
+                self.helperConnected = true
+                self.recoveryRequired = reply.recoveryRequired
+                self.setupStatus = reply.recoveryRequired ? "잠자기 설정 복구가 필요합니다. 제어창에서 Session OFF를 눌러 주세요." : "보조 서비스 연결 완료"
+            case .failure(let failure):
+                self.helperConnected = false
+                self.setupStatus = failure.localizedDescription
+            }
+        }
+    }
+
+    func installHelper() {
+        guard !busy else { return }
+        guard !active, !recoveryRequired else {
+            setupStatus = "먼저 제어창에서 Session을 OFF로 바꾸고 복구가 끝난 뒤 설치해 주세요."
+            return
+        }
+        guard Bundle.main.bundleURL.standardizedFileURL.path == "/Applications/pika.app" else {
+            setupStatus = "pika.app을 응용 프로그램 폴더로 드래그한 뒤 그곳에서 다시 실행해 주세요."
+            return
+        }
+        busy = true
+        setupStatus = "현재 앱에 맞는 보조 서비스를 다운로드하고 확인하는 중…"
+        Task { @MainActor in
+            defer { self.busy = false }
+            do {
+                try SystemSleepController.requireSystemSleepEnabled()
+                let package = try await HelperSetupDownload.download()
+                // Never replace an active lease or relax macOS security settings.
+                guard !self.active, !self.recoveryRequired else { throw AwakeError("Session을 먼저 OFF로 바꿔 주세요.") }
+                try SystemSleepController.requireSystemSleepEnabled()
+                self.client.invalidate()
+                if self.service.status != .notRegistered && self.service.status != .notFound {
+                    self.setupStatus = "이전 보조 서비스 등록을 정리하는 중…"
+                    try await self.service.unregister()
+                    try await Task.sleep(nanoseconds: 2_000_000_000)
+                    guard self.service.status == .notRegistered || self.service.status == .notFound else {
+                        throw AwakeError("이전 보조 서비스 등록 해제가 아직 완료되지 않았습니다. 잠시 뒤 다시 시도해 주세요.")
+                    }
+                }
+                try SystemSleepController.requireSystemSleepEnabled()
+                guard NSWorkspace.shared.open(package) else {
+                    throw AwakeError("macOS 설치 프로그램을 열지 못했습니다. 설치 안내를 다시 열어 시도해 주세요.")
+                }
+                self.busy = false
+                // The user now reviews and authorizes installation in Installer.
+                // Its preflight also requires the app to be closed.
+                NSApp.terminate(nil)
+            } catch {
+                self.setupStatus = error.localizedDescription
+                self.error = error.localizedDescription
+                self.refreshService()
+            }
+        }
     }
 
     func removeService() {

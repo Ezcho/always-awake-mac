@@ -13,7 +13,7 @@ with DSStore.open(os.path.join(volume, '.DS_Store'), 'w+') as store:
     store['.']['vstl'] = ('type', 'icnv')
     store['.']['ICVO'] = ('bool', True)
     store['.']['bwsp'] = {
-        'WindowBounds': '{{180, 160}, {600, 360}}',
+        'WindowBounds': '{{180, 100}, {700, 500}}',
         'ShowToolbar': False, 'ShowSidebar': False, 'ShowStatusBar': False,
         'ShowPathbar': False, 'ShowTabView': False, 'ContainerShowSidebar': False,
         'PreviewPaneVisibility': False,
@@ -27,5 +27,5 @@ with DSStore.open(os.path.join(volume, '.DS_Store'), 'w+') as store:
         'scrollPositionX': 0.0, 'scrollPositionY': 0.0,
         'labelOnBottom': True, 'showItemInfo': False, 'showIconPreview': False,
     }
-    store['pika.app']['Iloc'] = (150, 170)
-    store['Drag to Applications']['Iloc'] = (450, 170)
+    store['pika.app']['Iloc'] = (175, 145)
+    store['Drag to Applications']['Iloc'] = (525, 145)

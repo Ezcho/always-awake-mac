@@ -17,6 +17,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     private let windowMode = NSTextField(wrappingLabelWithString: "")
     private var pendingTermination = false
     private var controlWindow: NSWindow?
+    private var setupWindow: SetupWindowController?
     private let windowSessionRow = MenuSwitchRow(title: "Session")
     private let windowMonitorRow = MenuSwitchRow(title: "Monitor")
     private let windowSetup = NSButton(title: "권한 허용…", target: nil, action: nil)
@@ -73,6 +74,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         let guide = NSMenuItem(title: "사용 안내", action: #selector(openGuide), keyEquivalent: "")
         guide.target = self
         settings.addItem(guide)
+        let setupGuide = NSMenuItem(title: "설치 안내…", action: #selector(showSetupWindow), keyEquivalent: "")
+        setupGuide.target = self
+        settings.addItem(setupGuide)
         removeItem.target = self
         settings.addItem(removeItem)
         settingsItem.submenu = settings
@@ -89,6 +93,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         statusItem.button?.action = #selector(statusClick)
         statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
         model.onChange = { [weak self] in self?.updateMenu() }
+        model.onSetupRequested = { [weak self] in self?.showSetupWindow() }
         do {
             try controlServer.start { [weak self] request, reply in
                 MainActor.assumeIsolated {
@@ -99,6 +104,39 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         } catch { logger.error("MCP local control unavailable: \(error.localizedDescription)") }
         updateMenu()
         showControlWindow()
+        if !UserDefaults.standard.bool(forKey: "setupGuideSeen") || !model.serviceReady {
+            showSetupWindow()
+        }
+        model.checkHelperConnection()
+    }
+
+    func applicationDidBecomeActive(_ notification: Notification) {
+        model.checkHelperConnection()
+    }
+
+    @objc private func showSetupWindow() {
+        menu.cancelTracking()
+        if setupWindow == nil {
+            setupWindow = SetupWindowController(onInstallHelper: { [weak self] in
+                guard let self, !self.model.busy else { return }
+                let alert = NSAlert()
+                alert.messageText = "보조 서비스를 설치할까요?"
+                alert.informativeText = "현재 pika와 일치하는 보조 서비스만 다운로드합니다. 설치 프로그램을 열면서 pika는 종료됩니다. macOS에서 관리자 승인을 완료한 뒤 응용 프로그램 폴더의 pika를 다시 열어 주세요."
+                alert.addButton(withTitle: "설치 진행")
+                alert.addButton(withTitle: "취소")
+                if alert.runModal() == .alertFirstButtonReturn { self.model.installHelper() }
+            }, onOpenPrivacySettings: {
+                let settings = URL(string: "x-apple.systempreferences:com.apple.preference.security?General")!
+                if !NSWorkspace.shared.open(settings) {
+                    NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Applications/System Settings.app"))
+                }
+            }, onContinue: { [weak self] in
+                UserDefaults.standard.set(true, forKey: "setupGuideSeen")
+                self?.setupWindow?.close()
+                self?.showControlWindow()
+            })
+        }
+        setupWindow?.present(helperReady: model.helperConnected, busy: model.busy, status: model.setupStatus ?? model.error)
     }
 
     @objc private func showControlWindow() {
@@ -157,6 +195,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     func menuWillOpen(_ menu: NSMenu) { model.refreshService(); updateMenu() }
 
     private func updateMenu() {
+        setupWindow?.update(helperReady: model.helperConnected, busy: model.busy, status: model.setupStatus ?? model.error)
         sessionRow.update(on: model.active, enabled: !model.busy)
         monitorRow.update(on: model.monitorOn, enabled: model.active && !model.busy)
         windowSessionRow.update(on: model.active, enabled: !model.busy)
@@ -166,11 +205,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         modeItem.title = notice
         modeItem.isHidden = notice.isEmpty
         modeItem.toolTip = notice
-        windowSetup.isHidden = model.serviceReady
+        windowSetup.title = "설치 안내…"
+        windowSetup.isHidden = model.helperConnected
         windowSetup.isEnabled = !model.busy
         windowMessage.isHidden = model.error == nil && !model.recoveryRequired
         windowMessage.title = model.recoveryRequired ? "복구 필요…" : "안내…"
-        setupItem.isHidden = model.serviceReady
+        setupItem.title = "설치 안내…"
+        setupItem.isHidden = model.helperConnected
         setupItem.isEnabled = !model.busy
         errorItem.isHidden = model.error == nil && !model.recoveryRequired
         errorItem.title = model.recoveryRequired ? "복구 필요…" : "안내…"
@@ -196,14 +237,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
                 self.updateMenu()
                 self.logger.notice("Session toggle completed: active=\(self.model.active)")
                 if self.model.error != nil {
-                    self.showControlWindow()
-                    self.showMessage()
+                    if !self.model.helperConnected && !self.model.recoveryRequired {
+                        self.showSetupWindow()
+                    } else {
+                        self.showControlWindow()
+                        self.showMessage()
+                    }
                 }
             }
         }
     }
     @objc private func toggleMonitor() { model.setMonitor(!model.monitorOn) }
-    @objc private func prepareService() { menu.cancelTracking(); model.prepareService() }
+    @objc private func prepareService() { showSetupWindow() }
     @objc private func removeService() { menu.cancelTracking(); model.removeService() }
     @objc private func openGuide() {
         if let url = Bundle.main.url(forResource: "Guide", withExtension: "html") { NSWorkspace.shared.open(url) }
