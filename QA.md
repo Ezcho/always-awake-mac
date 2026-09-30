@@ -132,3 +132,5 @@
 - 실제 M2/Sequoia 15.5 관리자 설치, Gatekeeper 승인, 덮개·Session 테스트는 미검증입니다. 현재 정상 동작하는 Mac의 설치 앱과 전원 설정은 변경하지 않습니다.
 
 최종 로컬 검증: 101개 Swift 로직 검사, 23개 설치 스크립트 시뮬레이션, Universal 앱 빌드·서명 무결성, PKG payload·빌드 번호·정확한 client pin·포함 스크립트 일치, helper 실행 경로 3개 검사를 통과했습니다. 관리자 설치는 수행하지 않았습니다.
+
+GitHub Actions의 macos-15 환경에서도 소스 `b128f09`의 테스트·Universal 빌드·DMG/PKG 패키징·설치 파일 검사 전체가 통과했습니다: https://github.com/Ezcho/always-awake-mac/actions/runs/36722210760 . 이는 대상 M2/15.5에서의 관리자 설치 검증을 대체하지 않습니다.
