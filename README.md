@@ -89,7 +89,7 @@ open 'dist/pika.app'
 
 `dist/pika.app`과 기본 배포 파일 `dist/pika-1.0.13.pkg`가 생성됩니다. `Scripts/package.sh`는 선택적으로 DMG/ZIP을 생성하는 개발용 경로입니다. arm64와 x86_64를 모두 포함합니다. 빌드 스크립트는 기본적으로 로컬 ad-hoc 서명을 합니다. ad-hoc 빌드는 앱과 보조 서비스를 함께 설치하는 `.pkg`가 필요합니다. 정식 서명 빌드에서 덮개 닫힘 모드를 쓰려면 앱을 `/Applications`에 설치하고 macOS에서 helper를 승인해야 합니다.
 
-자동 테스트는 fake power driver로 소유권, lease 만료, crash 복구, 실패 rollback, 안전 기준 및 상태 전환을 검증합니다. UI의 초 단위 시계·유휴 센서 조회는 없으며 세션 또는 복구가 진행 중일 때만 10초 heartbeat 타이머가 실행됩니다. 타이머는 메뉴를 펼친 동안에도 동작합니다. 실제 시스템 전원 설정은 바꾸지 않습니다. 수동 실기기 검증 목록은 [QA.md](QA.md)를 참고하세요.
+자동 테스트는 fake power driver로 소유권, lease 만료, crash 복구, 실패 rollback, 안전 기준 및 상태 전환을 검증합니다. UI의 초 단위 시계·유휴 센서 조회는 없으며 세션 또는 복구가 진행 중일 때만 10초 heartbeat 타이머가 실행됩니다. 타이머는 메뉴를 펼친 동안에도 동작합니다. 실제 시스템 전원 설정은 바꾸지 않습니다. 실제 덮개 닫기·발열·배터리 동작은 별도 실기기 검증이 필요합니다.
 
 설치된 보조 서비스의 연결만 확인하려면 `'/Applications/pika.app/Contents/MacOS/pika' --check-service`를 실행합니다. `--test-session`은 기존 세션이 없을 때 실제 Session을 켰다가 즉시 끄므로 수동 검증에만 사용합니다. 두 명령은 화면 설정을 바꾸지 않습니다.
 
@@ -172,7 +172,7 @@ command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
 
 ## 홈페이지 방문 집계와 애니메이션
 
-- 홈페이지는 `Scripts/pika_motion.py`에서 같은 원본을 공유하는 16방향 시선·상체 자세를 만듭니다. 마우스가 움직이는 동안 손을 쉬고, 방향 전환은 최대 12Hz로 중간 자세를 순서대로 거칩니다. 350ms 동안 마우스 움직임이 없으면 약 83ms의 중간 복귀 자세를 거쳐 타이핑을 재개합니다. 고개·상체는 작은 범위로 기울며 노트북과 발 위치는 변형 가중치를 0으로 유지합니다. 유휴 폴링은 없고, 동작 줄이기·터치 입력에서는 시선을 추적하지 않으며 숨긴 탭에서는 타이핑도 멈춥니다. 원본 래스터 그림은 변경하지 않았습니다. 기존 이미지 생성 기록은 `docs/assets/pika-motion-prompt.txt`에 있습니다.
+- 홈페이지는 `Scripts/pika_motion.py`에서 같은 원본을 공유하는 16방향 시선·상체 자세를 만듭니다. 마우스가 움직이는 동안 손을 쉬고, 방향 전환은 최대 12Hz로 중간 자세를 순서대로 거칩니다. 350ms 동안 마우스 움직임이 없으면 약 83ms의 중간 복귀 자세를 거쳐 타이핑을 재개합니다. 고개·상체는 작은 범위로 기울며 노트북과 발 위치는 변형 가중치를 0으로 유지합니다. 유휴 폴링은 없고, 동작 줄이기·터치 입력에서는 시선을 추적하지 않으며 숨긴 탭에서는 타이핑도 멈춥니다. 원본 래스터 그림은 변경하지 않았습니다.
 - Google Analytics 4로 방문·신규 사용자·유입 경로를 집계합니다. 측정 ID는 `docs/analytics.json`의 `measurementId`에 저장하며, `docs/ga.js`를 모든 34개 페이지에 공통으로 삽입합니다. 로컬 미리보기, GPC 활성 브라우저, 언어 자동 이동 직전의 중간 페이지는 제외합니다.
 - GitHub 설치 파일 링크 클릭은 `pika_download_click` 이벤트로 기록합니다. 이는 다운로드 완료나 설치 사용자 수가 아니며 GitHub 릴리스 다운로드 횟수와 별개입니다. Google signals 및 광고 개인화 신호는 사용하지 않습니다.
 - 통계는 소유자의 GA 대시보드에서 확인합니다. GA는 사이트에 공개할 누적 카운터 API를 제공하지 않으므로 기존 눈 아이콘은 `—`로 유지합니다. GoatCounter는 연결하지 않았으며 요청을 보내지 않습니다. GA 비밀키나 계정 인증 정보를 홈페이지에 넣지 않습니다.
@@ -181,3 +181,11 @@ command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
 ## 업데이트 정보 배포
 
 PKG를 GitHub 정식 릴리스로 공개한 뒤 `gh api repos/Ezcho/always-awake-mac/releases/tags/vVERSION > .build/release.json`으로 공개 정보를 가져옵니다. `python3 Scripts/publish-update-feed.py --release-json .build/release.json --package dist/pika-VERSION.pkg`가 원격 자산의 크기·SHA256과 로컬 파일을 검증한 후 `docs/updates/latest.json`과 버전 고정 JSON을 생성합니다. 웹 버전·다운로드 링크와 함께 커밋하고 Pages를 배포합니다. 미공개 릴리스, 같은 버전 파일 교체, latest 다운그레이드는 거절합니다. API 토큰은 앱이나 사이트에 포함하지 않습니다.
+
+## 저장소 관리
+
+- Git에는 앱 소스(`Sources`), 테스트(`Tests`), 빌드·배포 도구(`Scripts`, `.github`), 필수 리소스(`Resources`), 사용 문서를 포함합니다.
+- `docs`는 GitHub Pages의 실제 배포 디렉터리입니다. 생성된 다국어 HTML, 사용 중인 이미지, 사이트맵, GA 설정, 다운로드·업데이트 피드는 배포에 필요하므로 추적합니다.
+- 빌드 산출물과 설치 파일은 `.build/`, `dist/`에서 만들고 GitHub Releases로 배포합니다. Git 소스에는 포함하지 않습니다.
+- 작업 메모, 검증 기록, 이미지 생성 프롬프트, 시안, 로그는 `.local/`에서 로컬로만 관리합니다. 기존 자료는 `.local/archive/`에 원래 디렉터리 구조로 보존했습니다. 새 클론에는 이 로컬 자료가 포함되지 않습니다.
+- 인증서·개인 키·환경변수 파일은 커밋하지 않습니다. `docs/analytics.json`의 GA 측정 ID는 공개 웹 설정입니다.

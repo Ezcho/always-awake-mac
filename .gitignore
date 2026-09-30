@@ -7,3 +7,37 @@ website/dist/*.zip
 website/dist/*.sha256
 .sites-runtime/
 website/.sites-runtime/
+
+# Local working notes, design drafts, and review artifacts
+.local/
+/QA.md
+/BACKLOG.md
+*.prompt.txt
+*-prompt.txt
+docs/.*-review.html
+
+# Build outputs, installers, caches, and editor state
+*.app/
+*.dSYM/
+*.pkg
+*.dmg
+*.zip
+*.log
+*.tmp
+*.swp
+*.pyc
+.pytest_cache/
+.venv/
+node_modules/
+.vscode/
+.idea/
+
+# Local credentials and signing material
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.key
+*.mobileprovision
+*.provisionprofile
