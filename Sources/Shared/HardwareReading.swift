@@ -4,6 +4,13 @@ import IOKit.ps
 import CoreGraphics
 
 enum HardwareReading {
+    static func lidIsClosed() -> Bool? {
+        let root = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("IOPMrootDomain"))
+        guard root != 0 else { return nil }
+        defer { IOObjectRelease(root) }
+        return IORegistryEntryCreateCFProperty(root, "AppleClamshellState" as CFString, kCFAllocatorDefault, 0)?.takeRetainedValue() as? Bool
+    }
+
     static func current() -> SafetyReading {
         var battery: Int?
         var ac = false
@@ -23,12 +30,7 @@ enum HardwareReading {
                 }
             }
         }
-        let root = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("IOPMrootDomain"))
-        var closed = true
-        if root != 0 {
-            closed = (IORegistryEntryCreateCFProperty(root, "AppleClamshellState" as CFString, kCFAllocatorDefault, 0)?.takeRetainedValue() as? Bool) ?? true
-            IOObjectRelease(root)
-        }
+        let closed = lidIsClosed() ?? true
         var displays = [CGDirectDisplayID](repeating: 0, count: 32)
         var count: UInt32 = 0
         // Online displays include sleeping screens; an OFF monitor still counts as connected.

@@ -6,7 +6,7 @@ final class DisplayController {
     private var pendingSleep: DispatchWorkItem?
     var onError: ((String) -> Void)?
 
-    func apply(keepOn: Bool) throws {
+    func apply(keepOn: Bool, onlyWhileLidClosed: Bool = false) throws {
         release()
         if keepOn {
             let result = IOPMAssertionCreateWithName(kIOPMAssertionTypePreventUserIdleDisplaySleep as CFString,
@@ -17,6 +17,8 @@ final class DisplayController {
             if activity != 0 { IOPMAssertionRelease(activity) }
         } else {
             let task = DispatchWorkItem { [weak self] in
+                // The lid may reopen between the observation and delayed sleep.
+                guard !onlyWhileLidClosed || HardwareReading.lidIsClosed() == true else { return }
                 let process = Process()
                 process.executableURL = URL(fileURLWithPath: "/usr/bin/pmset")
                 process.arguments = ["displaysleepnow"]

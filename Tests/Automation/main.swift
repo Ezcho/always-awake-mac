@@ -18,6 +18,8 @@ final class AppModel {
     var needsApproval = false
     var standardModeAvailable = false
     var sessionMode = "off"
+    var lidEngaged = false
+    var waitingForLid: Bool { active && sessionMode == "closedLid" && !lidEngaged }
     var lidClosedSupported = false
     var sessionNotice: String? = nil
     var error: String?
@@ -111,21 +113,17 @@ MainActor.assumeIsolated {
           && failedReply["message"] as? String == "helper unavailable"
           && failedReply["sessionOn"] as? Bool == false,
           "helper failure propagates with actual inactive state")
-    let standard = AppModel()
-    standard.serviceReady = false
-    standard.standardModeAvailable = true
-    standard.sessionMode = "standard"
-    standard.sessionNotice = "Keep lid open"
-    let standardReply = standard.request("set_session", true)
-    check(standardReply["ok"] as? Bool == true && standard.starts == 1,
-          "standard mode can start without helper registration")
-    check(standardReply["sessionMode"] as? String == "standard" && standardReply["lidClosedSupported"] as? Bool == false
-          && standardReply["sessionNotice"] as? String == "Keep lid open",
-          "standard mode exposes its closed-lid limitation")
-    standard.active = false
-    standard.recoveryRequired = true
-    check(standard.request("set_session", true)["code"] as? String == "recovery_required" && standard.starts == 1,
-          "standard mode never bypasses recovery guard")
+    let unsupported = AppModel()
+    unsupported.serviceReady = false
+    unsupported.standardModeAvailable = true
+    let unsupportedReply = unsupported.request("set_session", true)
+    check(unsupportedReply["code"] as? String == "setup_required" && unsupported.starts == 0,
+          "open-lid fallback cannot substitute for the required helper")
+    check(unsupportedReply["sessionOn"] as? Bool == false,
+          "missing lid support never reports an armed session")
+    unsupported.recoveryRequired = true
+    check(unsupported.request("set_session", true)["code"] as? String == "recovery_required" && unsupported.starts == 0,
+          "missing helper never bypasses recovery guard")
     failed.active = true
     failed.stopFailure = "restore failed"
     check(failed.request("set_session", false)["code"] as? String == "session_stop_failed",

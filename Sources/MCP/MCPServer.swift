@@ -8,8 +8,8 @@ final class MCPServer {
 
     static let tools: [[String: Any]] = [
         tool("pika_status", "Read pika session, requested monitor policy, helper registration, battery and thermal status. Registration does not prove helper connectivity.", readOnly: true),
-        tool("pika_set_session", "Set Session ON/OFF in the running pika menu-bar app. Safety checks remain active. OFF releases sleep prevention and resets Monitor to OFF without immediately sleeping the display. Standard mode requires an open lid. Closed-lid mode requires the installed privileged helper. Inspect sessionMode and lidClosedSupported.", readOnly: false),
-        tool("pika_set_monitor", "Set the monitor policy while Session is ON. true keeps/wakes the display; false requests display sleep after 3 seconds. Reports the requested policy, not physical screen state.", readOnly: false)
+        tool("pika_set_session", "Set Session ON/OFF in the running pika menu-bar app. Safety checks remain active. OFF releases sleep prevention and resets Monitor to OFF without immediately sleeping the display. Closed-lid operation requires a ready privileged helper; there is no open-lid fallback. ON does not blank or wake the screen. In closed-lid mode display policy waits for lid closure; inspect waitingForLid and lidEngaged as well as sessionMode and lidClosedSupported.", readOnly: false),
+        tool("pika_set_monitor", "Set the monitor policy while Session is ON. In closed-lid mode this only saves a preference while waitingForLid; closing the lid applies it. Once applied, true keeps/wakes the display; false requests display sleep after 3 seconds. Reports the requested policy, not physical screen state.", readOnly: false)
     ]
 
     private static func tool(_ name: String, _ description: String, readOnly: Bool) -> [String: Any] {

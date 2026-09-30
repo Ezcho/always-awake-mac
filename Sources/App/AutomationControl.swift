@@ -10,6 +10,7 @@ extension AppModel {
                 "monitorOn": monitorOn, "monitorControllable": active && !busy,
                 "busy": busy, "recoveryRequired": recoveryRequired,
                 "sessionMode": sessionMode, "lidClosedSupported": lidClosedSupported,
+                "waitingForLid": waitingForLid, "lidEngaged": lidEngaged,
                 "standardModeAvailable": standardModeAvailable,
                 "sessionNotice": sessionNotice as Any? ?? NSNull(),
                 "serviceRegistered": serviceReady, "needsApproval": needsApproval,
@@ -46,7 +47,7 @@ extension AppModel {
                 if let error { fail("monitor_failed", error); return }
             }
             var reply = automationStatus()
-            reply["displayPolicy"] = enabled ? "keep_awake" : "sleep_requested"
+            reply["displayPolicy"] = waitingForLid ? "on_lid_close" : (enabled ? "keep_awake" : "sleep_requested")
             completion(reply)
             return
         }
@@ -54,8 +55,8 @@ extension AppModel {
             guard !recoveryRequired else { fail("recovery_required", "Turn Session OFF to recover before starting"); return }
             if active { completion(automationStatus()); return }
             refreshService()
-            guard serviceReady || standardModeAvailable else {
-                fail("setup_required", "Open pika and approve its helper in macOS settings first"); return
+            guard serviceReady else {
+                fail("setup_required", "Install the pika helper package and open pika before enabling a closed-lid session"); return
             }
             toggleSession {
                 if self.active && self.error == nil { completion(self.automationStatus()) }

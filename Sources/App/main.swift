@@ -148,16 +148,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         monitorRow.update(on: model.monitorOn, enabled: model.active && !model.busy)
         windowSessionRow.update(on: model.active, enabled: !model.busy)
         windowMonitorRow.update(on: model.monitorOn, enabled: model.active && !model.busy)
-        let notice = model.sessionNotice ?? (model.standardModeAvailable ? "일반 모드 · 덮개를 열어 두세요" : "")
+        let notice = model.sessionNotice ?? ""
         windowMode.stringValue = notice
-        modeItem.title = model.standardModeAvailable ? "일반 모드 · 덮개 열림" : notice
+        modeItem.title = notice
         modeItem.isHidden = notice.isEmpty
         modeItem.toolTip = notice
-        windowSetup.isHidden = model.serviceReady || model.standardModeAvailable
+        windowSetup.isHidden = model.serviceReady
         windowSetup.isEnabled = !model.busy
         windowMessage.isHidden = model.error == nil && !model.recoveryRequired
         windowMessage.title = model.recoveryRequired ? "복구 필요…" : "안내…"
-        setupItem.isHidden = model.serviceReady || model.standardModeAvailable
+        setupItem.isHidden = model.serviceReady
         setupItem.isEnabled = !model.busy
         errorItem.isHidden = model.error == nil && !model.recoveryRequired
         errorItem.title = model.recoveryRequired ? "복구 필요…" : "안내…"

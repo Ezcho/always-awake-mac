@@ -11,22 +11,27 @@ final class AppModel {
     var recoveryRequired = false { didSet { updateMaintenance(); onChange?() } }
     var serviceReady = false { didSet { onChange?() } }
     var needsApproval = false { didSet { onChange?() } }
-    private let usesStandardMode = Signature.isAdHoc(Bundle.main.bundleURL.appendingPathComponent("Contents/Library/HelperTools/AlwaysAwakeHelper"))
+    private let requiresInstalledHelper = Signature.isAdHoc(Bundle.main.bundleURL.appendingPathComponent("Contents/Library/HelperTools/AlwaysAwakeHelper"))
     private(set) var installedHelperReady = false
-    var standardModeAvailable: Bool { usesStandardMode && !InstalledHelper.isPresent && !recoveryRequired }
+    // Retained in the MCP status schema for older clients. Sessions require lid support.
+    var standardModeAvailable: Bool { false }
     private(set) var sessionMode = "off"
+    private(set) var lidEngaged = false
+    var waitingForLid: Bool { active && sessionMode == "closedLid" && !lidEngaged }
     var lidClosedSupported: Bool { active && sessionMode == "closedLid" }
     var sessionNotice: String? {
+        if waitingForLid { return "대기 중 · 덮개를 닫으면 시작" }
+        if active && lidEngaged { return "덮개 닫힘 · 실행 중" }
         if installedHelperReady { return active ? "덮개 잠자기 방지 활성" : "덮개 모드 · 보조 서비스 설치됨" }
         if InstalledHelper.isPresent { return "보조 서비스 재설치 필요" }
-        if usesStandardMode { return "일반 모드 · 덮개를 열어 두세요" }
+        if requiresInstalledHelper { return "덮개 모드 · 보조 서비스 설치 필요" }
         return active ? "덮개 잠자기 방지 활성" : nil
     }
     let display = DisplayController()
-    private let systemSleep = SystemSleepController()
     let client = HelperClient()
     private let service = SMAppService.daemon(plistName: AppIdentity.helperPlist)
     private var timer: Timer?
+    private var lidTimer: Timer?
     private var heartbeatInFlight = false
     private var activity: NSObjectProtocol?
     var onChange: (() -> Void)?
@@ -36,7 +41,6 @@ final class AppModel {
         display.onError = { [weak self] message in self?.error = message }
         client.onDisconnect = { [weak self] in
             guard let self else { return }
-            guard self.sessionMode != "standard" else { return }
             let wasActive = self.active
             self.localStop()
             self.refreshService()
@@ -51,13 +55,6 @@ final class AppModel {
                 guard let self else { return }
                 if self.active { self.tick() }
                 self.refreshService()
-            }
-        }
-        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { [weak self] _ in
-            Task { @MainActor in
-                guard let self, self.sessionMode == "standard" else { return }
-                self.localStop()
-                self.error = "Mac이 잠자기로 전환되어 일반 세션을 종료했습니다."
             }
         }
     }
@@ -80,7 +77,10 @@ final class AppModel {
             catch { self.error = error.localizedDescription }
             return
         }
-        guard !usesStandardMode else { return }
+        guard !requiresInstalledHelper else {
+            error = "덮개 모드는 보조 서비스가 필요합니다. pika 설치 패키지(.pkg)를 실행해 주세요."
+            return
+        }
         // A stable installation path is required by ServiceManagement and app updates.
         guard Bundle.main.bundleURL.deletingLastPathComponent().path == "/Applications" else {
             error = "pika.app을 응용 프로그램 폴더로 옮긴 다음 다시 실행해 주세요."
@@ -107,7 +107,6 @@ final class AppModel {
         guard !busy else { completion?(); return }
         refreshService()
         if active || recoveryRequired { stop { _ in completion?() }; return }
-        if standardModeAvailable { startStandardSession(); completion?(); return }
         guard serviceReady else { prepareService(); completion?(); return }
         if let issue = HardwareReading.current().issue { error = issue; completion?(); return }
         busy = true
@@ -127,8 +126,7 @@ final class AppModel {
                 self.sessionMode = "closedLid"
                 self.active = true
                 self.activity = ProcessInfo.processInfo.beginActivity(options: [.userInitiated, .idleSystemSleepDisabled], reason: "pika session heartbeat")
-                do { try self.display.apply(keepOn: self.monitorOn) }
-                catch { self.error = error.localizedDescription }
+                self.startLidObservation()
             case .failure(let failure): self.error = failure.localizedDescription; self.refreshService()
             }
             self.onChange?()
@@ -136,13 +134,8 @@ final class AppModel {
     }
 
     func stop(completion: ((Bool) -> Void)? = nil) {
-        if sessionMode == "standard" {
-            localStop()
-            error = nil
-            completion?(true)
-            return
-        }
         busy = true
+        stopLidObservation()
         display.release()
         client.call(.stop) { [weak self] result in
             guard let self else { return }
@@ -155,6 +148,7 @@ final class AppModel {
                     self.error = reply.message
                     completion?(true)
                 } else {
+                    if self.active && reply.ownedByCaller { self.startLidObservation() }
                     self.error = reply.message ?? "잠자기 설정 복구가 필요합니다. 다시 OFF를 눌러 주세요."
                     completion?(false)
                 }
@@ -171,7 +165,10 @@ final class AppModel {
     func setMonitor(_ value: Bool) {
         guard active, !busy else { return }
         do {
-            try display.apply(keepOn: value)
+            // While armed, Monitor only selects what to do after the lid closes.
+            if lidEngaged {
+                try display.apply(keepOn: value, onlyWhileLidClosed: true)
+            }
             monitorPreference = value
             UserDefaults.standard.set(value, forKey: "monitorOn")
         }
@@ -218,17 +215,6 @@ final class AppModel {
     }
 
     private func tick() {
-        if active && sessionMode == "standard" {
-            let reading = HardwareReading.current()
-            if let issue = reading.issue {
-                localStop()
-                error = issue.replacingOccurrences(of: "Mac을 잠자기로 전환합니다.", with: "일반 세션을 종료합니다.")
-            } else if reading.lidClosed {
-                localStop()
-                error = "덮개가 닫혀 일반 세션을 종료했습니다. 이 빌드는 덮개를 연 상태에서 사용해 주세요."
-            }
-            return
-        }
         if active && !busy { sendHeartbeat() }
         if recoveryRequired { refreshService() }
         if recoveryRequired && !active && !busy && serviceReady {
@@ -266,34 +252,46 @@ final class AppModel {
         }
     }
 
+    private func startLidObservation() {
+        stopLidObservation()
+        updateLidState()
+        // Read only the lid registry value here; full safety checks and the helper
+        // lease retain their existing cadence. Never poll when Session is OFF.
+        let value = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
+            Task { @MainActor in self?.updateLidState() }
+        }
+        value.tolerance = 0.2
+        RunLoop.main.add(value, forMode: .common)
+        lidTimer = value
+    }
+
+    private func stopLidObservation() {
+        lidTimer?.invalidate()
+        lidTimer = nil
+        lidEngaged = false
+    }
+
+    private func updateLidState() {
+        guard active, !busy, sessionMode == "closedLid" else { return }
+        // Unknown lid state must not trigger a display sleep request.
+        guard let closed = HardwareReading.lidIsClosed(), closed != lidEngaged else { return }
+        lidEngaged = closed
+        if closed {
+            do { try display.apply(keepOn: monitorOn, onlyWhileLidClosed: true) }
+            catch { self.error = error.localizedDescription }
+        } else {
+            // Reopening cancels any delayed sleep and returns to the armed state.
+            display.release()
+        }
+        onChange?()
+    }
+
     private func localStop() {
-        systemSleep.stop()
+        stopLidObservation()
         sessionMode = "off"
         active = false
         display.release()
         if let activity { ProcessInfo.processInfo.endActivity(activity); self.activity = nil }
     }
 
-    private func startStandardSession() {
-        guard !recoveryRequired else { return }
-        let reading = HardwareReading.current()
-        if let issue = reading.issue { error = issue; return }
-        guard !reading.lidClosed else {
-            error = "일반 모드는 덮개를 연 상태에서만 시작할 수 있습니다."
-            return
-        }
-        busy = true
-        defer { busy = false }
-        error = nil
-        do {
-            try systemSleep.start()
-            sessionMode = "standard"
-            active = true
-            activity = ProcessInfo.processInfo.beginActivity(options: [.userInitiatedAllowingIdleSystemSleep], reason: "pika standard session safety checks")
-            try display.apply(keepOn: monitorOn)
-        } catch {
-            localStop()
-            self.error = error.localizedDescription
-        }
-    }
 }
