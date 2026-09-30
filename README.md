@@ -102,14 +102,25 @@ Apple Developer 계정의 Developer ID 인증서 및 이미 설정한 `notarytoo
 
 앱에 포함된 네이티브 `pika-mcp` 실행 파일을 STDIO MCP 서버로 등록합니다. Python/Node 설치나 웹 서버는 필요하지 않습니다. 앱과 보조 서비스를 설치한 뒤 `/Applications/pika.app`을 실행하세요.
 
-Codex 설정 예시 (`~/.codex/config.toml`):
+1. `/Applications/pika.app`을 실행하고 시작 안내에서 보조 서비스 설치를 완료한 뒤 앱을 다시 엽니다. 메뉴 막대에서 pika를 실행 중인 상태로 둡니다.
+2. Codex CLI가 있다면 터미널에서 한 번 등록합니다. 이 명령은 MCP 서버 설정을 추가하며 Session을 켜지는 않습니다.
+
+```sh
+codex mcp add pika -- /Applications/pika.app/Contents/MacOS/pika-mcp
+```
+
+CLI 대신 `~/.codex/config.toml`에 직접 추가할 수도 있습니다. 기존 pika 항목이 있다면 해당 항목을 수정하고 다른 설정은 유지하세요:
 
 ```toml
 [mcp_servers.pika]
 command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
 ```
 
-등록 후 MCP 서버를 다시 시작합니다. 다른 MCP 클라이언트에서도 같은 실행 파일을 STDIO 방식으로 사용합니다.
+3. 저장 후 MCP 클라이언트를 재시작하고 새 대화에서 “pika_status를 호출해서 현재 상태를 알려줘. Session과 Monitor는 변경하지 마.”라고 요청합니다. 도구가 상태를 정상 반환하면 앱 연결이 확인됩니다. Session OFF도 정상입니다.
+
+다른 로컬 MCP 클라이언트에서는 서버 이름 `pika`, 연결 방식 `STDIO`, 실행 명령을 위 경로로 설정하고 인수·환경변수는 비워 둡니다. 별도 URL·API 키·Node/Python 설치는 필요하지 않습니다. 홈페이지 주소는 MCP 엔드포인트가 아닙니다.
+
+도구가 없으면 실행 경로와 클라이언트 재시작을 확인하세요. 앱 연결 오류는 같은 Mac·사용자 계정에서 pika를 실행했는지, 보조 서비스 오류는 앱의 설치 안내를 완료했는지 확인하세요. 터미널에서 `codex`를 찾지 못하면 설정 파일 방식을 사용합니다. [Codex 공식 MCP 설정 문서](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)
 
 | 도구 | 입력 | 동작 |
 |---|---|---|

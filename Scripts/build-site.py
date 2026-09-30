@@ -5,6 +5,7 @@ import html
 import json
 from datetime import date
 from install_page import build as build_install
+from mcp_guide import render as render_mcp_guide
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'docs'
@@ -882,7 +883,7 @@ def render(locale):
 <div class="download-area"><a class="button primary" href="{DOWNLOAD}"><svg width="17" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v11m-4-4 4 4 4-4M3 13v5h14v-5" stroke="currentColor" stroke-width="1.8"/></svg>{h('download')}</a>
 <p class="download-meta"><span id="download-count" data-label="{h('downloads')}" data-updated-at="{updated}" title="GitHub · {updated}" aria-live="polite">{count:,} {h('downloads')}</span></p><p class="release">{h('release')}</p></div>
 <section id="mcp" class="mcp" aria-labelledby="mcp-title"><div class="mcp-heading"><h2 id="mcp-title">{h('connect')}</h2><span>STDIO</span></div><p class="mcp-note">{h('mcpnote')} <a href="{REPO}#mcp">{h('source')} ↗</a></p>
-<div class="terminal-body"><div class="command" dir="ltr"><code id="mcp-command">/Applications/pika.app/Contents/MacOS/pika-mcp</code><button class="copy" data-copy="mcp-command" data-copied="{h('copied')}" data-failed="{h('copyfail')}">{h('copy')}</button></div><span class="copy-status sr-only" role="status" aria-live="polite"></span></div></section>
+<div class="terminal-body"><div class="command" dir="ltr"><code id="mcp-command">/Applications/pika.app/Contents/MacOS/pika-mcp</code><button class="copy" data-copy="mcp-command" data-copied="{h('copied')}" data-failed="{h('copyfail')}">{h('copy')}</button></div><span class="copy-status sr-only" role="status" aria-live="polite"></span></div>{render_mcp_guide(locale, t["copy"], t["copied"], t["copyfail"])}</section>
 <a class="help-link" href="/install/?lang={locale}">{"설치 도움말" if locale == "ko" else "Installation help" if locale == "en" else h("compatibility")} ↗</a>
 </main>
 <noscript><nav class="language-fallback" aria-label="{h('language')}">{language_links}</nav></noscript>

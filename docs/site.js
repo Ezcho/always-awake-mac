@@ -35,6 +35,10 @@
       location.assign(pathFor(locale) + location.search + location.hash);
     });
   }
+  const guide = document.getElementById('mcp-guide');
+  document.querySelectorAll('[data-open-mcp]').forEach(button => {
+    button.addEventListener('click', () => guide.showModal());
+  });
   document.querySelectorAll('[data-copy]').forEach(button => {
     button.addEventListener('click', async () => {
       const target = document.getElementById(button.dataset.copy);
