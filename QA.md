@@ -153,4 +153,6 @@ GitHub Actions의 macos-15 환경에서도 소스 `b128f09`의 테스트·Univer
 - 총 19개 페이지의 self-canonical, OG URL, reciprocal hreflang, 사이트맵과 HTML 대체 언어 일치, 실제 수정일, 내부 링크·앵커·고립 페이지 여부를 검사합니다. 가짜 평점이나 리뷰를 만들지 않았습니다.
 - Search Console에서 인증된 도메인 소유자, 사이트맵 성공, 기존 17개 페이지 발견을 확인했습니다. 영어 홈과 /ko/ 모두 개별 URL 검사에서 Google 등록/색인 생성/HTTPS 제공 상태를 확인했습니다. 전체 색인 보고서는 아직 데이터 처리 중입니다.
 - robots.txt의 실제 HTTPS 응답은 200이며 Allow: / 및 정식 sitemap URL을 제공합니다. Search Console 설정의 아직 수집되지 않은 robots 표시를 실제 파일 부재로 해석하지 않습니다.
+- 58e4ef5의 Pages 배포와 macOS CI가 성공했습니다. 공개 사이트맵의 19개 URL 및 새 가이드 본문을 HTTPS로 확인했습니다. 한국어 홈은 1280×720 및 390×844에서 한 화면 구성과 가로 넘침 없음을 확인했고, 가이드는 데스크톱 본문·사이드바 및 모바일 단일 열 배치를 확인했습니다.
+- 신규 /guide/ 및 /guide/ko/는 Google 실제 URL 테스트에서 색인 가능 및 유효한 탐색경로를 확인한 뒤 각각 한 번 색인 요청했습니다. 두 URL 모두 우선순위 크롤링 대기열 추가를 확인했습니다. 이는 요청 접수이며 실제 색인 완료나 검색 순위를 뜻하지 않습니다. 기존 사이트맵과 이미 색인된 홈은 중복 제출하지 않았습니다.
 - Google 공식 참고: https://developers.google.com/search/docs/specialty/international/localized-versions , https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap , https://developers.google.com/search/docs/appearance/structured-data/software-app , https://developers.google.com/search/docs/fundamentals/creating-helpful-content
