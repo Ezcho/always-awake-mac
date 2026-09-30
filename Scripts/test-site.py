@@ -4,9 +4,12 @@ from pathlib import Path
 from html.parser import HTMLParser
 from urllib.parse import urlparse, unquote
 import json, xml.etree.ElementTree as ET
-from datetime import date
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 ROOT=Path(__file__).resolve().parent.parent/'docs'
 BASE='https://no-sleep-pika.online'
+# Editorial content dates are recorded in Korea; CI runners use UTC.
+TODAY=datetime.now(ZoneInfo('Asia/Seoul')).date()
 class Page(HTMLParser):
  def __init__(self):
   super().__init__();self.links=[];self.assets=[];self.alternates={};self.canonical=None;self.lang=None;self.h1=0;self.structured=[];self.in_json=False;self.buffer='';self.title=False;self.description=False;self.ids=set();self.og_url=None;self.robots='';self.title_text='';self.in_title=False
@@ -96,7 +99,7 @@ for item in items:
  alternates={el.attrib['hreflang']:el.attrib['href'] for el in item.findall('x:link',ns)}
  assert alternates==parsed[url].alternates,(url,'sitemap and HTML hreflang mismatch')
  modified=item.find('s:lastmod',ns)
- assert modified is not None and date.fromisoformat(modified.text)<=date.today(),(url,'invalid modification date')
+ assert modified is not None and date.fromisoformat(modified.text)<=TODAY,(url,'invalid modification date')
 # User guides must be reachable by real links without executing JavaScript.
 reachable={BASE+'/'}
 pending=list(reachable)
