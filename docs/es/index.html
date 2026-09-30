@@ -55,7 +55,20 @@
 </header>
 <main id="main">
 <h1 class="sr-only">no-sleep-pika — Control del reposo y la pantalla del Mac</h1>
-<div class="working-pika pika-motion" aria-hidden="true"><div class="motion-canvas"><img class="motion-still" src="/assets/pika-working.png" alt="" width="1024" height="1024" fetchpriority="high"><span class="motion-sprite"></span></div></div>
+<div class="working-pika pika-motion" data-gaze="center" aria-hidden="true"><div class="motion-canvas">
+<img class="motion-still" src="/assets/pika-working.png" alt="" width="1239" height="1269" fetchpriority="high">
+<svg class="motion-art" viewBox="0 0 620 635" xmlns="http://www.w3.org/2000/svg" focusable="false">
+<defs>
+<image id="pika-sheet" href="/assets/pika-motion.png" width="1240" height="1269"/>
+<clipPath id="pika-body"><rect width="616" height="635"/></clipPath>
+<clipPath id="pika-eyes"><path d="M223 267H240V277H247V307H242V314H238V318H235V322H217V317H212V312H208V288H213V278H216V272H223Z"/><path d="M328 282H357V289H364V295H366V297H371V323H366V332H362V338H354V344H324V340H317V337H312V306H316V294H321V288H328Z"/></clipPath>
+<g id="pika-pupils" clip-path="url(#pika-eyes)"><use href="#pika-sheet"/></g>
+<clipPath id="pika-hand"><path d="M249 406H305V444H318V514H253V480H249Z"/></clipPath>
+</defs>
+<g clip-path="url(#pika-body)"><use class="motion-body" href="#pika-sheet"/></g>
+<g class="motion-hand" clip-path="url(#pika-hand)"><use href="#pika-sheet" x="-608"/></g>
+<g class="gaze-layer"><path d="M223 267H240V277H247V307H242V314H238V318H235V322H217V317H212V312H208V288H213V278H216V272H223Z" fill="#f7d5a9"/><path d="M328 282H357V289H364V295H366V297H371V323H366V332H362V338H354V344H324V340H317V337H312V306H316V294H321V288H328Z" fill="#f9d9ad"/><g class="gaze-frame gaze-e"><use href="#pika-pupils" transform="translate(7 0)"/></g><g class="gaze-frame gaze-se"><use href="#pika-pupils" transform="translate(5 5)"/></g><g class="gaze-frame gaze-s"><use href="#pika-pupils" transform="translate(0 6)"/></g><g class="gaze-frame gaze-sw"><use href="#pika-pupils" transform="translate(-5 5)"/></g><g class="gaze-frame gaze-w"><use href="#pika-pupils" transform="translate(-7 0)"/></g><g class="gaze-frame gaze-nw"><use href="#pika-pupils" transform="translate(-5 -5)"/></g><g class="gaze-frame gaze-n"><use href="#pika-pupils" transform="translate(0 -6)"/></g><g class="gaze-frame gaze-ne"><use href="#pika-pupils" transform="translate(5 -5)"/></g></g>
+</svg></div></div>
 <div class="download-area"><a class="button primary" href="https://github.com/Ezcho/always-awake-mac/releases/download/v1.0.10/pika-1.0.10.pkg"><svg width="17" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v11m-4-4 4 4 4-4M3 13v5h14v-5" stroke="currentColor" stroke-width="1.8"/></svg>Descargar para Mac</a>
 <p class="download-meta"><span id="download-count" data-label="Descargas" data-updated-at="2026-09-29T13:15:56.799928+00:00" title="GitHub · 2026-09-29T13:15:56.799928+00:00" aria-live="polite">11 Descargas</span></p><p class="release">Versión pública 1.0.10 · macOS 13+ · Apple Silicon e Intel</p></div>
 <section id="mcp" class="mcp" aria-labelledby="mcp-title"><div class="mcp-heading"><h2 id="mcp-title">Conectar MCP</h2><span>STDIO</span></div><p class="mcp-note">Instala y abre pika; conecta con el comando de abajo. <a href="https://github.com/Ezcho/always-awake-mac#mcp">Ver código fuente ↗</a></p>

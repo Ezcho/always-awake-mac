@@ -166,7 +166,7 @@ command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
 
 ## 홈페이지 방문 집계와 애니메이션
 
-- `docs/assets/pika-motion.png`는 기존 피카 일러스트를 유지한 네 가지 포즈입니다. 9초 CSS 루프로 타이핑·쳐다보기·눈깜빡임을 재생합니다. 숨겨진 탭에서는 정지하고, 동작 줄이기/이미지 오류에서는 기존 정지 이미지를 표시합니다. 생성 방식과 정확한 프롬프트는 `docs/assets/pika-motion-prompt.txt`에 있습니다.
+- 홈페이지는 `Scripts/pika_motion.py`에서 같은 이미지의 몸통·귀·노트북을 고정하고 손 영역만 9초 타이핑 루프로 전환합니다. 기존 스프라이트의 웃는 장면은 사용하지 않습니다. 원본 눈 영역을 공유하는 8방향 SVG 시선 프레임이 마우스를 따라 최대 8Hz로 바뀌며, 유휴 폴링은 없습니다. 동작 줄이기·터치 입력에서는 시선을 추적하지 않고, 숨겨진 탭에서는 타이핑을 멈춥니다. 그림 파일은 새로 생성하거나 수정하지 않았습니다. 기존 이미지 생성 기록은 `docs/assets/pika-motion-prompt.txt`에 있습니다.
 - 작은 눈 아이콘은 다운로드 수와 별개의 누적 방문 집계입니다. `docs/analytics.json`의 `goatcounter`에 소유한 `사이트코드.goatcounter.com` 호스트를 넣고 GoatCounter 설정의 **Allow adding visitor counts on your website**를 켜야 실제 집계가 시작됩니다. 현재 null이면 연결 전이며 **—**로 표시합니다. 가짜 초기값이나 로컬 브라우저 누적 숫자를 사용하지 않습니다.
 - 공식 tracking pixel과 `counter/TOTAL.json`만 사용하며 외부 JavaScript나 API 비밀키를 싣지 않습니다. 공개 페이지 경로만 보내고 쿼리·유입주소는 생략합니다. 통계 서비스는 요청 IP/User-Agent를 받습니다. GPC 요청 및 로컬 미리보기는 집계하지 않습니다. 과거 방문 수는 복원하지 않으며 광고 차단·봇·서비스 집계 방식에 따른 차이가 있습니다. 공개 합계는 서비스 캐시 때문에 최대 4시간 늦게 갱신될 수 있습니다.
 - 참고: https://www.goatcounter.com/help/pixel 및 https://www.goatcounter.com/help/visitor-counter
