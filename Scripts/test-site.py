@@ -27,14 +27,15 @@ class Page(HTMLParser):
  def handle_endtag(self,tag):
   if tag=='script' and self.in_json:self.structured.append(json.loads(self.buffer));self.in_json=False
 pages=sorted(ROOT.rglob('index.html'))
-assert len(pages)==15, f'Expected 15 locale pages, got {len(pages)}'
+assert len(pages)==17, f'Expected 15 locale pages and 2 installation guides, got {len(pages)}'
 canonical=set()
 for path in pages:
  page=Page();page.feed(path.read_text())
  assert page.lang and page.title and page.description,path
  assert page.h1==1,(path,'must have one H1')
  assert page.canonical and page.canonical.startswith(BASE),path
- assert len(page.alternates)==16 and 'x-default' in page.alternates,(path,'hreflang')
+ expected_alternates = 3 if 'install' in path.relative_to(ROOT).parts else 16
+ assert len(page.alternates)==expected_alternates and 'x-default' in page.alternates,(path,'hreflang')
  assert page.structured,(path,'structured data')
  canonical.add(page.canonical)
  for href in page.links+page.assets+list(page.alternates.values()):
