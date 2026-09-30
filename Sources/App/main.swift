@@ -17,6 +17,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     private let modeItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
     private let windowMode = NSTextField(wrappingLabelWithString: "")
     private var pendingTermination = false
+    private var updateHandoff = false
+    private var updater: AppUpdateController!
+    private let updateItem = NSMenuItem(title: "업데이트 확인…", action: #selector(checkForUpdates), keyEquivalent: "")
     private var controlWindow: NSWindow?
     private var setupWindow: SetupWindowController?
     private let windowSessionRow = MenuSwitchRow(title: "Session")
@@ -94,6 +97,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         statusItem.button?.action = #selector(statusClick)
         statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
         if let button = statusItem.button { statusIcon = PikaStatusIcon(button: button) }
+        updater = AppUpdateController(model: model) { [weak self] in
+            guard let self, !self.model.active, !self.model.recoveryRequired else { return }
+            self.updateHandoff = true
+            NSApp.terminate(nil)
+        }
+        updater.onChange = { [weak self] in self?.updateItem.title = self?.updater.menuTitle ?? "업데이트 확인…" }
+        updateItem.target = self
+        menu.insertItem(updateItem, at: menu.numberOfItems - 1)
         model.onChange = { [weak self] in self?.updateMenu() }
         model.onSetupRequested = { [weak self] in self?.showSetupWindow() }
         do {
@@ -110,9 +121,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
             showSetupWindow()
         }
         model.checkHelperConnection()
+        updater.checkAutomatically()
     }
 
     func applicationDidBecomeActive(_ notification: Notification) {
+        updater?.checkAutomatically()
         model.checkHelperConnection()
     }
 
@@ -163,6 +176,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
                 button.controlSize = .small
                 button.frame = NSRect(x: x, y: 12, width: 100, height: 26)
             }
+            let updateButton = NSButton(title: "업데이트…", target: self, action: #selector(checkForUpdates))
+            updateButton.bezelStyle = .rounded
+            updateButton.controlSize = .mini
+            updateButton.frame = NSRect(x: 172, y: 163, width: 80, height: 20)
+            window.contentView?.addSubview(updateButton)
             windowMode.font = .systemFont(ofSize: 11)
             windowMode.textColor = .secondaryLabelColor
             windowMode.frame = NSRect(x: 24, y: 46, width: 216, height: 34)
@@ -248,6 +266,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     @objc private func toggleMonitor() { model.setMonitor(!model.monitorOn) }
     @objc private func prepareService() { showSetupWindow() }
     @objc private func removeService() { menu.cancelTracking(); model.removeService() }
+    @objc private func checkForUpdates() { menu.cancelTracking(); updater.present() }
     @objc private func openGuide() {
         if let url = Bundle.main.url(forResource: "Guide", withExtension: "html") { NSWorkspace.shared.open(url) }
     }
@@ -266,6 +285,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     func applicationWillTerminate(_ notification: Notification) { statusIcon?.invalidate() }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        if updateHandoff && !model.active && !model.recoveryRequired { model.client.invalidate(); return .terminateNow }
         guard model.active || model.recoveryRequired || model.busy else { model.client.invalidate(); return .terminateNow }
         guard !pendingTermination else { return .terminateCancel }
         if model.busy { return .terminateCancel }

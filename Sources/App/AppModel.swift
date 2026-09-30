@@ -261,6 +261,20 @@ final class AppModel {
         }
     }
 
+    func prepareForUpdate() async throws {
+        guard busy, !active, !recoveryRequired else { throw AwakeError("먼저 Session 복구를 완료해 주세요.") }
+        try SystemSleepController.requireSystemSleepEnabled()
+        client.invalidate()
+        if service.status != .notRegistered && service.status != .notFound {
+            try await service.unregister()
+            try await Task.sleep(nanoseconds: 2_000_000_000)
+            guard service.status == .notRegistered || service.status == .notFound else {
+                throw AwakeError("이전 보조 서비스가 종료되는 중입니다. 잠시 뒤 다시 시도해 주세요.")
+            }
+        }
+        try SystemSleepController.requireSystemSleepEnabled()
+    }
+
     func removeService() {
         guard !busy else { return }
         if InstalledHelper.isPresent {
