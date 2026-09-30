@@ -204,3 +204,4 @@ GitHub Actions의 macos-15 환경에서도 소스 `b128f09`의 테스트·Univer
 - 설치된 1.0.10 본체 50초/6표본 읽기 전용 관찰: footprint 30,786,400 bytes 고정. 세션 변경이나 강제 종료 없음. 장기/활성 작업 중 부하 검증은 별도입니다.
 - 전체 로직·MCP·UI diagnostics·status icon lifecycle 검사 및 39개 업데이트 검증과 fake installer 3케이스 통과. AppleScript는 샌드박스의 표준 명령 해석 제한 때문에 외부에서 문법 컴파일만 수행했고 성공했습니다. 실제 관리자 스크립트는 실행하지 않았습니다.
 - Universal arm64/x86_64 앱·updater 서명 검사, helper discovery, PKG payload·버전·정확한 서명 pin·must-close 검사 통과. 신규 프로세스 이름과 번들 진입점 일치 확인. 실제 관리자 설치, 재실행, 덮개 동작은 사용자 테스트 대상입니다.
+- 소스 커밋 `5e0763368e2017b9c41a500fbcde2c667c1059c4`의 GitHub CI `36741733948` 전체 성공. 공개 v1.0.11의 실제 최신 릴리스 조회와 PKG 다운로드를 앱과 같은 UpdateDownload 코드로 검증했으며, 1.0.10보다 새 버전으로 인식했습니다. 다운로드 2,329,801 bytes, SHA256 `7a62303b5de3dd2b523ab5995eb52b30554c2d016a62004547d95f402b5c4424` 일치. 관리자 설치는 실행하지 않았습니다.

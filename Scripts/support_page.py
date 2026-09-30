@@ -28,7 +28,7 @@ COPY = {
                 'For Wi-Fi problems, Option-click the Wi-Fi menu and open Wireless Diagnostics. For long remote jobs, use the agent’s supported retry and checkpoint features when available.'
             ]),
             ('updates', 'Update without downloading another installer', [
-                'Install pika 1.0.10 once if you are using 1.0.9 or earlier. After that, choose Check for Updates in the menu bar or the update button in the control window. Automatic checks only notify through the menu; installation starts when you choose it.',
+                'Install pika 1.0.11 once if you are using 1.0.9 or earlier. After that, choose Check for Updates in the menu bar or the update button in the control window. Automatic checks only notify through the menu; installation starts when you choose it.',
                 'Keep the lid open and finish your work before updating. pika stops the Session, verifies the download, asks for macOS administrator approval, updates the app and helper together, and reopens the app. Session stays OFF. If authorization is cancelled, you can retry or reopen pika. Restart MCP client connections after updating.'
             ]),
             ('menu', 'The menu bar icon is missing', [
@@ -70,7 +70,7 @@ COPY = {
                 'Wi-Fi 문제는 Option 키를 누른 채 Wi-Fi 메뉴를 클릭해 무선 진단을 여세요. 장시간 원격 작업에는 Agent가 제공하는 재시도와 중간 저장 기능을 함께 사용하세요.'
             ]),
             ('updates', '앱 안에서 업데이트하기', [
-                '1.0.9 이하라면 1.0.10을 한 번 PKG로 설치하세요. 그 이후에는 메뉴 막대의 업데이트 확인… 또는 제어창의 업데이트…에서 진행할 수 있습니다. 자동 확인은 메뉴에 새 버전을 표시하며, 설치는 사용자가 시작합니다.',
+                '1.0.9 이하라면 1.0.11을 한 번 PKG로 설치하세요. 그 이후에는 메뉴 막대의 업데이트 확인… 또는 제어창의 업데이트…에서 진행할 수 있습니다. 자동 확인은 메뉴에 새 버전을 표시하며, 설치는 사용자가 시작합니다.',
                 '덮개를 열고 작업을 마친 뒤 업데이트하세요. Session을 종료하고 파일을 검증한 다음, macOS 관리자 승인으로 앱과 보조 서비스를 함께 교체하고 pika를 다시 엽니다. Session은 OFF로 유지됩니다. 승인 취소 시 다시 시도하거나 앱을 열 수 있습니다. 업데이트 후 MCP 클라이언트 연결도 다시 시작하세요.'
             ]),
             ('menu', '메뉴 막대 아이콘이 보이지 않을 때', [
