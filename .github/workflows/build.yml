@@ -29,6 +29,7 @@ jobs:
           python3 Scripts/test-site.py
           node --check docs/site.js
           node --check docs/downloads.js
+          node Scripts/test-web-additions.cjs
       - name: Build administrator installer packages
         run: ./Scripts/package-helper.sh
       - name: Verify full installer and process preflight

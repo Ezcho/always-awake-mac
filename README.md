@@ -163,3 +163,10 @@ command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
 - 복구용 ‘PKG 다시 받기’ 버튼은 현재 버전의 통합 PKG를 HTTPS와 GitHub 자산 SHA-256으로 검증해 Finder에 표시합니다. 앱을 종료하지 않은 채 Installer를 자동 실행하지 않습니다. 사용자가 ‘pika 종료’를 누르고 PKG를 엽니다.
 - 개인정보 보호 및 보안의 **그래도 열기**는 macOS가 실행을 차단한 경우에만 사용합니다. [Apple 안내](https://support.apple.com/ko-kr/102445)
 - `LSFileQuarantineEnabled`를 유지하며 보안 승인·관리자 인증은 사용자가 macOS UI에서 진행합니다.
+
+## 홈페이지 방문 집계와 애니메이션
+
+- `docs/assets/pika-motion.png`는 기존 피카 일러스트를 유지한 네 가지 포즈입니다. 9초 CSS 루프로 타이핑·쳐다보기·눈깜빡임을 재생합니다. 숨겨진 탭에서는 정지하고, 동작 줄이기/이미지 오류에서는 기존 정지 이미지를 표시합니다. 생성 방식과 정확한 프롬프트는 `docs/assets/pika-motion-prompt.txt`에 있습니다.
+- 작은 눈 아이콘은 다운로드 수와 별개의 누적 방문 집계입니다. `docs/analytics.json`의 `goatcounter`에 소유한 `사이트코드.goatcounter.com` 호스트를 넣고 GoatCounter 설정의 **Allow adding visitor counts on your website**를 켜야 실제 집계가 시작됩니다. 현재 null이면 연결 전이며 **—**로 표시합니다. 가짜 초기값이나 로컬 브라우저 누적 숫자를 사용하지 않습니다.
+- 공식 tracking pixel과 `counter/TOTAL.json`만 사용하며 외부 JavaScript나 API 비밀키를 싣지 않습니다. 공개 페이지 경로만 보내고 쿼리·유입주소는 생략합니다. 통계 서비스는 요청 IP/User-Agent를 받습니다. GPC 요청 및 로컬 미리보기는 집계하지 않습니다. 과거 방문 수는 복원하지 않으며 광고 차단·봇·서비스 집계 방식에 따른 차이가 있습니다. 공개 합계는 서비스 캐시 때문에 최대 4시간 늦게 갱신될 수 있습니다.
+- 참고: https://www.goatcounter.com/help/pixel 및 https://www.goatcounter.com/help/visitor-counter

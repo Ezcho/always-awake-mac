@@ -1,0 +1,10 @@
+Mode: built-in image_gen edit, transparent background.
+Source: docs/assets/pika-working.png
+Use case: identity-preserve. Asset type: transparent pixel-art animation sprite sheet for the existing no-sleep-pika website.
+The attached image is the edit target, not merely inspiration. Preserve this exact golden-brown pika, cream cheeks/chest, short round ears, pixel scale, palette, and dark laptop with green terminal marks. Keep the existing illustration's identity and objects. No new props, no text.
+Create a 2-by-2 sprite sheet with FOUR equally sized square cells, transparent background throughout, no gutters, labels or borders. In each cell show the COMPLETE original pika and laptop with the same fixed camera, scale, placement, margins, seated body and laptop outline; the laptop and lower body MUST stay aligned across all four cells.
+Top-left: working pose close to the original, both paws on keyboard, looking down toward laptop.
+Top-right: alternate typing pose, only the paws move slightly, one raised and the other pressing a key. Head, body, laptop, framing stay identical.
+Bottom-left: short break, paws resting on keyboard, head lifted slightly and eyes looking toward the viewer, a gentle curious smile.
+Bottom-right: same break pose with a brief friendly blink, eyes closed, no tears and no crying.
+This is a subtle, seamless website animation, NOT four different drawings or a redesign. Preserve the original crisp pixelated edges, dark-brown outlines, warm shading, and perspective. Keep actual alpha transparency. Equal cell alignment is critical.

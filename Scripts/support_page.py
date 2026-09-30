@@ -2,7 +2,7 @@
 import html
 import json
 
-UPDATED = '2026-09-30'  # Change only when this guide's content changes.
+UPDATED = '2026-10-01'  # Change only when this guide's content changes.
 COMMAND = '/Applications/pika.app/Contents/MacOS/pika-mcp'
 COPY = {
     'en': {
@@ -10,7 +10,7 @@ COPY = {
         'description': 'How pika Session and Monitor work with a closed MacBook lid, what a locked screen means, Wi-Fi limits, and local MCP setup for AI agents.',
         'home': 'Home', 'install': 'Install pika', 'language': 'Guide language',
         'intro': 'Use Session to keep work running, and Monitor to choose the display behavior after you close the lid.',
-        'updated': 'Updated September 30, 2026',
+        'updated': 'Updated October 1, 2026',
         'sections': [
             ('start', 'Start a closed-lid session', [
                 'Install the full pika PKG and open /Applications/pika.app. Wait for the helper connection, turn Session ON, choose Monitor, then close your MacBook’s lid. Keep the Mac ventilated.',
@@ -26,6 +26,10 @@ COPY = {
                 'Yes. Preventing system sleep does not guarantee a network connection. Wi-Fi signal, router or ISP outages, VPN policies, and a remote API’s timeout or service limits can still interrupt a job. pika does not reconnect Wi-Fi or retry your agent’s failed requests.',
                 'For a first run, try a short job with the lid closed, reopen the Mac, and check timestamps and errors in the job’s own log. If work stopped, check both pika’s session status and the network. A local process can continue while a remote API request fails.',
                 'For Wi-Fi problems, Option-click the Wi-Fi menu and open Wireless Diagnostics. For long remote jobs, use the agent’s supported retry and checkpoint features when available.'
+            ]),
+            ('updates', 'Update without downloading another installer', [
+                'Install pika 1.0.10 once if you are using 1.0.9 or earlier. After that, choose Check for Updates in the menu bar or the update button in the control window. Automatic checks only notify through the menu; installation starts when you choose it.',
+                'Keep the lid open and finish your work before updating. pika stops the Session, verifies the download, asks for macOS administrator approval, updates the app and helper together, and reopens the app. Session stays OFF. If authorization is cancelled, you can retry or reopen pika. Restart MCP client connections after updating.'
             ]),
             ('menu', 'The menu bar icon is missing', [
                 'Open pika from Applications to bring its controls to the foreground. Closing that window leaves the app running. If many status items crowd the menu bar, reduce other menu bar items or switch to an app with fewer menus, then check again.',
@@ -48,7 +52,7 @@ COPY = {
         'description': '맥북 덮개를 닫았을 때 pika Session·Monitor 동작, 화면 잠금과 절전의 차이, Wi-Fi 끊김 가능성과 AI 에이전트 MCP 연결 방법을 안내합니다.',
         'home': '홈', 'install': 'pika 설치 안내', 'language': '안내 언어',
         'intro': 'Session으로 작업을 유지하고, Monitor로 덮개를 닫은 뒤의 화면 동작을 선택하세요.',
-        'updated': '2026년 9월 30일 업데이트',
+        'updated': '2026년 10월 1일 업데이트',
         'sections': [
             ('start', '덮개를 닫고 세션 시작하기', [
                 '통합 pika PKG를 설치한 뒤 /Applications/pika.app을 여세요. 보조 서비스 연결을 확인하고 Session ON → Monitor 선택 → 맥북 덮개 닫기 순서로 사용하세요. 통풍을 확보해 주세요.',
@@ -64,6 +68,10 @@ COPY = {
                 '네. 시스템 잠자기를 막아도 네트워크 연결을 보장하지는 않습니다. Wi-Fi 신호, 공유기·통신사 장애, VPN 정책, 원격 API의 시간 초과나 사용량 제한으로 작업이 끊길 수 있습니다. pika는 Wi-Fi 재연결이나 Agent 요청 재시도를 수행하지 않습니다.',
                 '처음에는 짧은 작업으로 덮개를 닫았다가 열어 보고, 해당 작업 로그의 시간과 오류를 확인하세요. 작업이 멈췄다면 pika 세션 상태와 네트워크를 함께 점검하세요. 로컬 프로세스는 실행 중이어도 외부 API 요청은 실패할 수 있습니다.',
                 'Wi-Fi 문제는 Option 키를 누른 채 Wi-Fi 메뉴를 클릭해 무선 진단을 여세요. 장시간 원격 작업에는 Agent가 제공하는 재시도와 중간 저장 기능을 함께 사용하세요.'
+            ]),
+            ('updates', '앱 안에서 업데이트하기', [
+                '1.0.9 이하라면 1.0.10을 한 번 PKG로 설치하세요. 그 이후에는 메뉴 막대의 업데이트 확인… 또는 제어창의 업데이트…에서 진행할 수 있습니다. 자동 확인은 메뉴에 새 버전을 표시하며, 설치는 사용자가 시작합니다.',
+                '덮개를 열고 작업을 마친 뒤 업데이트하세요. Session을 종료하고 파일을 검증한 다음, macOS 관리자 승인으로 앱과 보조 서비스를 함께 교체하고 pika를 다시 엽니다. Session은 OFF로 유지됩니다. 승인 취소 시 다시 시도하거나 앱을 열 수 있습니다. 업데이트 후 MCP 클라이언트 연결도 다시 시작하세요.'
             ]),
             ('menu', '메뉴 막대 아이콘이 보이지 않을 때', [
                 '응용 프로그램에서 pika를 열면 제어창이 전면에 나타납니다. 이 창을 닫아도 앱은 계속 실행됩니다. 아이콘이 많아 메뉴 막대가 붐비면 다른 메뉴 막대 항목을 줄이거나 메뉴가 적은 앱으로 전환한 뒤 다시 확인하세요.',
@@ -105,7 +113,7 @@ def render(locale, base, repo):
 <link rel="alternate" hreflang="en" href="{base}/guide/"><link rel="alternate" hreflang="ko" href="{base}/guide/ko/"><link rel="alternate" hreflang="x-default" href="{base}/guide/">
 <meta property="og:type" content="article"><meta property="og:site_name" content="no-sleep-pika"><meta property="og:title" content="{e(t['title'])}"><meta property="og:description" content="{e(t['description'])}"><meta property="og:url" content="{url}"><meta property="og:image" content="{base}/assets/pika-working.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/install/install.css"><link rel="stylesheet" href="/guide/guide.css">
-<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script></head>
+<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script><script src="/visitors.js" defer></script></head>
 <body><a class="skip" href="#main">{e(t['title'])}</a><div class="shell"><header><a class="brand" href="{home}"><img src="/assets/favicon.svg" alt="" width="30" height="30">no-sleep-pika.</a><nav aria-label="{e(t['language'])}"><a href="/guide/" lang="en"{' aria-current="page"' if locale == 'en' else ''}>English</a><a href="/guide/ko/" lang="ko"{' aria-current="page"' if locale == 'ko' else ''}>한국어</a></nav></header>
 <main id="main"><a class="back" href="{home}">← {e(t['home'])}</a><h1>{e(t['title'])}</h1><p class="intro">{e(t['intro'])}</p><p class="muted"><time datetime="{UPDATED}">{e(t['updated'])}</time></p>
 <nav class="contents" aria-label="{e(t['title'])}">{contents}<a href="#mcp">{e(t['mcp'])}</a></nav>
