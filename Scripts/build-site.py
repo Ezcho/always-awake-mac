@@ -10,8 +10,8 @@ OUT = ROOT / 'docs'
 BASE = 'https://no-sleep-pika.online'
 REPO = 'https://github.com/Ezcho/always-awake-mac'
 # Keep this aligned with the published release, not the unreleased source version.
-RELEASE = 'v1.0.3-mvp'
-DOWNLOAD = f'{REPO}/releases/download/{RELEASE}/pika-1.0.3.dmg'
+RELEASE = 'v1.0.4'
+DOWNLOAD = f'{REPO}/releases/download/{RELEASE}/pika-1.0.4.dmg'
 LANGUAGES = [('en','English'),('ko','한국어'),('zh-CN','简体中文'),('zh-TW','繁體中文'),('ja','日本語'),('hi','हिन्दी'),('id','Bahasa Indonesia'),('es','Español'),('fr','Français'),('de','Deutsch'),('pt-BR','Português'),('ru','Русский'),('ar','العربية'),('vi','Tiếng Việt'),('th','ไทย')]
 KEYS = '''title description skip features connect download eyebrow headline intro source release compatibility scroll feature1 body1 feature2 body2 feature3 body3 controls controlstitle controlsbody window mcp mcptitle mcpbody buildstep addstep toolstep copy copied copyfail installation installtitle install1 install2 install3 limitation safety faq q1 a1 q2 a2 q3 a3 footer language screenshot buildlabel configlabel'''.split()
 TEXT = {}
@@ -31,7 +31,7 @@ A SMALL APP FOR LONGER SESSIONS
 A little pika.<br>A longer session.
 Session and display controls, right in your Mac’s menu bar. A quiet companion for work that takes a little longer.
 View source
-Public release 1.0.3 · macOS 13+ · Apple Silicon & Intel
+Public release 1.0.4 · macOS 13+ · Apple Silicon & Intel
 Check installation requirements
 Meet your night-shift companion
 One session switch.
@@ -46,8 +46,8 @@ Open the controls when you need them. Close the window and pika stays in the men
 Session · Monitor · That’s it.
 READY FOR YOUR AGENT
 Let your agent<br>flip the switch.
-The MCP interface is in the source build. The public 1.0.3 download does not include it yet.
-On a Mac with Xcode Command Line Tools, build the source, move dist/pika.app to /Applications, then open it. Standard mode does not require helper approval.
+Install and open pika, then connect using the command below.
+Open the DMG and drag pika into Applications, then open the app.
 In Codex, open Settings → MCP servers. Add a STDIO server named pika with the command below. No arguments are needed.
 After restarting the MCP server, your agent can check status and change Session or Monitor. Monitor requires an active session. Check sessionMode and lidClosedSupported with pika_status; standard mode keeps the Mac awake only with its lid open.
 Copy
@@ -55,7 +55,7 @@ Copied
 Select and copy the command
 INSTALL & GET STARTED
 A home in your menu bar.
-Download the DMG and move the app to Applications. The current download may still be named Always Awake.
+Open the DMG and drag pika into Applications, then open the app.
 Open the app and follow the helper-service setup. Controls appear at launch; closing the window keeps the app running.
 Turn Session on, then choose Monitor on or off. Remove the helper from the app’s settings before uninstalling.
 The current download is not Developer ID signed or notarized. Depending on your system, macOS may block the app or its privileged helper. If installation or Session startup fails, follow the installation guidance on GitHub.
@@ -84,7 +84,7 @@ Mac용 다운로드
 작은 피카.<br>조금 더 긴 작업.
 Mac 메뉴 막대에서 세션과 화면을 간편하게 제어하세요. 시간이 더 필요한 작업 곁에 조용히 머뭅니다.
 소스코드 보기
-공개 버전 1.0.3 · macOS 13+ · Apple Silicon 및 Intel
+공개 버전 1.0.4 · macOS 13+ · Apple Silicon 및 Intel
 설치 요구사항 확인
 야근을 함께할 작은 친구
 세션은 스위치 하나로.
@@ -99,8 +99,8 @@ Mac의 상태도 살피며.
 Session · Monitor · 이것만 있으면 됩니다.
 에이전트와 함께
 스위치는<br>에이전트에게.
-MCP 인터페이스는 소스 빌드에 포함되어 있습니다. 현재 공개된 1.0.3 다운로드에는 아직 포함되지 않았습니다.
-Xcode Command Line Tools가 있는 Mac에서 소스를 빌드하고 dist/pika.app을 /Applications로 옮긴 뒤 실행하세요. 일반 모드에는 보조 서비스 승인이 필요 없습니다.
+pika를 설치하고 실행한 뒤 아래 명령어로 연결하세요.
+DMG를 열고 pika를 응용 프로그램 폴더로 드래그한 뒤 실행하세요.
 Codex의 설정 → MCP servers에서 pika라는 STDIO 서버를 추가하고 아래 명령어를 입력하세요. 별도 인수는 필요 없습니다.
 MCP 서버를 다시 시작하면 에이전트가 상태를 확인하고 Session·Monitor를 제어할 수 있습니다. Monitor에는 활성 세션이 필요합니다. pika_status의 sessionMode와 lidClosedSupported를 확인하세요. 일반 모드는 덮개를 연 상태에서만 잠자기를 방지합니다.
 복사
@@ -108,7 +108,7 @@ MCP 서버를 다시 시작하면 에이전트가 상태를 확인하고 Session
 명령어를 선택해 복사하세요
 설치하고 시작하기
 메뉴 막대가 피카의 집.
-DMG를 다운로드하고 앱을 응용 프로그램으로 옮기세요. 현재 다운로드의 이름은 Always Awake로 표시될 수 있습니다.
+DMG를 열고 pika를 응용 프로그램 폴더로 드래그한 뒤 실행하세요.
 앱을 열고 보조 서비스 설정을 진행하세요. 실행하면 제어창이 나타나며, 창을 닫아도 앱은 계속 실행됩니다.
 Session을 켜고 Monitor를 선택하세요. 앱을 삭제하기 전에는 설정에서 보조 서비스를 제거하세요.
 현재 다운로드는 Developer ID 서명·공증 전입니다. 시스템에 따라 macOS가 앱이나 권한이 필요한 보조 서비스를 차단할 수 있습니다. 설치 또는 Session 시작에 문제가 있으면 GitHub의 설치 안내를 확인하세요.
@@ -137,7 +137,7 @@ no-sleep-pika 是轻量级 macOS 菜单栏应用，提供会话与显示控制�
 小小鼠兔。<br>陪你多做一会儿。
 在 Mac 菜单栏轻松控制会话和屏幕。为需要更多时间的工作，留一个安静的伙伴。
 查看源代码
-公开版本 1.0.3 · macOS 13+ · Apple Silicon 与 Intel
+公开版本 1.0.4 · macOS 13+ · Apple Silicon 与 Intel
 查看安装要求
 认识你的夜班伙伴
 一个开关，管理会话。
@@ -152,8 +152,8 @@ no-sleep-pika 是轻量级 macOS 菜单栏应用，提供会话与显示控制�
 Session · Monitor · 就这么简单。
 为你的智能体准备好
 让智能体<br>来拨动开关。
-MCP 接口已包含在源码构建中。目前公开的 1.0.3 下载版尚未包含此功能。
-在装有 Xcode Command Line Tools 的 Mac 上构建源码，将 dist/pika.app 移至 /Applications 后打开。标准模式无需批准辅助服务。
+安装并打开 pika，然后使用下方命令连接。
+打开 DMG，将 pika 拖入 Applications 文件夹，然后打开应用。
 在 Codex 的 Settings → MCP servers 中添加名为 pika 的 STDIO 服务器，使用下方命令，无需参数。
 重启 MCP 服务器后，智能体可查询状态并控制 Session 或 Monitor。Monitor 需要先开启会话。使用 pika_status 查看 sessionMode 和 lidClosedSupported；标准模式仅在盖子打开时保持 Mac 唤醒。
 复制
@@ -161,7 +161,7 @@ MCP 接口已包含在源码构建中。目前公开的 1.0.3 下载版尚未包
 请选择并复制命令
 安装并开始
 菜单栏里的小伙伴。
-下载 DMG 并将应用移至“应用程序”。当前下载的名称可能仍为 Always Awake。
+打开 DMG，将 pika 拖入 Applications 文件夹，然后打开应用。
 打开应用并完成辅助服务设置。启动时显示控制窗口；关闭窗口后应用继续运行。
 开启 Session，再选择 Monitor 开或关。卸载前请在应用设置中移除辅助服务。
 当前下载尚未使用 Developer ID 签名或公证。根据系统配置，macOS 可能拦截应用或特权辅助服务。如果安装或 Session 启动失败，请查看 GitHub 上的安装指南。
@@ -190,7 +190,7 @@ no-sleep-pika 是輕量 macOS 選單列應用程式，提供工作階段與螢�
 小小鼠兔。<br>陪你多做一會兒。
 在 Mac 選單列輕鬆控制工作階段與螢幕。為需要更多時間的工作，留一位安靜的夥伴。
 查看原始碼
-公開版本 1.0.3 · macOS 13+ · Apple Silicon 與 Intel
+公開版本 1.0.4 · macOS 13+ · Apple Silicon 與 Intel
 查看安裝需求
 認識你的夜班夥伴
 一個開關，管理工作階段。
@@ -205,8 +205,8 @@ no-sleep-pika 是輕量 macOS 選單列應用程式，提供工作階段與螢�
 Session · Monitor · 就這麼簡單。
 為你的代理準備好
 讓代理<br>來切換開關。
-MCP 介面已包含在原始碼建置中。目前公開的 1.0.3 下載版尚未包含此功能。
-在已安裝 Xcode Command Line Tools 的 Mac 上建置原始碼，將 dist/pika.app 移至 /Applications 後開啟。標準模式不需要核准輔助服務。
+安裝並開啟 pika，再使用下方指令連接。
+開啟 DMG，將 pika 拖入 Applications 檔案夾，再開啟程式。
 在 Codex 的 Settings → MCP servers 新增名為 pika 的 STDIO 伺服器，使用下方指令，無須引數。
 重新啟動 MCP 伺服器後，代理可查詢狀態並控制 Session 或 Monitor。Monitor 需要先開啟工作階段。使用 pika_status 查看 sessionMode 和 lidClosedSupported；標準模式僅在上蓋開啟時保持 Mac 喚醒。
 複製
@@ -214,7 +214,7 @@ MCP 介面已包含在原始碼建置中。目前公開的 1.0.3 下載版尚未
 請選取並複製指令
 安裝並開始
 選單列裡的小夥伴。
-下載 DMG 並將程式移至「應用程式」。目前下載的名稱可能仍為 Always Awake。
+開啟 DMG，將 pika 拖入 Applications 檔案夾，再開啟程式。
 開啟程式並完成輔助服務設定。啟動時顯示控制視窗；關閉視窗後程式會繼續執行。
 開啟 Session，再選擇 Monitor 開或關。移除程式前，請先在設定中移除輔助服務。
 目前下載尚未使用 Developer ID 簽署或公證。依系統設定，macOS 可能阻擋程式或特權輔助服務。如果安裝或 Session 啟動失敗，請參考 GitHub 的安裝指南。
@@ -243,7 +243,7 @@ Mac 版をダウンロード
 小さなナキウサギ。<br>もう少し、作業のそばに。
 Mac のメニューバーからセッションと画面を操作。時間のかかる作業に、静かな相棒を。
 ソースを見る
-公開版 1.0.3 · macOS 13+ · Apple Silicon / Intel
+公開版 1.0.4 · macOS 13+ · Apple Silicon / Intel
 インストール要件を見る
 夜の作業の小さな相棒
 セッションはスイッチひとつ。
@@ -258,8 +258,8 @@ Mac の状態にも気を配る。
 Session · Monitor · それだけ。
 エージェントとつながる
 スイッチ操作は、<br>エージェントへ。
-MCP はソースからのビルドで利用できます。現在公開中の 1.0.3 にはまだ含まれていません。
-Xcode Command Line Tools を入れた Mac でソースをビルドし、dist/pika.app を /Applications へ移動して起動します。標準モードにヘルパーの承認は不要です。
+pika をインストールして開き、下のコマンドで接続。
+DMG を開き、pika を「アプリケーション」へドラッグして起動します。
 Codex の Settings → MCP servers で、pika という STDIO サーバーを追加し、下のコマンドを入力します。引数は不要です。
 MCP サーバーを再起動すると、エージェントが状態を確認し Session と Monitor を操作できます。Monitor には有効なセッションが必要です。pika_status の sessionMode と lidClosedSupported を確認してください。標準モードは蓋を開けた状態でのみスリープを防ぎます。
 コピー
@@ -267,7 +267,7 @@ MCP サーバーを再起動すると、エージェントが状態を確認し 
 コマンドを選択してコピー
 インストールして始める
 メニューバーが、居場所です。
-DMG をダウンロードし、アプリを「アプリケーション」へ移動。現在のダウンロードは Always Awake という名前の場合があります。
+DMG を開き、pika を「アプリケーション」へドラッグして起動します。
 アプリを開いてヘルパーを設定します。起動時に操作ウィンドウが表示され、閉じてもアプリは動作を続けます。
 Session をオンにしてから Monitor を選びます。アンインストール前に設定からヘルパーを削除してください。
 現在のダウンロードは Developer ID 署名・公証前です。環境によって macOS がアプリや特権ヘルパーをブロックする場合があります。インストールや Session の開始に問題があれば、GitHub のインストール案内をご確認ください。
@@ -296,7 +296,7 @@ Mac के लिए डाउनलोड
 नन्हा पिका।<br>काम के लिए थोड़ा और समय।
 Mac के मेनू बार से सेशन और स्क्रीन नियंत्रित करें। समय लेने वाले काम के लिए एक शांत साथी।
 सोर्स कोड देखें
-सार्वजनिक संस्करण 1.0.3 · macOS 13+ · Apple Silicon और Intel
+सार्वजनिक संस्करण 1.0.4 · macOS 13+ · Apple Silicon और Intel
 इंस्टॉल करने की ज़रूरतें देखें
 रात के काम का छोटा साथी
 सेशन के लिए एक स्विच।
@@ -311,8 +311,8 @@ Mac की स्थिति का भी ख़याल।
 Session · Monitor · बस इतना ही।
 आपके एजेंट के लिए तैयार
 स्विच का काम<br>एजेंट को दें।
-MCP इंटरफ़ेस सोर्स से बने ऐप में उपलब्ध है। सार्वजनिक 1.0.3 डाउनलोड में यह अभी शामिल नहीं है।
-Xcode Command Line Tools वाले Mac पर सोर्स बनाएँ, dist/pika.app को /Applications में ले जाएँ और खोलें। सामान्य मोड में सहायक सेवा की मंज़ूरी ज़रूरी नहीं है।
+pika इंस्टॉल करके खोलें, फिर नीचे दिए कमांड से कनेक्ट करें।
+DMG खोलें, pika को Applications फ़ोल्डर में खींचें और ऐप खोलें।
 Codex में Settings → MCP servers खोलें। pika नाम का STDIO सर्वर जोड़कर नीचे दिया कमांड डालें। किसी आर्ग्युमेंट की ज़रूरत नहीं है।
 MCP सर्वर दोबारा शुरू करने के बाद एजेंट स्थिति देख सकता है और Session या Monitor बदल सकता है। Monitor के लिए चालू सेशन ज़रूरी है। pika_status से sessionMode और lidClosedSupported देखें; सामान्य मोड केवल ढक्कन खुला होने पर Mac को जागृत रखता है।
 कॉपी करें
@@ -320,7 +320,7 @@ MCP सर्वर दोबारा शुरू करने के बा�
 कमांड चुनकर कॉपी करें
 इंस्टॉल करें और शुरू करें
 मेनू बार में एक घर।
-DMG डाउनलोड करके ऐप को Applications में ले जाएँ। मौजूदा डाउनलोड का नाम अभी Always Awake हो सकता है।
+DMG खोलें, pika को Applications फ़ोल्डर में खींचें और ऐप खोलें।
 ऐप खोलकर सहायक सेवा सेट करें। शुरू होने पर नियंत्रण विंडो दिखती है; विंडो बंद करने पर ऐप चलता रहता है।
 Session चालू करें, फिर Monitor चुनें। ऐप हटाने से पहले उसकी सेटिंग से सहायक सेवा हटाएँ।
 मौजूदा डाउनलोड Developer ID से हस्ताक्षरित या नोटराइज़्ड नहीं है। सिस्टम के अनुसार macOS ऐप या विशेषाधिकार वाली सहायक सेवा रोक सकता है। इंस्टॉल करने या Session शुरू करने में समस्या हो तो GitHub की इंस्टॉलेशन गाइड देखें।
@@ -349,7 +349,7 @@ APLIKASI KECIL, SESI LEBIH PANJANG
 Pika kecil.<br>Waktu kerja lebih panjang.
 Kontrol sesi dan layar langsung dari bilah menu Mac. Teman tenang untuk pekerjaan yang butuh sedikit waktu lagi.
 Lihat kode sumber
-Rilis publik 1.0.3 · macOS 13+ · Apple Silicon & Intel
+Rilis publik 1.0.4 · macOS 13+ · Apple Silicon & Intel
 Lihat persyaratan instalasi
 Kenali teman kerja malam Anda
 Satu sakelar untuk sesi.
@@ -364,8 +364,8 @@ Buka kontrol saat diperlukan. Tutup jendelanya, dan pika tetap ada di bilah menu
 Session · Monitor · Cukup itu.
 SIAP UNTUK AGEN ANDA
 Biarkan agen<br>mengatur sakelar.
-Antarmuka MCP tersedia dalam build dari kode sumber. Unduhan publik 1.0.3 belum menyertakannya.
-Di Mac dengan Xcode Command Line Tools, bangun kode sumber, pindahkan dist/pika.app ke /Applications, lalu buka. Mode standar tidak memerlukan persetujuan layanan pembantu.
+Instal dan buka pika, lalu hubungkan dengan perintah di bawah.
+Buka DMG, seret pika ke folder Applications, lalu buka aplikasinya.
 Di Codex, buka Settings → MCP servers. Tambahkan server STDIO bernama pika dengan perintah di bawah. Tidak diperlukan argumen.
 Setelah memulai ulang server MCP, agen dapat memeriksa status dan mengubah Session atau Monitor. Monitor memerlukan sesi aktif. Periksa sessionMode dan lidClosedSupported melalui pika_status; mode standar hanya menjaga Mac tetap terjaga saat penutup terbuka.
 Salin
@@ -373,7 +373,7 @@ Tersalin
 Pilih dan salin perintah
 INSTAL DAN MULAI
 Rumah di bilah menu.
-Unduh DMG dan pindahkan aplikasi ke Applications. Unduhan saat ini mungkin masih bernama Always Awake.
+Buka DMG, seret pika ke folder Applications, lalu buka aplikasinya.
 Buka aplikasi dan ikuti pengaturan layanan pembantu. Kontrol muncul saat dibuka; menutup jendela tidak menghentikan aplikasi.
 Aktifkan Session, lalu pilih Monitor aktif atau mati. Hapus layanan pembantu dari pengaturan sebelum menghapus aplikasi.
 Unduhan saat ini belum ditandatangani Developer ID atau dinotarisasi. Bergantung pada sistem, macOS dapat memblokir aplikasi atau layanan pembantu berhak istimewa. Jika instalasi atau Session gagal dimulai, lihat panduan instalasi di GitHub.
@@ -402,7 +402,7 @@ UNA PEQUEÑA APP PARA SESIONES MÁS LARGAS
 Una pequeña pika.<br>Un poco más de tiempo.
 Controla las sesiones y la pantalla desde la barra de menús del Mac. Una compañía discreta para el trabajo que necesita un poco más de tiempo.
 Ver código fuente
-Versión pública 1.0.3 · macOS 13+ · Apple Silicon e Intel
+Versión pública 1.0.4 · macOS 13+ · Apple Silicon e Intel
 Consultar requisitos de instalación
 Tu compañía para el turno de noche
 Un interruptor para la sesión.
@@ -417,8 +417,8 @@ Abre los controles cuando los necesites. Cierra la ventana y pika seguirá en la
 Session · Monitor · Nada más.
 LISTA PARA TU AGENTE
 Deja que tu agente<br>mueva el interruptor.
-La interfaz MCP está en la compilación desde el código fuente. La descarga pública 1.0.3 todavía no la incluye.
-En un Mac con Xcode Command Line Tools, compila el código, mueve dist/pika.app a /Applications y ábrela. El modo estándar no requiere autorizar el servicio auxiliar.
+Instala y abre pika; conecta con el comando de abajo.
+Abre el DMG, arrastra pika a Aplicaciones y abre la app.
 En Codex, abre Settings → MCP servers. Añade un servidor STDIO llamado pika con el comando de abajo. No necesita argumentos.
 Tras reiniciar el servidor MCP, tu agente puede consultar el estado y cambiar Session o Monitor. Monitor requiere una sesión activa. Consulta sessionMode y lidClosedSupported con pika_status; el modo estándar mantiene el Mac despierto solo con la tapa abierta.
 Copiar
@@ -426,7 +426,7 @@ Copiado
 Selecciona y copia el comando
 INSTALA Y EMPIEZA
 Un hogar en tu barra de menús.
-Descarga el DMG y mueve la app a Aplicaciones. La descarga actual puede seguir llamándose Always Awake.
+Abre el DMG, arrastra pika a Aplicaciones y abre la app.
 Abre la app y configura el servicio auxiliar. Los controles aparecen al iniciarla; cerrar la ventana deja la app funcionando.
 Activa Session y elige Monitor encendido o apagado. Elimina el servicio auxiliar desde los ajustes antes de desinstalar.
 La descarga actual no tiene firma Developer ID ni notarización. Según tu sistema, macOS puede bloquear la app o su servicio auxiliar privilegiado. Si falla la instalación o el inicio de Session, consulta la guía de instalación en GitHub.
@@ -455,7 +455,7 @@ UNE PETITE APP POUR PRENDRE SON TEMPS
 Un petit pika.<br>Un peu plus de temps.
 Contrôlez les sessions et l’écran depuis la barre des menus du Mac. Un compagnon discret pour les tâches qui demandent un peu plus de temps.
 Voir le code source
-Version publique 1.0.3 · macOS 13+ · Apple Silicon et Intel
+Version publique 1.0.4 · macOS 13+ · Apple Silicon et Intel
 Consulter les prérequis
 Votre compagnon de nuit
 Un seul interrupteur pour la session.
@@ -470,8 +470,8 @@ Ouvrez les commandes au besoin. Fermez la fenêtre : pika reste dans la barre de
 Session · Monitor · C’est tout.
 PRÊTE POUR VOTRE AGENT
 Laissez votre agent<br>actionner l’interrupteur.
-L’interface MCP est disponible dans la version compilée depuis les sources. Le téléchargement public 1.0.3 ne l’inclut pas encore.
-Sur un Mac avec Xcode Command Line Tools, compilez les sources, déplacez dist/pika.app dans /Applications, puis ouvrez l’app. Le mode standard ne nécessite pas d’autoriser le service auxiliaire.
+Installez et ouvrez pika, puis connectez-le avec la commande ci-dessous.
+Ouvrez le DMG, glissez pika dans Applications, puis ouvrez l’app.
 Dans Codex, ouvrez Settings → MCP servers. Ajoutez un serveur STDIO nommé pika avec la commande ci-dessous. Aucun argument n’est nécessaire.
 Après le redémarrage du serveur MCP, votre agent peut consulter l’état et modifier Session ou Monitor. Monitor nécessite une session active. Consultez sessionMode et lidClosedSupported avec pika_status ; le mode standard maintient le Mac éveillé uniquement avec le capot ouvert.
 Copier
@@ -479,7 +479,7 @@ Copié
 Sélectionnez et copiez la commande
 INSTALLEZ ET COMMENCEZ
 Une place dans votre barre des menus.
-Téléchargez le DMG et déplacez l’app dans Applications. Le téléchargement actuel peut encore porter le nom Always Awake.
+Ouvrez le DMG, glissez pika dans Applications, puis ouvrez l’app.
 Ouvrez l’app et configurez le service auxiliaire. Les commandes apparaissent au lancement ; fermer la fenêtre laisse l’app fonctionner.
 Activez Session, puis choisissez l’état de Monitor. Supprimez le service auxiliaire dans les réglages avant de désinstaller l’app.
 Le téléchargement actuel n’est ni signé avec Developer ID ni notarié. Selon votre système, macOS peut bloquer l’app ou son service auxiliaire privilégié. En cas de problème d’installation ou de démarrage de Session, consultez le guide sur GitHub.
@@ -508,7 +508,7 @@ KLEINE APP, LÄNGERE SITZUNGEN
 Ein kleiner Pfeifhase.<br>Ein bisschen mehr Zeit.
 Sitzungen und Display direkt über die Menüleiste steuern. Ein stiller Begleiter für Arbeit, die etwas länger dauert.
 Quellcode ansehen
-Öffentliche Version 1.0.3 · macOS 13+ · Apple Silicon & Intel
+Öffentliche Version 1.0.4 · macOS 13+ · Apple Silicon & Intel
 Installationsvoraussetzungen
 Dein Begleiter für die Nachtschicht
 Ein Schalter für die Sitzung.
@@ -523,8 +523,8 @@ Zwei Schalter.<br>Platz zum Konzentrieren.
 Session · Monitor · Das ist alles.
 BEREIT FÜR DEINEN AGENTEN
 Lass deinen Agenten<br>den Schalter umlegen.
-Die MCP-Schnittstelle ist im Build aus dem Quellcode enthalten. Der öffentliche Download 1.0.3 enthält sie noch nicht.
-Erstelle die App auf einem Mac mit Xcode Command Line Tools aus dem Quellcode, verschiebe dist/pika.app nach /Applications und öffne sie. Der Standardmodus benötigt keine Genehmigung für den Hilfsdienst.
+Installiere und öffne pika und verbinde es mit dem Befehl unten.
+Öffne das DMG, ziehe pika in den Ordner Programme und öffne die App.
 Öffne in Codex Settings → MCP servers. Füge einen STDIO-Server namens pika mit dem folgenden Befehl hinzu. Argumente sind nicht nötig.
 Nach dem Neustart des MCP-Servers kann dein Agent den Status prüfen und Session oder Monitor ändern. Monitor benötigt eine aktive Sitzung. Prüfe sessionMode und lidClosedSupported mit pika_status; der Standardmodus hält den Mac nur bei geöffnetem Deckel wach.
 Kopieren
@@ -532,7 +532,7 @@ Kopiert
 Befehl markieren und kopieren
 INSTALLIEREN UND LOSLEGEN
 Ein Zuhause in deiner Menüleiste.
-Lade die DMG und verschiebe die App nach Programme. Der aktuelle Download heißt möglicherweise noch Always Awake.
+Öffne das DMG, ziehe pika in den Ordner Programme und öffne die App.
 Öffne die App und richte den Hilfsdienst ein. Die Steuerung erscheint beim Start; beim Schließen des Fensters läuft die App weiter.
 Schalte Session ein und wähle den Monitor-Zustand. Entferne vor der Deinstallation den Hilfsdienst in den Einstellungen.
 Der aktuelle Download ist weder mit Developer ID signiert noch notarisiert. Je nach System kann macOS die App oder ihren privilegierten Hilfsdienst blockieren. Bei Problemen mit der Installation oder dem Start von Session beachte die Installationsanleitung auf GitHub.
@@ -561,7 +561,7 @@ UM APP PEQUENO PARA SESSÕES MAIS LONGAS
 Uma pequena pika.<br>Um pouco mais de tempo.
 Controle a sessão e a tela direto da barra de menus do Mac. Uma companhia discreta para o trabalho que precisa de mais um tempinho.
 Ver código-fonte
-Versão pública 1.0.3 · macOS 13+ · Apple Silicon e Intel
+Versão pública 1.0.4 · macOS 13+ · Apple Silicon e Intel
 Conferir requisitos de instalação
 Sua companhia no turno da noite
 Um interruptor para a sessão.
@@ -576,8 +576,8 @@ Abra os controles quando precisar. Feche a janela e pika continua na barra de me
 Session · Monitor · Só isso.
 PRONTO PARA SEU AGENTE
 Deixe seu agente<br>acionar o interruptor.
-A interface MCP está disponível na compilação do código-fonte. O download público 1.0.3 ainda não a inclui.
-Em um Mac com Xcode Command Line Tools, compile o código, mova dist/pika.app para /Applications e abra o app. O modo padrão não exige autorização do serviço auxiliar.
+Instale e abra o pika, depois conecte com o comando abaixo.
+Abra o DMG, arraste o pika para Aplicativos e abra o app.
 No Codex, abra Settings → MCP servers. Adicione um servidor STDIO chamado pika com o comando abaixo. Não são necessários argumentos.
 Após reiniciar o servidor MCP, seu agente pode consultar o estado e alterar Session ou Monitor. Monitor exige uma sessão ativa. Confira sessionMode e lidClosedSupported com pika_status; o modo padrão mantém o Mac acordado apenas com a tampa aberta.
 Copiar
@@ -585,7 +585,7 @@ Copiado
 Selecione e copie o comando
 INSTALE E COMECE
 Um lar na sua barra de menus.
-Baixe o DMG e mova o app para Aplicativos. O download atual ainda pode se chamar Always Awake.
+Abra o DMG, arraste o pika para Aplicativos e abra o app.
 Abra o app e configure o serviço auxiliar. Os controles aparecem ao iniciar; fechar a janela mantém o app em execução.
 Ligue Session e escolha o estado de Monitor. Antes de desinstalar, remova o serviço auxiliar nos ajustes do app.
 O download atual não tem assinatura Developer ID nem notarização. Dependendo do sistema, o macOS pode bloquear o app ou seu serviço auxiliar privilegiado. Se a instalação ou o início de Session falhar, consulte o guia de instalação no GitHub.
@@ -614,7 +614,7 @@ no-sleep-pika — лёгкое приложение для строки меню
 Маленькая пищуха.<br>Чуть больше времени.
 Управляйте сеансом и экраном из строки меню Mac. Тихий спутник для работы, которой нужно немного больше времени.
 Исходный код
-Публичная версия 1.0.3 · macOS 13+ · Apple Silicon и Intel
+Публичная версия 1.0.4 · macOS 13+ · Apple Silicon и Intel
 Требования к установке
 Ваш спутник в ночную смену
 Один переключатель сеанса.
@@ -629,8 +629,8 @@ no-sleep-pika — лёгкое приложение для строки меню
 Session · Monitor · Вот и всё.
 ДЛЯ ВАШЕГО АГЕНТА
 Пусть переключает<br>ваш агент.
-Интерфейс MCP включён в сборку из исходного кода. Публичная версия 1.0.3 пока его не содержит.
-На Mac с Xcode Command Line Tools соберите приложение из исходного кода, перенесите dist/pika.app в /Applications и откройте его. Стандартный режим не требует одобрения вспомогательной службы.
+Установите и откройте pika, затем подключите командой ниже.
+Откройте DMG, перетащите pika в «Программы» и запустите приложение.
 В Codex откройте Settings → MCP servers. Добавьте STDIO-сервер с именем pika и командой ниже. Аргументы не нужны.
 После перезапуска MCP-сервера агент сможет проверять состояние и менять Session или Monitor. Для Monitor нужен активный сеанс. Проверьте sessionMode и lidClosedSupported через pika_status; стандартный режим поддерживает бодрствование Mac только при открытой крышке.
 Копировать
@@ -638,7 +638,7 @@ Session · Monitor · Вот и всё.
 Выделите и скопируйте команду
 УСТАНОВКА И ЗАПУСК
 Место в вашей строке меню.
-Скачайте DMG и перенесите приложение в «Программы». Текущая версия может всё ещё называться Always Awake.
+Откройте DMG, перетащите pika в «Программы» и запустите приложение.
 Откройте приложение и настройте вспомогательную службу. Панель появляется при запуске; закрытие окна не завершает приложение.
 Включите Session и выберите состояние Monitor. Перед удалением приложения удалите вспомогательную службу в настройках.
 Текущая версия не подписана Developer ID и не нотарифицирована. В зависимости от системы macOS может заблокировать приложение или привилегированную вспомогательную службу. При проблемах с установкой или запуском Session обратитесь к руководству на GitHub.
@@ -667,7 +667,7 @@ no-sleep-pika تطبيق خفيف لشريط قوائم macOS للتحكم في 
 بيكا صغير.<br>وقت أطول للعمل.
 تحكّم في الجلسة والشاشة مباشرة من شريط قوائم Mac. رفيق هادئ للعمل الذي يحتاج إلى مزيد من الوقت.
 عرض الشيفرة المصدرية
-الإصدار العام 1.0.3 · macOS 13+ · Apple Silicon وIntel
+الإصدار العام 1.0.4 · macOS 13+ · Apple Silicon وIntel
 متطلبات التثبيت
 تعرّف إلى رفيق العمل الليلي
 مفتاح واحد للجلسة.
@@ -682,8 +682,8 @@ no-sleep-pika تطبيق خفيف لشريط قوائم macOS للتحكم في 
 Session · Monitor · هذا كل شيء.
 جاهز لوكيلك
 دع وكيلك<br>يحرّك المفتاح.
-واجهة MCP متوفرة في النسخة المبنية من المصدر. التنزيل العام 1.0.3 لا يتضمنها بعد.
-على Mac مزوّد بـ Xcode Command Line Tools، ابنِ التطبيق من المصدر وانقل dist/pika.app إلى /Applications ثم افتحه. الوضع القياسي لا يحتاج إلى الموافقة على الخدمة المساعدة.
+ثبّت pika وافتحه، ثم اتصل باستخدام الأمر أدناه.
+افتح ملف DMG، واسحب pika إلى مجلد Applications، ثم افتح التطبيق.
 في Codex افتح Settings → MCP servers. أضف خادم STDIO باسم pika باستخدام الأمر أدناه. لا حاجة إلى معاملات.
 بعد إعادة تشغيل خادم MCP يمكن لوكيلك فحص الحالة وتغيير Session أو Monitor. يتطلب Monitor جلسة نشطة. افحص sessionMode وlidClosedSupported باستخدام pika_status؛ الوضع القياسي يبقي Mac مستيقظًا فقط عندما يكون الغطاء مفتوحًا.
 نسخ
@@ -691,7 +691,7 @@ Session · Monitor · هذا كل شيء.
 حدّد الأمر وانسخه
 ثبّت وابدأ
 منزل في شريط القوائم.
-نزّل DMG وانقل التطبيق إلى Applications. قد يظل اسم التنزيل الحالي Always Awake.
+افتح ملف DMG، واسحب pika إلى مجلد Applications، ثم افتح التطبيق.
 افتح التطبيق وأكمل إعداد الخدمة المساعدة. تظهر عناصر التحكم عند التشغيل؛ إغلاق النافذة لا يوقف التطبيق.
 شغّل Session ثم اختر حالة Monitor. احذف الخدمة المساعدة من إعدادات التطبيق قبل إلغاء تثبيته.
 التنزيل الحالي غير موقّع بـ Developer ID ولم يخضع للتوثيق. بحسب نظامك قد يحظر macOS التطبيق أو الخدمة المساعدة ذات الامتيازات. إذا تعثر التثبيت أو بدء Session، راجع دليل التثبيت على GitHub.
@@ -720,7 +720,7 @@ Tải cho Mac
 Pika bé nhỏ.<br>Thêm thời gian làm việc.
 Điều khiển phiên và màn hình ngay trên thanh menu Mac. Người bạn yên lặng cho những công việc cần thêm chút thời gian.
 Xem mã nguồn
-Bản công khai 1.0.3 · macOS 13+ · Apple Silicon & Intel
+Bản công khai 1.0.4 · macOS 13+ · Apple Silicon & Intel
 Xem yêu cầu cài đặt
 Người bạn đồng hành ca đêm
 Một công tắc cho phiên.
@@ -735,8 +735,8 @@ Mở bảng điều khiển khi cần. Đóng cửa sổ, pika vẫn ở lại t
 Session · Monitor · Chỉ vậy thôi.
 SẴN SÀNG CHO TÁC NHÂN CỦA BẠN
 Để tác nhân<br>bật tắt giúp bạn.
-Giao diện MCP có trong bản dựng từ mã nguồn. Bản tải công khai 1.0.3 chưa bao gồm tính năng này.
-Trên Mac có Xcode Command Line Tools, dựng mã nguồn, chuyển dist/pika.app vào /Applications rồi mở. Chế độ tiêu chuẩn không yêu cầu phê duyệt dịch vụ trợ giúp.
+Cài đặt và mở pika, rồi kết nối bằng lệnh bên dưới.
+Mở DMG, kéo pika vào thư mục Applications, rồi mở ứng dụng.
 Trong Codex, mở Settings → MCP servers. Thêm máy chủ STDIO tên pika với lệnh bên dưới. Không cần đối số.
 Sau khi khởi động lại máy chủ MCP, tác nhân có thể kiểm tra trạng thái và thay đổi Session hoặc Monitor. Monitor yêu cầu phiên đang hoạt động. Kiểm tra sessionMode và lidClosedSupported bằng pika_status; chế độ tiêu chuẩn chỉ giữ Mac thức khi mở nắp.
 Sao chép
@@ -744,7 +744,7 @@ Sao chép
 Chọn và sao chép lệnh
 CÀI ĐẶT VÀ BẮT ĐẦU
 Một ngôi nhà trên thanh menu.
-Tải DMG và chuyển ứng dụng vào Applications. Bản tải hiện tại có thể vẫn mang tên Always Awake.
+Mở DMG, kéo pika vào thư mục Applications, rồi mở ứng dụng.
 Mở ứng dụng và thiết lập dịch vụ trợ giúp. Bảng điều khiển xuất hiện khi khởi chạy; đóng cửa sổ vẫn giữ ứng dụng chạy.
 Bật Session rồi chọn trạng thái Monitor. Gỡ dịch vụ trợ giúp trong cài đặt trước khi xóa ứng dụng.
 Bản tải hiện tại chưa được ký Developer ID hoặc công chứng. Tùy hệ thống, macOS có thể chặn ứng dụng hoặc dịch vụ trợ giúp đặc quyền. Nếu gặp lỗi cài đặt hoặc khởi động Session, hãy xem hướng dẫn trên GitHub.
@@ -773,7 +773,7 @@ no-sleep-pika เป็นแอปแถบเมนู macOS ขนาดเ�
 พิกาตัวน้อย<br>เพิ่มเวลาทำงานอีกนิด
 ควบคุมเซสชันและหน้าจอจากแถบเมนู Mac เพื่อนเงียบ ๆ สำหรับงานที่ต้องการเวลาเพิ่มอีกหน่อย
 ดูซอร์สโค้ด
-รุ่นสาธารณะ 1.0.3 · macOS 13+ · Apple Silicon และ Intel
+รุ่นสาธารณะ 1.0.4 · macOS 13+ · Apple Silicon และ Intel
 ดูข้อกำหนดการติดตั้ง
 เพื่อนร่วมงานยามค่ำคืน
 สวิตช์เดียวสำหรับเซสชัน
@@ -788,8 +788,8 @@ no-sleep-pika เป็นแอปแถบเมนู macOS ขนาดเ�
 Session · Monitor · เท่านี้เอง
 พร้อมสำหรับเอเจนต์ของคุณ
 ให้เอเจนต์ช่วย<br>เปิดปิดสวิตช์
-อินเทอร์เฟซ MCP อยู่ในรุ่นที่สร้างจากซอร์สโค้ด รุ่นสาธารณะ 1.0.3 ที่ดาวน์โหลดได้ยังไม่มีฟีเจอร์นี้
-บน Mac ที่มี Xcode Command Line Tools ให้สร้างแอปจากซอร์สโค้ด ย้าย dist/pika.app ไปที่ /Applications แล้วเปิดแอป โหมดมาตรฐานไม่ต้องอนุมัติบริการตัวช่วย
+ติดตั้งและเปิด pika แล้วเชื่อมต่อด้วยคำสั่งด้านล่าง
+เปิด DMG ลาก pika ไปที่โฟลเดอร์ Applications แล้วเปิดแอป
 ใน Codex เปิด Settings → MCP servers เพิ่มเซิร์ฟเวอร์ STDIO ชื่อ pika ด้วยคำสั่งด้านล่าง ไม่ต้องใส่อาร์กิวเมนต์
 หลังเริ่มเซิร์ฟเวอร์ MCP ใหม่ เอเจนต์จะตรวจสอบสถานะและเปลี่ยน Session หรือ Monitor ได้ Monitor ต้องมีเซสชันที่ทำงานอยู่ ตรวจสอบ sessionMode และ lidClosedSupported ด้วย pika_status โหมดมาตรฐานทำให้ Mac ตื่นได้เฉพาะเมื่อเปิดฝาอยู่
 คัดลอก
@@ -797,7 +797,7 @@ Session · Monitor · เท่านี้เอง
 เลือกและคัดลอกคำสั่ง
 ติดตั้งและเริ่มต้น
 บ้านเล็ก ๆ บนแถบเมนู
-ดาวน์โหลด DMG และย้ายแอปไปที่ Applications รุ่นดาวน์โหลดปัจจุบันอาจยังใช้ชื่อ Always Awake
+เปิด DMG ลาก pika ไปที่โฟลเดอร์ Applications แล้วเปิดแอป
 เปิดแอปและตั้งค่าบริการตัวช่วย ส่วนควบคุมจะแสดงเมื่อเปิดแอป การปิดหน้าต่างจะไม่หยุดแอป
 เปิด Session แล้วเลือกสถานะ Monitor ก่อนถอนการติดตั้ง ให้ลบบริการตัวช่วยจากการตั้งค่าของแอป
 รุ่นดาวน์โหลดปัจจุบันยังไม่ได้ลงนาม Developer ID หรือรับการรับรอง macOS อาจบล็อกแอปหรือบริการตัวช่วยที่มีสิทธิ์พิเศษ ทั้งนี้ขึ้นอยู่กับระบบ หากติดตั้งหรือเริ่ม Session ไม่ได้ โปรดดูคู่มือการติดตั้งบน GitHub
@@ -822,7 +822,7 @@ COMPACT = {'en': ['Downloads', 'Session and display controls. Battery and therma
 for _locale, _values in COMPACT.items():
     TEXT[_locale].update(zip(("downloads", "featureline", "draginstall"), _values))
 
-MCP_NOTES = {'en': 'MCP requires a source build; not included in 1.0.3.', 'ko': 'MCP는 소스 빌드가 필요합니다. 1.0.3에는 미포함.', 'zh-CN': 'MCP 需从源码构建，1.0.3 尚未包含。', 'zh-TW': 'MCP 需從原始碼建置，1.0.3 尚未包含。', 'ja': 'MCP はソースからビルド。1.0.3 には未収録。', 'hi': 'MCP के लिए सोर्स बिल्ड चाहिए; 1.0.3 में शामिल नहीं।', 'id': 'MCP perlu build dari sumber; belum ada di 1.0.3.', 'es': 'MCP requiere compilar el código; no viene en 1.0.3.', 'fr': 'MCP nécessite une compilation ; absent de la 1.0.3.', 'de': 'MCP benötigt einen Quellcode-Build; fehlt in 1.0.3.', 'pt-BR': 'MCP exige compilar o código; não vem na 1.0.3.', 'ru': 'MCP требует сборки из исходников; в 1.0.3 его нет.', 'ar': 'يتطلب MCP البناء من المصدر؛ غير متوفر في 1.0.3.', 'vi': 'MCP cần dựng từ mã nguồn; chưa có trong 1.0.3.', 'th': 'MCP ต้องสร้างจากซอร์ส ยังไม่มีในรุ่น 1.0.3'}
+MCP_NOTES = {'en': 'Install and open pika, then connect using the command below.', 'ko': 'pika를 설치하고 실행한 뒤 아래 명령어로 연결하세요.', 'zh-CN': '安装并打开 pika，然后使用下方命令连接。', 'zh-TW': '安裝並開啟 pika，再使用下方指令連接。', 'ja': 'pika をインストールして開き、下のコマンドで接続。', 'hi': 'pika इंस्टॉल करके खोलें, फिर नीचे दिए कमांड से कनेक्ट करें।', 'id': 'Instal dan buka pika, lalu hubungkan dengan perintah di bawah.', 'es': 'Instala y abre pika; conecta con el comando de abajo.', 'fr': 'Installez et ouvrez pika, puis connectez-le avec la commande ci-dessous.', 'de': 'Installiere und öffne pika und verbinde es mit dem Befehl unten.', 'pt-BR': 'Instale e abra o pika, depois conecte com o comando abaixo.', 'ru': 'Установите и откройте pika, затем подключите командой ниже.', 'ar': 'ثبّت pika وافتحه، ثم اتصل باستخدام الأمر أدناه.', 'vi': 'Cài đặt và mở pika, rồi kết nối bằng lệnh bên dưới.', 'th': 'ติดตั้งและเปิด pika แล้วเชื่อมต่อด้วยคำสั่งด้านล่าง'}
 for _locale, _note in MCP_NOTES.items():
     TEXT[_locale]["mcpnote"] = _note
 
@@ -842,7 +842,7 @@ def render(locale):
     alternate = '\n'.join(f'<link rel="alternate" hreflang="{code}" href="{page_url(code)}">' for code, _ in LANGUAGES)
     options = '\n'.join(f'<option value="{code}" lang="{code}"{(" selected" if code == locale else "")}>{name}</option>' for code, name in LANGUAGES)
     language_links = ' '.join(f'<a href="{page_path(code)}" hreflang="{code}" lang="{code}">{name}</a>' for code, name in LANGUAGES)
-    schema = {'@context':'https://schema.org','@type':'SoftwareApplication','name':'no-sleep-pika','alternateName':'pika','url':BASE,'applicationCategory':'UtilitiesApplication','operatingSystem':'macOS 13 or later','description':t['description'],'softwareVersion':'1.0.3','downloadUrl':DOWNLOAD,'image':BASE+'/assets/pika-working.png','codeRepository':REPO,'inLanguage':locale}
+    schema = {'@context':'https://schema.org','@type':'SoftwareApplication','name':'no-sleep-pika','alternateName':'pika','url':BASE,'applicationCategory':'UtilitiesApplication','operatingSystem':'macOS 13 or later','description':t['description'],'softwareVersion':'1.0.4','downloadUrl':DOWNLOAD,'image':BASE+'/assets/pika-working.png','codeRepository':REPO,'inLanguage':locale}
     snapshot = json.loads((OUT / 'downloads.json').read_text())
     count = snapshot['total']
     assert isinstance(count, int) and count >= 0
