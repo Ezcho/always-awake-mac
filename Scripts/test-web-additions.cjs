@@ -31,27 +31,43 @@ async function visitors({host='no-sleep-pika.online', service='pika-test.goatcou
     setTimeout:(f,delay)=>{timers.set(++nextTimer,{f,at:now+delay});return nextTimer;},clearTimeout:id=>timers.delete(id)
   });
   const move=(x,y,type='mouse')=>handlers.pointermove({clientX:x,clientY:y,pointerType:type});
-  const tick=ms=>{now+=ms;for(const [id,t] of timers)if(t.at<=now){timers.delete(id);t.f();}};
-  assert.equal(images[0].src,undefined);assert(!classes.has('motion-ready'));
-  media.matches=false;handlers.media();assert.equal(images[0].src,'/assets/pika-motion.png');images[0].onload();assert(classes.has('motion-ready'));
-  const directions=['e','se','s','sw','w','nw','n','ne'];
-  directions.forEach((direction,i)=>{tick(125);move(290+200*Math.cos(i*Math.PI/4),305+200*Math.sin(i*Math.PI/4));assert.equal(host.dataset.gaze,direction);});
-  tick(125);move(290,305);assert.equal(host.dataset.gaze,'center');
-  // Input bursts coalesce to the latest pointer and never create an idle loop.
-  tick(125);move(600,305);assert.equal(host.dataset.gaze,'e');move(0,305);move(290,600);
-  assert.equal(timers.size,1);tick(124);assert.equal(host.dataset.gaze,'e');tick(1);assert.equal(host.dataset.gaze,'s');assert.equal(timers.size,0);
-  tick(125);move(0,305,'touch');assert.equal(host.dataset.gaze,'s');
-  handlers.pointerleave();assert.equal(host.dataset.gaze,'center');
-  move(0,305);move(600,305);doc.hidden=true;handlers.visibilitychange();assert(classes.has('motion-paused'));assert.equal(timers.size,0);assert.equal(host.dataset.gaze,'center');
-  doc.hidden=false;handlers.visibilitychange();tick(125);move(0,305);windowHandlers.blur();assert.equal(host.dataset.gaze,'center');
-  media.matches=true;handlers.media();move(600,305);assert.equal(host.dataset.gaze,'center');assert(classes.has('motion-paused'));
-  media.matches=false;handlers.media();fine.matches=false;handlers.fine();move(600,305);assert.equal(host.dataset.gaze,'center');
+  const tick=ms=>{
+    const until=now+ms;
+    while(true){
+      const next=[...timers].filter(([,t])=>t.at<=until).sort((a,b)=>a[1].at-b[1].at)[0];
+      if(!next)break;
+      now=next[1].at;timers.delete(next[0]);next[1].f();
+    }
+    now=until;
+  };
+  const directions=['e','ese','se','sse','s','ssw','sw','wsw','w','wnw','nw','nnw','n','nne','ne','ene'];
+  const point=i=>move(290+200*Math.cos(i*Math.PI/8),305+200*Math.sin(i*Math.PI/8));
+  assert.equal(images[0].src,undefined);assert.equal(images[1].src,undefined);
+  media.matches=false;handlers.media();images[0].onload();images[1].onload();assert(classes.has('motion-ready'));assert(classes.has('motion-lean-ready'));
+  directions.forEach((direction,i)=>{tick(90);point(i);assert.equal(host.dataset.gaze,direction);assert(classes.has('motion-looking'));});
+  // ENE -> ESE crosses E in two frames, along the short arc across zero degrees.
+  tick(90);point(1);assert.equal(host.dataset.gaze,'e');tick(84);assert.equal(host.dataset.gaze,'ese');
+  handlers.pointerleave();tick(100);point(0);point(12);point(4);
+  assert.equal(timers.size,2);tick(82);assert.equal(host.dataset.gaze,'e');tick(2);assert.equal(host.dataset.gaze,'ese');
+  tick(84);assert.equal(host.dataset.gaze,'se');tick(84);assert.equal(host.dataset.gaze,'sse');tick(84);assert.equal(host.dataset.gaze,'s');
+  // Stop, soften the last pose, then return to typing. No polling remains.
+  assert(classes.has('motion-looking'));tick(14);assert(classes.has('motion-returning'));assert(classes.has('motion-looking'));
+  tick(84);assert(!classes.has('motion-looking'));assert(!classes.has('motion-returning'));assert.equal(host.dataset.gaze,'center');assert.equal(timers.size,0);
+  point(0);tick(300);point(0);tick(300);assert(classes.has('motion-looking'));assert(!classes.has('motion-returning'));
+  tick(50);assert(classes.has('motion-returning'));point(0);assert(!classes.has('motion-returning'));assert(classes.has('motion-looking'));
+  // Touch never starts attention. Background/blur cancel every pending callback.
+  handlers.pointerleave();tick(100);move(0,305,'touch');assert.equal(timers.size,0);assert(!classes.has('motion-looking'));
+  point(0);point(4);doc.hidden=true;handlers.visibilitychange();assert(classes.has('motion-paused'));assert.equal(timers.size,0);assert.equal(host.dataset.gaze,'center');
+  doc.hidden=false;handlers.visibilitychange();tick(100);point(0);windowHandlers.blur();assert.equal(timers.size,0);
+  media.matches=true;handlers.media();point(4);assert(!classes.has('motion-looking'));assert(classes.has('motion-paused'));
+  media.matches=false;handlers.media();fine.matches=false;handlers.fine();point(4);assert.equal(timers.size,0);
+  images[1].onerror();assert(!classes.has('motion-lean-ready'));assert(classes.has('motion-ready'));
   images[0].onerror();assert(!classes.has('motion-ready'));
-  const css=fs.readFileSync('docs/style.css','utf8');assert(css.includes('pika-type 9s steps(1,end) infinite'));assert(!css.includes('background-position'));
+  const css=fs.readFileSync('docs/style.css','utf8');assert(css.includes('.motion-looking .motion-hand{animation:none;opacity:0}'));
   const page=fs.readFileSync('docs/ko/index.html','utf8');
-  assert.equal((page.match(/class="gaze-frame /g)||[]).length,8);
-  assert(page.includes('class="motion-body" href="#pika-sheet"'));
-  assert(!page.includes('motion-sprite'));
-  console.log('PASS motion: eight directions, 8 Hz limit, burst coalescing, no idle timer, fixed body, touch/hidden/reduced-motion/reset/error handling');
+  assert.equal((page.match(/class="gaze-frame /g)||[]).length,16);
+  assert.equal((page.match(/<filter id="pika-lean-/g)||[]).length,16);
+  assert.equal((page.match(/<filter id="pika-soft-/g)||[]).length,16);
+  console.log('PASS motion: 16 directions, intermediate short-arc turns, 12 Hz limit, typing pause, soft idle return, no idle polling, touch/background/reduced motion/asset failure');
 
 })().catch(e=>{console.error(e);process.exit(1)});

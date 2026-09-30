@@ -1,4 +1,4 @@
-/* Eight registered gaze poses; at most eight updates/second, no idle polling. */
+/* Sixteen registered poses. Intermediate turns run at ≤12 Hz, never idle-poll. */
 (() => {
   'use strict';
   const host = document.querySelector('.pika-motion');
@@ -6,51 +6,83 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(any-hover: hover) and (any-pointer: fine)');
   const sprite = new Image();
-  const directions = ['e', 'se', 's', 'sw', 'w', 'nw', 'n', 'ne'];
-  const interval = 125;
-  let loaded = false, pending = null, timer = null, lastPaint = -Infinity;
+  const leanMap = new Image();
+  const directions = ['e', 'ese', 'se', 'sse', 's', 'ssw', 'sw', 'wsw', 'w', 'wnw', 'nw', 'nnw', 'n', 'nne', 'ne', 'ene'];
+  const interval = 1000 / 12, idleDelay = 350, angleStep = Math.PI / 8;
+  let loaded = false, pending = null, timer = null, idleTimer = null, returnTimer = null;
+  let lastPaint = -Infinity, current = -1, target = -1;
   const active = () => loaded && !reduced.matches && finePointer.matches && !document.hidden;
-  const reset = () => {
+  const clearFrames = () => {
     if (timer !== null) clearTimeout(timer);
     timer = null;
     pending = null;
+  };
+  const reset = () => {
+    clearFrames();
+    if (idleTimer !== null) clearTimeout(idleTimer);
+    if (returnTimer !== null) clearTimeout(returnTimer);
+    idleTimer = returnTimer = null;
+    current = target = -1;
     host.dataset.gaze = 'center';
+    host.classList.toggle('motion-looking', false);
+    host.classList.toggle('motion-returning', false);
+  };
+  const returnToWork = () => {
+    idleTimer = null;
+    clearFrames();
+    if (current === -1 || !active()) return reset();
+    // A half-strength pose bridges the last look and the neutral working pose.
+    host.classList.toggle('motion-returning', true);
+    returnTimer = setTimeout(reset, interval);
   };
   const paint = () => {
     timer = null;
-    if (!active() || !pending) return;
+    if (!active()) return reset();
     lastPaint = performance.now();
-    const box = host.querySelector('.motion-art').getBoundingClientRect();
-    if (!box.width || !box.height) return reset();
-    // SVG is 620×635, centered inside a square canvas. Aim from between the eyes.
-    const scale = Math.min(box.width / 620, box.height / 635);
-    const x = box.left + (box.width - 620 * scale) / 2 + 290 * scale;
-    const y = box.top + (box.height - 635 * scale) / 2 + 305 * scale;
-    const dx = pending.x - x, dy = pending.y - y;
-    const radius = Math.max(18, 32 * scale);
-    let gaze = 'center';
-    if (Math.hypot(dx, dy) > radius) {
-      const angle = Math.atan2(dy, dx);
-      let sector = (Math.round(angle / (Math.PI / 4)) + 8) % 8;
-      // A small deadband prevents flicker while hovering at sector boundaries.
-      const previous = directions.indexOf(host.dataset.gaze);
-      if (previous !== -1) {
-        const delta = Math.atan2(Math.sin(angle - previous * Math.PI / 4), Math.cos(angle - previous * Math.PI / 4));
-        if (Math.abs(delta) < Math.PI / 8 + 0.08) sector = previous;
+    if (pending) {
+      const box = host.querySelector('.motion-art').getBoundingClientRect();
+      if (!box.width || !box.height) return reset();
+      const scale = Math.min(box.width / 620, box.height / 635);
+      const x = box.left + (box.width - 620 * scale) / 2 + 290 * scale;
+      const y = box.top + (box.height - 635 * scale) / 2 + 305 * scale;
+      const dx = pending.x - x, dy = pending.y - y;
+      let sector = -1;
+      if (Math.hypot(dx, dy) > Math.max(18, 32 * scale)) {
+        const angle = Math.atan2(dy, dx);
+        sector = (Math.round(angle / angleStep) + 16) % 16;
+        if (target !== -1) {
+          const delta = Math.atan2(Math.sin(angle - target * angleStep), Math.cos(angle - target * angleStep));
+          if (Math.abs(delta) < angleStep / 2 + 0.04) sector = target;
+        }
       }
-      gaze = directions[sector];
+      target = sector;
+      pending = null;
     }
+    if (current === -1 || target === -1) current = target;
+    else {
+      // Cross intermediate directions along the shortest arc instead of jumping.
+      const delta = (target - current + 24) % 16 - 8;
+      current = (current + Math.sign(delta) + 16) % 16;
+    }
+    const gaze = current === -1 ? 'center' : directions[current];
     if (host.dataset.gaze !== gaze) host.dataset.gaze = gaze;
-    pending = null;
+    if (current !== target) timer = setTimeout(paint, interval);
   };
   const update = () => {
     if (!reduced.matches && !sprite.src) sprite.src = '/assets/pika-motion.png';
+    if (!reduced.matches && !leanMap.src) leanMap.src = '/assets/pika-lean-map.svg';
     host.classList.toggle('motion-ready', loaded);
     host.classList.toggle('motion-paused', document.hidden || reduced.matches);
     if (!active()) reset();
   };
   document.addEventListener('pointermove', event => {
     if (event.pointerType !== 'mouse' || !active()) return;
+    host.classList.toggle('motion-looking', true);
+    host.classList.toggle('motion-returning', false);
+    if (returnTimer !== null) clearTimeout(returnTimer);
+    returnTimer = null;
+    if (idleTimer !== null) clearTimeout(idleTimer);
+    idleTimer = setTimeout(returnToWork, idleDelay);
     pending = {x: event.clientX, y: event.clientY};
     if (timer !== null) return;
     const wait = interval - (performance.now() - lastPaint);
@@ -63,6 +95,8 @@
   window.addEventListener('scroll', reset, {passive: true});
   sprite.onload = () => { loaded = true; update(); };
   sprite.onerror = () => { loaded = false; update(); };
+  leanMap.onload = () => host.classList.toggle('motion-lean-ready', true);
+  leanMap.onerror = () => host.classList.toggle('motion-lean-ready', false);
   reduced.addEventListener('change', update);
   finePointer.addEventListener('change', update);
   document.addEventListener('visibilitychange', update);

@@ -876,7 +876,7 @@ def render(locale):
 <meta property="og:locale" content="{locale.replace('-', '_')}">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{h('title')}"><meta name="twitter:description" content="{esc(t['description'], quote=True)}"><meta name="twitter:image" content="{BASE}/assets/pika-working.png">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/style.css"><script src="/site.js" defer></script><script src="/downloads.js" defer></script><script src="/motion.js" defer></script><script src="/visitors.js" defer></script>
+<link rel="stylesheet" href="/style.css?v=pointer-16"><script src="/site.js" defer></script><script src="/downloads.js" defer></script><script src="/motion.js?v=pointer-16" defer></script><script src="/visitors.js" defer></script>
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(metadata, ensure_ascii=False)}</script>
 </head>

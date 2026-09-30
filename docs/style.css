@@ -46,7 +46,7 @@
 .mcp-guide::backdrop{background:#18221666}.guide-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.guide-header h2{font-size:23px}.guide-close{border:0;border-radius:5px;background:#eaf0e4;width:34px;height:34px;font-size:24px;cursor:pointer;color:inherit}.guide-intro{font-size:14px;color:#65765b;margin:10px 0 22px}.guide-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);column-gap:30px;row-gap:24px;align-items:start}.guide-prepare{grid-column:1;grid-row:1}.guide-register{grid-column:2;grid-row:1 / 4}.guide-verify{grid-column:1;grid-row:2}.guide-tools{grid-column:1;grid-row:3}.mcp-guide h3{font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px}.mcp-guide h3 span{display:inline-grid;place-items:center;background:#e5eddd;color:#465e3b;width:23px;height:23px;border-radius:50%;flex-shrink:0;font-size:12px}.mcp-guide p{font-size:13px;line-height:1.8}.mcp-guide a{text-decoration:underline;text-underline-offset:3px}.mcp-guide .command{margin:10px 0;align-items:flex-start;padding:12px;gap:8px}.mcp-guide .command code{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}.mcp-guide .copy{font-size:11px}.mcp-guide .guide-hint{font-size:12px;color:#6a785f;margin-top:12px}.mcp-guide details{margin-top:16px}.mcp-guide summary{cursor:pointer;font-size:13px;font-weight:600}.mcp-guide summary:focus-visible{outline:2px solid #658b4e;outline-offset:4px}.mcp-guide details p{margin-top:8px}.guide-tools{border-top:1px solid #dce5d4;padding-top:15px}.guide-tools p+p{margin-top:8px}.guide-tools code{font-size:11px;overflow-wrap:anywhere}.guide-source{display:inline-block;margin-top:10px;font-size:12px}.guide-trouble{border-top:1px solid #dce5d4;padding-top:14px}body:has(.mcp-guide[open]){overflow:hidden}
 @media(max-width:639px){.mcp-guide{padding:20px;max-height:92svh}.guide-grid{display:flex;flex-direction:column;gap:24px}.guide-register{order:2}.guide-prepare{order:1}.guide-verify{order:3}.guide-tools{order:4}.guide-header h2{font-size:20px}.guide-intro{font-size:13px}}
 
-/* Body/laptop always use the same registered image. Only the hand and eyes change. */
+/* One registered source: rest the paws during pointer attention, anchor the laptop/feet. */
 .pika-motion{position:relative;display:grid;place-items:center;container-type:size}
 .motion-canvas{position:relative;width:min(100cqw,100cqh);height:min(100cqw,100cqh)}
 .motion-still{width:100%;height:100%;object-fit:contain}
@@ -55,21 +55,64 @@
 .motion-ready .motion-still{visibility:hidden}
 .motion-hand{opacity:0;animation:pika-type 9s steps(1,end) infinite}
 .motion-paused .motion-hand{animation-play-state:paused}
+.motion-looking .motion-hand{animation:none;opacity:0}
 .gaze-layer,.gaze-frame{display:none}
 .pika-motion:not([data-gaze="center"]) .gaze-layer{display:inline}
+.gaze-frame use{transform:translate(calc(var(--look-x)*var(--look-strength,1)),calc(var(--look-y)*var(--look-strength,1)))}
+.motion-returning{--look-strength:.5}
 .pika-motion[data-gaze="e"] .gaze-e{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="e"] .motion-figure{filter:url(#pika-lean-e)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="e"] .motion-figure{filter:url(#pika-soft-e)}
+.pika-motion[data-gaze="ese"] .gaze-ese{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="ese"] .motion-figure{filter:url(#pika-lean-ese)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="ese"] .motion-figure{filter:url(#pika-soft-ese)}
 .pika-motion[data-gaze="se"] .gaze-se{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="se"] .motion-figure{filter:url(#pika-lean-se)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="se"] .motion-figure{filter:url(#pika-soft-se)}
+.pika-motion[data-gaze="sse"] .gaze-sse{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="sse"] .motion-figure{filter:url(#pika-lean-sse)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="sse"] .motion-figure{filter:url(#pika-soft-sse)}
 .pika-motion[data-gaze="s"] .gaze-s{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="s"] .motion-figure{filter:url(#pika-lean-s)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="s"] .motion-figure{filter:url(#pika-soft-s)}
+.pika-motion[data-gaze="ssw"] .gaze-ssw{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="ssw"] .motion-figure{filter:url(#pika-lean-ssw)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="ssw"] .motion-figure{filter:url(#pika-soft-ssw)}
 .pika-motion[data-gaze="sw"] .gaze-sw{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="sw"] .motion-figure{filter:url(#pika-lean-sw)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="sw"] .motion-figure{filter:url(#pika-soft-sw)}
+.pika-motion[data-gaze="wsw"] .gaze-wsw{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="wsw"] .motion-figure{filter:url(#pika-lean-wsw)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="wsw"] .motion-figure{filter:url(#pika-soft-wsw)}
 .pika-motion[data-gaze="w"] .gaze-w{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="w"] .motion-figure{filter:url(#pika-lean-w)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="w"] .motion-figure{filter:url(#pika-soft-w)}
+.pika-motion[data-gaze="wnw"] .gaze-wnw{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="wnw"] .motion-figure{filter:url(#pika-lean-wnw)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="wnw"] .motion-figure{filter:url(#pika-soft-wnw)}
 .pika-motion[data-gaze="nw"] .gaze-nw{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="nw"] .motion-figure{filter:url(#pika-lean-nw)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="nw"] .motion-figure{filter:url(#pika-soft-nw)}
+.pika-motion[data-gaze="nnw"] .gaze-nnw{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="nnw"] .motion-figure{filter:url(#pika-lean-nnw)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="nnw"] .motion-figure{filter:url(#pika-soft-nnw)}
 .pika-motion[data-gaze="n"] .gaze-n{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="n"] .motion-figure{filter:url(#pika-lean-n)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="n"] .motion-figure{filter:url(#pika-soft-n)}
+.pika-motion[data-gaze="nne"] .gaze-nne{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="nne"] .motion-figure{filter:url(#pika-lean-nne)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="nne"] .motion-figure{filter:url(#pika-soft-nne)}
 .pika-motion[data-gaze="ne"] .gaze-ne{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="ne"] .motion-figure{filter:url(#pika-lean-ne)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="ne"] .motion-figure{filter:url(#pika-soft-ne)}
+.pika-motion[data-gaze="ene"] .gaze-ene{display:inline}
+.pika-motion.motion-lean-ready[data-gaze="ene"] .motion-figure{filter:url(#pika-lean-ene)}
+.pika-motion.motion-lean-ready.motion-returning[data-gaze="ene"] .motion-figure{filter:url(#pika-soft-ene)}
 @keyframes pika-type{
   0%,8%,16%,24%,32%,40%,48%,56%,60%,100%{opacity:0}
   4%,12%,20%,28%,36%,44%,52%{opacity:1}
 }
-@media(prefers-reduced-motion:reduce){.motion-hand{animation:none!important;opacity:0!important}.gaze-layer{display:none!important}}
+@media(prefers-reduced-motion:reduce){.motion-hand{animation:none!important;opacity:0!important}.gaze-layer{display:none!important}.motion-figure{filter:none!important}}
 .visitor-counter{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-variant-numeric:tabular-nums;color:#87927f;white-space:nowrap;text-decoration:none;margin-inline-start:12px;vertical-align:middle}
 .visitor-counter svg{width:14px;height:14px;flex-shrink:0}
 @media(max-width:639px){.visitor-counter{font-size:10px;margin-inline-start:8px}}
