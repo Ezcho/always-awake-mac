@@ -116,3 +116,6 @@
 .visitor-counter{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-variant-numeric:tabular-nums;color:#87927f;white-space:nowrap;text-decoration:none;margin-inline-start:12px;vertical-align:middle}
 .visitor-counter svg{width:14px;height:14px;flex-shrink:0}
 @media(max-width:639px){.visitor-counter{font-size:10px;margin-inline-start:8px}}
+
+/* One plain sentence explains the app before the download action. */
+.tagline{font-size:clamp(18px,2vw,23px);font-weight:600;line-height:1.5;letter-spacing:-.35px;margin:0 0 16px;text-wrap:balance}

@@ -828,6 +828,26 @@ COMPACT = {'en': ['Downloads', 'Session and display controls. Battery and therma
 for _locale, _values in COMPACT.items():
     TEXT[_locale].update(zip(("downloads", "featureline", "draginstall"), _values))
 
+TAGLINES = {
+    'en': 'Keep working with your Mac closed.',
+    'ko': '맥을 덮어도 작업을 유지하세요',
+    'zh-CN': '合上 Mac，工作继续。',
+    'zh-TW': '闔上 Mac，工作繼續。',
+    'ja': 'Macを閉じても、作業を続けよう。',
+    'hi': 'Mac बंद करने पर भी काम जारी रखें।',
+    'id': 'Tutup Mac, pekerjaan tetap berjalan.',
+    'es': 'Cierra tu Mac y mantén tus tareas en marcha.',
+    'fr': 'Fermez votre Mac, vos tâches continuent.',
+    'de': 'Mac zuklappen. Aufgaben laufen weiter.',
+    'pt-BR': 'Feche o Mac e mantenha suas tarefas rodando.',
+    'ru': 'Закройте Mac — работа продолжится.',
+    'ar': 'أغلق غطاء Mac ودع مهامك تستمر.',
+    'vi': 'Gập Mac lại, công việc vẫn tiếp tục.',
+    'th': 'พับฝา Mac แล้วให้งานทำต่อไป',
+}
+for _locale, _tagline in TAGLINES.items():
+    TEXT[_locale]['tagline'] = _tagline
+
 MCP_NOTES = {'en': 'Install and open pika, then connect using the command below.', 'ko': 'pika를 설치하고 실행한 뒤 아래 명령어로 연결하세요.', 'zh-CN': '安装并打开 pika，然后使用下方命令连接。', 'zh-TW': '安裝並開啟 pika，再使用下方指令連接。', 'ja': 'pika をインストールして開き、下のコマンドで接続。', 'hi': 'pika इंस्टॉल करके खोलें, फिर नीचे दिए कमांड से कनेक्ट करें।', 'id': 'Instal dan buka pika, lalu hubungkan dengan perintah di bawah.', 'es': 'Instala y abre pika; conecta con el comando de abajo.', 'fr': 'Installez et ouvrez pika, puis connectez-le avec la commande ci-dessous.', 'de': 'Installiere und öffne pika und verbinde es mit dem Befehl unten.', 'pt-BR': 'Instale e abra o pika, depois conecte com o comando abaixo.', 'ru': 'Установите и откройте pika, затем подключите командой ниже.', 'ar': 'ثبّت pika وافتحه، ثم اتصل باستخدام الأمر أدناه.', 'vi': 'Cài đặt và mở pika, rồi kết nối bằng lệnh bên dưới.', 'th': 'ติดตั้งและเปิด pika แล้วเชื่อมต่อด้วยคำสั่งด้านล่าง'}
 for _locale, _note in MCP_NOTES.items():
     TEXT[_locale]["mcpnote"] = _note
@@ -876,7 +896,7 @@ def render(locale):
 <meta property="og:locale" content="{locale.replace('-', '_')}">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{h('title')}"><meta name="twitter:description" content="{esc(t['description'], quote=True)}"><meta name="twitter:image" content="{BASE}/assets/pika-working.png">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/style.css?v=pointer-16"><script src="/site.js" defer></script><script src="/downloads.js" defer></script><script src="/motion.js?v=pointer-16" defer></script><script src="/visitors.js" defer></script>
+<link rel="stylesheet" href="/style.css?v=tagline-1"><script src="/site.js" defer></script><script src="/downloads.js" defer></script><script src="/motion.js?v=pointer-16" defer></script><script src="/visitors.js" defer></script>
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
 <script type="application/ld+json">{json.dumps(metadata, ensure_ascii=False)}</script>
 </head>
@@ -888,9 +908,8 @@ def render(locale):
 <div class="language"><span aria-hidden="true">◎</span><label class="sr-only" for="language">{h('language')}</label><select id="language">{options}</select></div>
 </header>
 <main id="main">
-<h1 class="sr-only">no-sleep-pika — {h('title').split(' — ', 1)[-1]}</h1>
 {render_pika_motion()}
-<div class="download-area"><a class="button primary" href="{DOWNLOAD}"><svg width="17" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v11m-4-4 4 4 4-4M3 13v5h14v-5" stroke="currentColor" stroke-width="1.8"/></svg>{h('download')}</a>
+<div class="download-area"><h1 class="tagline">{h('tagline')}</h1><a class="button primary" href="{DOWNLOAD}"><svg width="17" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v11m-4-4 4 4 4-4M3 13v5h14v-5" stroke="currentColor" stroke-width="1.8"/></svg>{h('download')}</a>
 <p class="download-meta"><span id="download-count" data-label="{h('downloads')}" data-updated-at="{updated}" title="GitHub · {updated}" aria-live="polite">{count:,} {h('downloads')}</span></p><p class="release">{h('release')}</p></div>
 <section id="mcp" class="mcp" aria-labelledby="mcp-title"><div class="mcp-heading"><h2 id="mcp-title">{h('connect')}</h2><span>STDIO</span></div><p class="mcp-note">{h('mcpnote')} <a href="{REPO}#mcp">{h('source')} ↗</a></p>
 <div class="terminal-body"><div class="command" dir="ltr"><code id="mcp-command">/Applications/pika.app/Contents/MacOS/pika-mcp</code><button class="copy" data-copy="mcp-command" data-copied="{h('copied')}" data-failed="{h('copyfail')}">{h('copy')}</button></div><span class="copy-status sr-only" role="status" aria-live="polite"></span></div>{render_mcp_guide(locale, t["copy"], t["copied"], t["copyfail"])}</section>
