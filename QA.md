@@ -195,3 +195,12 @@ GitHub Actions의 macos-15 환경에서도 소스 `b128f09`의 테스트·Univer
 - 고개와 상체에 작은 SVG displacement를 적용합니다. `pika-lean-map.svg`는 원본 그림을 바꾸지 않는 변형 가중치이며 노트북과 발 영역은 고정합니다. 외곽 가중치를 충분히 확장해 테두리에 생기는 복제 잔상을 수정하고 실제 좌우 화면을 확인했습니다. 지도 로딩 실패 때는 상체 효과만 비활성화하고 시선/타이핑은 계속 사용할 수 있습니다.
 - 실제 브라우저에서 주시 중 handAnimation=none, handOpacity=0, 고개 filter 활성화를 확인했습니다. 마우스 정지 후 center, filter=none, handAnimation=pika-type으로 복귀했습니다.
 - `Scripts/test-web-additions.cjs`에서 16방향, 0도 경계 최단 회전, 중간 프레임 순서, 12Hz 제한, 타이핑 정지, 복귀 중 재입력, 타이머 정리, 터치·동작 줄이기·백그라운드·에셋 실패를 검사했습니다. 19개 페이지 검증 통과. 앱 버전 및 앱 소스는 변경하지 않았습니다.
+
+### 2026-10-01 · pika 1.0.11 (build 14)
+
+- 내부 본체 실행 파일을 `AlwaysAwake`에서 `pika`로 변경. 앱 ID·helper ID·MCP 명령 경로 유지. 설치 preflight는 두 이름 모두 인식하며 6개 구/신 버전 실행 상태·조회 실패 케이스 통과.
+- MCP stdin 파이프가 남은 부모 종료 상황을 이전 빌드에서 재현. Dispatch process exit source로 폴링 없이 감시하며 등록 시 부모 변경도 검사. 정상 4개 동시 연결과 EOF, 부모 정상 종료, SIGKILL 및 부분 입력 중 부모 종료 검사를 통과했습니다. 현재 살아 있는 Codex의 복수 연결을 누수로 단정하거나 강제 합치지 않았습니다.
+- MCP 20,000 requests, warmup 2,000: peak footprint 2,802,144 bytes, warmup 이후 증가 0.00 MiB, EOF 정상 종료. 도구 실행은 initialize/tools-list만 사용했습니다.
+- 설치된 1.0.10 본체 50초/6표본 읽기 전용 관찰: footprint 30,786,400 bytes 고정. 세션 변경이나 강제 종료 없음. 장기/활성 작업 중 부하 검증은 별도입니다.
+- 전체 로직·MCP·UI diagnostics·status icon lifecycle 검사 및 39개 업데이트 검증과 fake installer 3케이스 통과. AppleScript는 샌드박스의 표준 명령 해석 제한 때문에 외부에서 문법 컴파일만 수행했고 성공했습니다. 실제 관리자 스크립트는 실행하지 않았습니다.
+- Universal arm64/x86_64 앱·updater 서명 검사, helper discovery, PKG payload·버전·정확한 서명 pin·must-close 검사 통과. 신규 프로세스 이름과 번들 진입점 일치 확인. 실제 관리자 설치, 재실행, 덮개 동작은 사용자 테스트 대상입니다.

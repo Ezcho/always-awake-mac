@@ -26,11 +26,11 @@ SHARED=(Sources/Shared/SleepSetting.swift Sources/Shared/Protocol.swift Sources/
 for ARCH in arm64 x86_64; do
     FLAGS=(-O -swift-version 5 -sdk "$SDK" -target "${ARCH}-apple-macosx13.0" -module-cache-path "$BUILD/module-cache")
     xcrun swiftc "${FLAGS[@]}" "${SHARED[@]}" Sources/Helper/*.swift -o "$BUILD/AlwaysAwakeHelper-$ARCH"
-    xcrun swiftc "${FLAGS[@]}" "${SHARED[@]}" Sources/Control/*.swift Sources/Shared/UpdateRelease.swift Sources/App/*.swift -o "$BUILD/AlwaysAwake-$ARCH"
+    xcrun swiftc "${FLAGS[@]}" "${SHARED[@]}" Sources/Control/*.swift Sources/Shared/UpdateRelease.swift Sources/App/*.swift -o "$BUILD/pika-$ARCH"
     xcrun swiftc "${FLAGS[@]}" Sources/Shared/Protocol.swift Sources/Control/*.swift Sources/MCP/*.swift -o "$BUILD/pika-mcp-$ARCH"
     xcrun swiftc "${FLAGS[@]}" Sources/Shared/Protocol.swift Sources/Shared/UpdateRelease.swift Sources/Updater/main.swift -o "$BUILD/pika-updater-$ARCH"
 done
-xcrun lipo -create "$BUILD/AlwaysAwake-arm64" "$BUILD/AlwaysAwake-x86_64" -output "$APP/Contents/MacOS/AlwaysAwake"
+xcrun lipo -create "$BUILD/pika-arm64" "$BUILD/pika-x86_64" -output "$APP/Contents/MacOS/pika"
 xcrun lipo -create "$BUILD/AlwaysAwakeHelper-arm64" "$BUILD/AlwaysAwakeHelper-x86_64" -output "$APP/Contents/Library/HelperTools/AlwaysAwakeHelper"
 xcrun lipo -create "$BUILD/pika-mcp-arm64" "$BUILD/pika-mcp-x86_64" -output "$APP/Contents/MacOS/pika-mcp"
 xcrun lipo -create "$BUILD/pika-updater-arm64" "$BUILD/pika-updater-x86_64" -output "$APP/Contents/MacOS/pika-updater"

@@ -5,12 +5,12 @@ import plistlib, subprocess, tempfile, xml.etree.ElementTree as ET
 root = Path(__file__).resolve().parent.parent
 common = (root/'Resources/Installer/common.sh').read_text()
 function = common.split('require_app_closed() {',1)[1].split('\nstop_installed_helper()',1)[0]
-function = ('require_app_closed() {'+function).replace('/usr/bin/pgrep -x AlwaysAwake', 'fake_pgrep')
-for status, expected in [(0,1),(1,0),(2,1)]:
-    script = f'set -euo pipefail\nfake_pgrep() {{ return {status}; }}\nfail() {{ echo "$*" >&2; exit 1; }}\n'+function+'\nrequire_app_closed\n'
+function = ('require_app_closed() {'+function).replace('/usr/bin/pgrep', 'fake_pgrep')
+for current, legacy, expected in [(0,1,1),(1,0,1),(0,0,1),(1,1,0),(2,1,1),(1,2,1)]:
+    script = f'set -euo pipefail\nfake_pgrep() {{ if [[ "$2" == pika ]]; then return {current}; else return {legacy}; fi; }}\nfail() {{ echo "$*" >&2; exit 1; }}\n'+function+'\nrequire_app_closed\n'
     result = subprocess.run(['/bin/bash','-c',script],capture_output=True,text=True)
-    assert result.returncode == expected, (status,result.stderr)
-print('PASS process preflight: running app rejected, closed app allowed, inspection failure rejected')
+    assert result.returncode == expected, (current,legacy,result.stderr)
+print('PASS 6 process preflight cases: current/legacy/both running, both closed, inspection failures')
 # Exercise the production installer parser with fake pmset output only.
 sleep_function = 'sleep_enabled() {' + common.split('sleep_enabled() {',1)[1].split('\nrequire_sleep_enabled()',1)[0]
 sleep_function = sleep_function.replace('/usr/bin/pmset -g', 'fake_pmset')

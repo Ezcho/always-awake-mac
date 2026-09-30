@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Exercise real signed helper discovery without privileges or power mutations."""
 from pathlib import Path
-import subprocess
+import subprocess, plistlib
 
 app = Path(__file__).resolve().parent.parent / "dist/pika.app"
 helper = app / "Contents/Library/HelperTools/AlwaysAwakeHelper"
@@ -21,3 +21,12 @@ subprocess.run(["/usr/bin/codesign", "--verify", "--strict", str(updater)], chec
 archs = subprocess.check_output(["/usr/bin/lipo", "-archs", str(updater)], text=True)
 assert "arm64" in archs and "x86_64" in archs
 print("PASS: Universal signed standalone updater")
+
+info = plistlib.loads((app/'Contents/Info.plist').read_bytes())
+assert info['CFBundleExecutable'] == 'pika'
+main = app/'Contents/MacOS'/info['CFBundleExecutable']
+assert main.is_file() and not (app/'Contents/MacOS/AlwaysAwake').exists()
+subprocess.run(['codesign','--verify','--strict',str(main)],check=True)
+archs = subprocess.check_output(['lipo','-archs',str(main)],text=True)
+assert 'arm64' in archs and 'x86_64' in archs
+print('PASS renamed Universal pika executable and bundle entry point')
