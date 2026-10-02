@@ -21,6 +21,13 @@ def render(locale, base, repo, release):
     download = f'{repo}/releases/download/{release}/pika-{release[1:]}.pkg'
     alternate = ''.join(f'<link rel="alternate" hreflang="{lang}" href="{base}{path}">' for lang, path in PATHS.items())
     language_links = ''.join(f'<a href="{PATHS[lang]}" lang="{lang}">{e(name)}</a>' for lang, name in LANGUAGES)
+    def figure(kind):
+        hero = kind == 'methods'
+        alt = ' · '.join(t['headings'][i] for i in ([1, 3, 6] if hero else [6]))
+        name = 'keep-mac-awake-methods' if hero else 'pika-session-guide'
+        size = 'width="2172" height="724"' if hero else 'width="1774" height="887"'
+        loading = 'fetchpriority="high"' if hero else 'loading="lazy"'
+        return f'<figure class="guide-illustration"><img src="/assets/{name}.webp" {size} {loading} decoding="async" alt="{e(alt)}"></figure>'
     sections = []
     for i, (heading, paragraphs) in enumerate(zip(t['headings'], t['paragraphs'])):
         content = ''.join(f'<p>{e(p)}</p>' for p in paragraphs)
@@ -30,21 +37,22 @@ def render(locale, base, repo, release):
         if i == 2:
             content += '<p><a href="https://support.apple.com/guide/mac-help/mchle41a6ccd/mac">Apple · Sleep and wake settings</a></p>'
         if i == 6:
+            content = figure('session') + content
             content += f'<p><a class="article-cta" href="{download}">{e(t["download"])} · {release[1:]}</a></p><p><a href="{install}">{e(t["install"])}</a></p>'
         if i == 9:
             content += '<ul><li><a href="https://support.apple.com/en-us/102501">Apple: If your external display is dark or low resolution</a></li><li><a href="https://support.apple.com/guide/mac-help/mchle41a6ccd/mac">Apple: Set sleep and wake settings for your Mac</a></li><li><a href="https://support.apple.com/en-us/102282">Apple: Allow USB and other accessories</a></li><li><code>man caffeinate</code> · macOS System Manager’s Manual</li></ul>'
         sections.append(f'<section id="{IDS[i]}"><h2>{e(heading)}</h2>{content}</section>')
     schema = {'@context':'https://schema.org','@graph':[
-        {'@type':'Article','headline':t['title'],'description':t['intro'],'url':url,'mainEntityOfPage':url,'inLanguage':locale,'datePublished':UPDATED,'dateModified':UPDATED,'image':base+'/assets/pika-working.png','author':{'@type':'Organization','name':'no-sleep-pika','url':base+'/'},'publisher':{'@type':'Organization','name':'no-sleep-pika','url':base+'/'}},
+        {'@type':'Article','headline':t['title'],'description':t['intro'],'url':url,'mainEntityOfPage':url,'inLanguage':locale,'datePublished':UPDATED,'dateModified':UPDATED,'image':base+'/assets/keep-mac-awake-methods.webp','author':{'@type':'Organization','name':'no-sleep-pika','url':base+'/'},'publisher':{'@type':'Organization','name':'no-sleep-pika','url':base+'/'}},
         {'@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'pika','item':base+home},{'@type':'ListItem','position':2,'name':t['title'],'item':url}]}]}
     toc = ''.join(f'<a href="#{key}">{e(title)}</a>' for key,title in zip(IDS,t['headings']))
     return f'''<!doctype html>
 <html lang="{locale}" dir="{'rtl' if locale == 'ar' else 'ltr'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(t['title'])} | no-sleep-pika</title><meta name="description" content="{e(t['intro'])}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="{url}">{alternate}<link rel="alternate" hreflang="x-default" href="{base}{PATHS['en']}">
-<meta property="og:type" content="article"><meta property="og:title" content="{e(t['title'])}"><meta property="og:description" content="{e(t['intro'])}"><meta property="og:url" content="{url}"><meta property="og:image" content="{base}/assets/pika-working.png"><meta property="article:published_time" content="{UPDATED}"><meta property="article:modified_time" content="{UPDATED}"><meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/assets/favicon.svg"><link rel="stylesheet" href="/install/install.css"><link rel="stylesheet" href="/guide/guide.css"><link rel="stylesheet" href="/guide/article.css"><script type="application/ld+json">{json.dumps(schema,ensure_ascii=False)}</script></head>
+<meta property="og:type" content="article"><meta property="og:title" content="{e(t['title'])}"><meta property="og:description" content="{e(t['intro'])}"><meta property="og:url" content="{url}"><meta property="og:image" content="{base}/assets/keep-mac-awake-methods.webp"><meta property="article:published_time" content="{UPDATED}"><meta property="article:modified_time" content="{UPDATED}"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/favicon.svg"><link rel="stylesheet" href="/install/install.css"><link rel="stylesheet" href="/guide/guide.css"><link rel="stylesheet" href="/guide/article.css?v=20261002-images"><script type="application/ld+json">{json.dumps(schema,ensure_ascii=False)}</script></head>
 <body><div class="shell"><header><a class="brand" href="{home}">no-sleep-pika</a><div class="article-languages"><details><summary>🌐 {dict(LANGUAGES)[locale]}</summary><div>{language_links}</div></details></div></header>
-<main id="main"><p class="eyebrow">MAC GUIDE · <time datetime="{UPDATED}">{UPDATED}</time></p><h1>{e(t['title'])}</h1><p class="intro">{e(t['intro'])}</p><nav class="contents">{toc}</nav><div class="guide-layout"><article>{''.join(sections)}</article><aside class="notice"><img class="article-pika" src="/assets/pika-working.png" width="140" height="140" alt=""><p>{e(t['disclosure'])}</p><a class="article-cta" href="{download}">{e(t['download'])}</a><a href="{previous}">{e(t['related'])} →</a><a href="{url}index.md">Markdown</a></aside></div></main><footer><a href="{home}">pika</a><a href="{repo}">GitHub</a></footer></div></body></html>'''
+<main id="main"><p class="eyebrow">MAC GUIDE · <time datetime="{UPDATED}">{UPDATED}</time></p><h1>{e(t['title'])}</h1><p class="intro">{e(t['intro'])}</p>{figure("methods")}<nav class="contents">{toc}</nav><div class="guide-layout"><article>{''.join(sections)}</article><aside class="notice"><img class="article-pika" src="/assets/pika-working.png" width="140" height="140" alt=""><p>{e(t['disclosure'])}</p><a class="article-cta" href="{download}">{e(t['download'])}</a><a href="{previous}">{e(t['related'])} →</a><a href="{url}index.md">Markdown</a></aside></div></main><footer><a href="{home}">pika</a><a href="{repo}">GitHub</a></footer></div></body></html>'''
 
 
 def build(out, base, repo, release):
