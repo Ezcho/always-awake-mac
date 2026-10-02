@@ -49,6 +49,8 @@ pika kann die Session beenden, wenn Akku oder macOS-Wärmezustand Schutzgrenzen 
 
 [Weitere Hilfe zu Installation, Verbindung und Problemen · English →](https://no-sleep-pika.online/guide/)
 
+[Mac wach halten: Clamshell-Modus, caffeinate und pika im Vergleich →](https://no-sleep-pika.online/guide/de/keep-mac-awake/)
+
 ## MacBook zugeklappt weiterlaufen lassen: So geht’s
 
 pika ist eine macOS-Menüleisten-App mit zwei Schaltern: Session und Monitor. Für macOS 13 oder neuer, Apple Silicon und Intel.

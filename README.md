@@ -173,7 +173,7 @@ command = "/Applications/pika.app/Contents/MacOS/pika-mcp"
 ## 홈페이지 방문 집계와 애니메이션
 
 - 홈페이지는 `Scripts/pika_motion.py`에서 같은 원본을 공유하는 16방향 시선·상체 자세를 만듭니다. 마우스가 움직이는 동안 손을 쉬고, 방향 전환은 최대 12Hz로 중간 자세를 순서대로 거칩니다. 350ms 동안 마우스 움직임이 없으면 약 83ms의 중간 복귀 자세를 거쳐 타이핑을 재개합니다. 고개·상체는 작은 범위로 기울며 노트북과 발 위치는 변형 가중치를 0으로 유지합니다. 유휴 폴링은 없고, 동작 줄이기·터치 입력에서는 시선을 추적하지 않으며 숨긴 탭에서는 타이핑도 멈춥니다. 원본 래스터 그림은 변경하지 않았습니다.
-- Google Analytics 4로 방문·신규 사용자·유입 경로를 집계합니다. 측정 ID는 `docs/analytics.json`의 `measurementId`에 저장하며, `docs/ga.js`를 모든 34개 페이지에 공통으로 삽입합니다. 로컬 미리보기, GPC 활성 브라우저, 언어 자동 이동 직전의 중간 페이지는 제외합니다.
+- Google Analytics 4로 방문·신규 사용자·유입 경로를 집계합니다. 측정 ID는 `docs/analytics.json`의 `measurementId`에 저장하며, `docs/ga.js`를 모든 49개 페이지에 공통으로 삽입합니다. 로컬 미리보기, GPC 활성 브라우저, 언어 자동 이동 직전의 중간 페이지는 제외합니다.
 - GitHub 설치 파일 링크 클릭은 `pika_download_click` 이벤트로 기록합니다. 이는 다운로드 완료나 설치 사용자 수가 아니며 GitHub 릴리스 다운로드 횟수와 별개입니다. Google signals 및 광고 개인화 신호는 사용하지 않습니다.
 - 통계는 소유자의 GA 대시보드에서 확인합니다. GA는 사이트에 공개할 누적 카운터 API를 제공하지 않으므로 기존 눈 아이콘은 `—`로 유지합니다. GoatCounter는 연결하지 않았으며 요청을 보내지 않습니다. GA 비밀키나 계정 인증 정보를 홈페이지에 넣지 않습니다.
 - 집계는 태그 배포 이후부터 시작하며 과거 방문을 복원하지 않습니다. 광고 차단·사용자 설정 등에 따라 실제 방문과 차이가 날 수 있습니다.
@@ -198,3 +198,7 @@ PKG를 GitHub 정식 릴리스로 공개한 뒤 `gh api repos/Ezcho/always-awake
 - Anthropic은 Claude 검색용 `Claude-SearchBot`, 사용자 요청용 `Claude-User`, 학습용 `ClaudeBot`을 구분합니다. Claude Code 공식 문서도 `llms.txt`와 `.md` 문서를 제공합니다. 이 형식을 제공한다고 모든 AI가 자동 탐색하거나 검색 순위·인용·추천이 보장되는 것은 아닙니다.
 - 공식 근거: [Anthropic 크롤러 안내](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler), [Claude Code 문서 목록](https://code.claude.com/docs/llms.txt), [OpenAI 크롤러 안내](https://developers.openai.com/api/docs/bots). 확인일: 2026-10-01.
 - 검증: `python3 Scripts/test-ai-docs.py`. 공개 페이지·코드 보존, 생성 결과 최신성, 문서 링크, 검색 봇 접근 및 새 글 자동 포함을 확인합니다.
+
+## 잠자기 방지 방법 비교 글
+
+[Mac에서 맥을 잠들지 않게 하는 방법](https://no-sleep-pika.online/guide/ko/keep-mac-awake/)은 전원·클램쉘, caffeinate, pika를 비교합니다. `Scripts/keep_awake_locales.py`에서 15개 언어 원문을 관리하고 `Scripts/keep_awake_article.py`에서 생성합니다. 공개일은 2026-10-02이며 사이트맵·hreflang·Markdown·AI 문서 목록에 함께 포함됩니다. 검색엔진의 최종 색인과 순위는 발행만으로 보장되지 않습니다.

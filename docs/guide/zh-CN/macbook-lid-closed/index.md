@@ -49,6 +49,8 @@ MacBook 合盖通常会进入睡眠，而不是完全关机。重新打开后应
 
 [更多安装、连接和排障步骤 · English →](https://no-sleep-pika.online/guide/)
 
+[让 Mac 不进入睡眠的方法：合盖模式、caffeinate 与 pika →](https://no-sleep-pika.online/guide/zh-CN/keep-mac-awake/)
+
 ## 如何让 MacBook 合上盖子后继续运行
 
 pika 是一款 macOS 菜单栏应用，通过 Session 和 Monitor 两个开关控制。支持 macOS 13 及以上版本、Apple Silicon 和 Intel。

@@ -49,6 +49,8 @@ pika dapat mengakhiri sesi ketika baterai atau kondisi termal macOS mencapai bat
 
 [Panduan lengkap instalasi, koneksi, dan pemecahan masalah · English →](https://no-sleep-pika.online/guide/)
 
+[Cara menjaga Mac tetap aktif: clamshell, caffeinate, dan pika →](https://no-sleep-pika.online/guide/id/keep-mac-awake/)
+
 ## Cara agar MacBook tetap bekerja saat layar ditutup
 
 pika adalah aplikasi bar menu macOS dengan dua sakelar: Session dan Monitor. Untuk macOS 13 ke atas, Apple Silicon dan Intel.

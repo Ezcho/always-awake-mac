@@ -49,6 +49,8 @@ pika อาจจบเซสชันเมื่อแบตเตอรี่
 
 [รายละเอียดการติดตั้ง การเชื่อมต่อ และแก้ปัญหา · English →](https://no-sleep-pika.online/guide/)
 
+[วิธีทำให้ Mac ไม่พักเครื่อง: clamshell, caffeinate และ pika →](https://no-sleep-pika.online/guide/th/keep-mac-awake/)
+
 ## วิธีให้ MacBook ทำงานต่อแม้พับฝาเครื่อง
 
 pika เป็นแอปแถบเมนู macOS ที่มีสองสวิตช์คือ Session และ Monitor รองรับ macOS 13 ขึ้นไป ทั้ง Apple Silicon และ Intel

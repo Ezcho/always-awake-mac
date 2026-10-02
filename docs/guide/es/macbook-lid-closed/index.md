@@ -49,6 +49,8 @@ pika puede finalizar la sesión si la batería o el estado térmico de macOS alc
 
 [Más ayuda de instalación, conexión y diagnóstico · English →](https://no-sleep-pika.online/guide/)
 
+[Cómo evitar que tu Mac se duerma: modo cerrado, caffeinate y pika →](https://no-sleep-pika.online/guide/es/keep-mac-awake/)
+
 ## Cómo mantener el MacBook funcionando con la tapa cerrada
 
 pika es una app de la barra de menús con dos controles: Session y Monitor. Para macOS 13 o posterior, Apple Silicon e Intel.

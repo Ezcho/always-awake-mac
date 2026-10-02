@@ -83,6 +83,8 @@ A local MCP client on the same Mac can query status and control Session and Moni
 
 For connection issues and missing menu bar icons, continue to the [full pika user guide](https://no-sleep-pika.online/guide/).
 
+[How to keep your Mac awake: clamshell mode, caffeinate and pika →](https://no-sleep-pika.online/guide/keep-mac-awake/)
+
 ## Close your Mac. Keep work running.
 
 pika is a macOS menu bar app with two switches: Session and Monitor. For macOS 13 or later on Apple Silicon and Intel.

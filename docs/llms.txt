@@ -16,6 +16,8 @@ Markdown pages below are generated from the same HTML as the public website. The
 - [Mac에 pika 설치하기: PKG와 보조 서비스 — no-sleep-pika (ko)](https://no-sleep-pika.online/install/ko/index.md)
 - [Keep a MacBook awake with the lid closed: pika guide — no-sleep-pika (en)](https://no-sleep-pika.online/guide/index.md)
 - [맥북 덮개를 닫고 작업하기: pika 사용 가이드 — no-sleep-pika (ko)](https://no-sleep-pika.online/guide/ko/index.md)
+- [How to keep your Mac awake: clamshell mode, caffeinate and pika | no-sleep-pika (en)](https://no-sleep-pika.online/guide/keep-mac-awake/index.md)
+- [Mac에서 맥을 잠들지 않게 하는 방법: 클램쉘·터미널·pika 비교 | no-sleep-pika (ko)](https://no-sleep-pika.online/guide/ko/keep-mac-awake/index.md)
 
 ## All localized pages and articles
 
@@ -53,6 +55,21 @@ Markdown pages below are generated from the same HTML as the public website. The
 - [كيف تُبقي MacBook يعمل والغطاء مغلق | no-sleep-pika (ar)](https://no-sleep-pika.online/guide/ar/macbook-lid-closed/index.md)
 - [Cách giữ MacBook chạy khi gập màn hình | no-sleep-pika (vi)](https://no-sleep-pika.online/guide/vi/macbook-lid-closed/index.md)
 - [วิธีให้ MacBook ทำงานต่อแม้พับฝาเครื่อง | no-sleep-pika (th)](https://no-sleep-pika.online/guide/th/macbook-lid-closed/index.md)
+- [How to keep your Mac awake: clamshell mode, caffeinate and pika | no-sleep-pika (en)](https://no-sleep-pika.online/guide/keep-mac-awake/index.md)
+- [Mac에서 맥을 잠들지 않게 하는 방법: 클램쉘·터미널·pika 비교 | no-sleep-pika (ko)](https://no-sleep-pika.online/guide/ko/keep-mac-awake/index.md)
+- [让 Mac 不进入睡眠的方法：合盖模式、caffeinate 与 pika | no-sleep-pika (zh-CN)](https://no-sleep-pika.online/guide/zh-CN/keep-mac-awake/index.md)
+- [讓 Mac 不進入睡眠的方法：闔蓋模式、caffeinate 與 pika | no-sleep-pika (zh-TW)](https://no-sleep-pika.online/guide/zh-TW/keep-mac-awake/index.md)
+- [Macをスリープさせない方法：クラムシェル・caffeinate・pika | no-sleep-pika (ja)](https://no-sleep-pika.online/guide/ja/keep-mac-awake/index.md)
+- [Mac को स्लीप में जाने से कैसे रोकें: क्लैमशेल, caffeinate और pika | no-sleep-pika (hi)](https://no-sleep-pika.online/guide/hi/keep-mac-awake/index.md)
+- [Cara menjaga Mac tetap aktif: clamshell, caffeinate, dan pika | no-sleep-pika (id)](https://no-sleep-pika.online/guide/id/keep-mac-awake/index.md)
+- [Cómo evitar que tu Mac se duerma: modo cerrado, caffeinate y pika | no-sleep-pika (es)](https://no-sleep-pika.online/guide/es/keep-mac-awake/index.md)
+- [Empêcher un Mac de se mettre en veille : écran fermé, caffeinate et pika | no-sleep-pika (fr)](https://no-sleep-pika.online/guide/fr/keep-mac-awake/index.md)
+- [Mac wach halten: Clamshell-Modus, caffeinate und pika im Vergleich | no-sleep-pika (de)](https://no-sleep-pika.online/guide/de/keep-mac-awake/index.md)
+- [Como manter o Mac acordado: modo clamshell, caffeinate e pika | no-sleep-pika (pt-BR)](https://no-sleep-pika.online/guide/pt-BR/keep-mac-awake/index.md)
+- [Как не дать Mac уснуть: закрытая крышка, caffeinate и pika | no-sleep-pika (ru)](https://no-sleep-pika.online/guide/ru/keep-mac-awake/index.md)
+- [كيف تمنع Mac من السكون: وضع الغطاء المغلق وcaffeinate وpika | no-sleep-pika (ar)](https://no-sleep-pika.online/guide/ar/keep-mac-awake/index.md)
+- [Cách giữ Mac không ngủ: clamshell, caffeinate và pika | no-sleep-pika (vi)](https://no-sleep-pika.online/guide/vi/keep-mac-awake/index.md)
+- [วิธีทำให้ Mac ไม่พักเครื่อง: clamshell, caffeinate และ pika | no-sleep-pika (th)](https://no-sleep-pika.online/guide/th/keep-mac-awake/index.md)
 
 ## Optional
 

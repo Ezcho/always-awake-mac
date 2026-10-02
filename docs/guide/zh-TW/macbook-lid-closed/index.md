@@ -49,6 +49,8 @@ MacBook 闔蓋通常會進入睡眠，而不是完全關機。重新打開後 Ap
 
 [更多安裝、連線與疑難排解步驟 · English →](https://no-sleep-pika.online/guide/)
 
+[讓 Mac 不進入睡眠的方法：闔蓋模式、caffeinate 與 pika →](https://no-sleep-pika.online/guide/zh-TW/keep-mac-awake/)
+
 ## 如何讓 MacBook 闔上蓋子後繼續執行
 
 pika 是 macOS 選單列 App，以 Session 和 Monitor 兩個開關控制。支援 macOS 13 以上、Apple Silicon 與 Intel。

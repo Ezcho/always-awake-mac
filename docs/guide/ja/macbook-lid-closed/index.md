@@ -49,6 +49,8 @@ no-sleep-pika · 2026-10-01
 
 [インストール・接続・トラブル対処の詳細 · English →](https://no-sleep-pika.online/guide/)
 
+[Macをスリープさせない方法：クラムシェル・caffeinate・pika →](https://no-sleep-pika.online/guide/ja/keep-mac-awake/)
+
 ## MacBookを閉じても作業を続ける方法
 
 pikaはSessionとMonitorの2つのスイッチで操作するmacOSメニューバーアプリです。macOS 13以降、Apple Silicon・Intelに対応しています。

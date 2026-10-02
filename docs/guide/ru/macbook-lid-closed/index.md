@@ -49,6 +49,8 @@ pika может завершить сеанс при достижении защ
 
 [Подробнее об установке, подключении и устранении неполадок · English →](https://no-sleep-pika.online/guide/)
 
+[Как не дать Mac уснуть: закрытая крышка, caffeinate и pika →](https://no-sleep-pika.online/guide/ru/keep-mac-awake/)
+
 ## Как оставить MacBook работающим с закрытой крышкой
 
 pika — приложение строки меню macOS с двумя переключателями: Session и Monitor. Для macOS 13 и новее, Apple Silicon и Intel.

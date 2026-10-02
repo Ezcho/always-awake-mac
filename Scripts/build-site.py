@@ -9,6 +9,7 @@ from lid_article import build as build_article, UPDATED as ARTICLE_UPDATED, PATH
 from mcp_guide import render as render_mcp_guide
 from pika_motion import render as render_pika_motion
 from ai_docs import build as build_ai_docs
+from keep_awake_article import build as build_keep_awake, UPDATED as KEEP_UPDATED, PATHS as KEEP_PATHS, COPY as KEEP_COPY
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'docs'
@@ -935,13 +936,20 @@ def main():
     install_urls = build_install(OUT, BASE, REPO)
     support_urls = build_support(OUT, BASE, REPO)
     article_urls = build_article(OUT, BASE, REPO)
+    keep_urls = build_keep_awake(OUT, BASE, REPO, RELEASE)
+    # Link the comparison from each localized existing article; keep the homepage compact.
+    for locale, path in ARTICLE_PATHS.items():
+        page = OUT / path.strip('/') / 'index.html'
+        content = page.read_text(encoding='utf-8')
+        related = f'<p><a href="{KEEP_PATHS[locale]}">{html.escape(KEEP_COPY[locale]["title"])} →</a></p>'
+        page.write_text(content.replace('</article>', related + '</article>'), encoding='utf-8')
     # Apply the same analytics loader to every generated language and guide.
-    for url in [page_url(code) for code, _ in LANGUAGES] + install_urls + support_urls + article_urls:
+    for url in [page_url(code) for code, _ in LANGUAGES] + install_urls + support_urls + article_urls + keep_urls:
         page = OUT / url.removeprefix(BASE).lstrip('/') / 'index.html'
         content = page.read_text(encoding='utf-8')
         content = content.replace('</head>', '<script src="/ga.js" defer></script></head>')
         page.write_text(content, encoding='utf-8')
-    for urls, updated, languages in ((install_urls, INSTALL_UPDATED, ('en', 'ko')), (support_urls, SUPPORT_UPDATED, ('en', 'ko')), (article_urls, ARTICLE_UPDATED, tuple(ARTICLE_PATHS))):
+    for urls, updated, languages in ((install_urls, INSTALL_UPDATED, ('en', 'ko')), (support_urls, SUPPORT_UPDATED, ('en', 'ko')), (article_urls, ARTICLE_UPDATED, tuple(ARTICLE_PATHS)), (keep_urls, KEEP_UPDATED, tuple(KEEP_PATHS))):
         alternates = ''.join(f'<xhtml:link rel="alternate" hreflang="{language}" href="{url}"/>' for language, url in zip(languages, urls))
         alternates += f'<xhtml:link rel="alternate" hreflang="x-default" href="{urls[0]}"/>'
         entries += ''.join(f'<url><loc>{url}</loc><lastmod>{updated}</lastmod>{alternates}</url>' for url in urls)
@@ -953,7 +961,7 @@ def main():
             robots.write(f'\nUser-agent: {agent}\nAllow: /\n')
     build_ai_docs(OUT, BASE)
     (OUT / '.nojekyll').touch()
-    print(f'Built {len(LANGUAGES)} localized homepages, 4 guides, 15 articles, sitemap.xml and robots.txt.')
+    print(f'Built {len(LANGUAGES)} localized homepages, 4 guides, 30 articles, sitemap.xml and robots.txt.')
 
 if __name__ == '__main__':
     main()

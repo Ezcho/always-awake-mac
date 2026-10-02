@@ -38,7 +38,7 @@ class Page(HTMLParser):
   if tag=='title':self.in_title=False
   if tag=='script' and self.in_json:self.structured.append(json.loads(self.buffer));self.in_json=False
 pages=sorted(ROOT.rglob('index.html'))
-assert len(pages)==34, f'Expected 15 locale pages, 2 installation guides, 2 usage guides and 15 articles, got {len(pages)}'
+assert len(pages)==49, f'Expected 15 locale pages, 2 installation guides, 2 usage guides and 30 articles, got {len(pages)}'
 canonical=set()
 parsed={}
 titles=set()
@@ -57,7 +57,7 @@ for path in pages:
  assert 'index' in page.robots and 'noindex' not in page.robots,(path,'indexability')
  assert page.title_text not in titles,(path,'duplicate title')
  titles.add(page.title_text)
- expected_alternates = 16 if 'macbook-lid-closed' in relative.parts else 3 if set(('install','guide')) & set(relative.parts) else 16
+ expected_alternates = 16 if {'macbook-lid-closed', 'keep-mac-awake'} & set(relative.parts) else 3 if set(('install','guide')) & set(relative.parts) else 16
  assert len(page.alternates)==expected_alternates and 'x-default' in page.alternates,(path,'hreflang')
  assert page.structured,(path,'structured data')
  entities=[entity for block in page.structured for entity in block.get('@graph',[block])]
@@ -123,4 +123,4 @@ while pending:
 assert reachable==canonical,('orphaned pages',canonical-reachable)
 assert 'Sitemap: '+BASE+'/sitemap.xml' in (ROOT/'robots.txt').read_text()
 assert (ROOT/'CNAME').read_text().strip()=='no-sleep-pika.online'
-print('PASS 34 pages: reciprocal hreflang, sitemap dates, canonical/OG consistency, schema release, crawlable guides, assets and anchors')
+print('PASS 49 pages: reciprocal hreflang, sitemap dates, canonical/OG consistency, schema release, crawlable guides, assets and anchors')

@@ -49,6 +49,8 @@ no-sleep-pika · 2026-10-01
 
 [مزيد من تفاصيل التثبيت والاتصال وحل المشكلات · English →](https://no-sleep-pika.online/guide/)
 
+[كيف تمنع Mac من السكون: وضع الغطاء المغلق وcaffeinate وpika →](https://no-sleep-pika.online/guide/ar/keep-mac-awake/)
+
 ## كيف تُبقي MacBook يعمل والغطاء مغلق
 
 pika تطبيق لشريط قوائم macOS بمفتاحين: Session وMonitor. يدعم macOS 13 والإصدارات الأحدث، وApple Silicon وIntel.

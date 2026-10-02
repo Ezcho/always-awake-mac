@@ -49,6 +49,8 @@ MacBook का ढक्कन बंद करने पर आम तौर �
 
 [इंस्टॉलेशन, कनेक्शन और समस्या समाधान के विस्तृत चरण · English →](https://no-sleep-pika.online/guide/)
 
+[Mac को स्लीप में जाने से कैसे रोकें: क्लैमशेल, caffeinate और pika →](https://no-sleep-pika.online/guide/hi/keep-mac-awake/)
+
 ## ढक्कन बंद होने पर भी MacBook पर काम कैसे जारी रखें
 
 pika, macOS मेनू बार का ऐप है जिसमें Session और Monitor के दो स्विच हैं। macOS 13 या बाद के संस्करण, Apple Silicon और Intel के लिए।

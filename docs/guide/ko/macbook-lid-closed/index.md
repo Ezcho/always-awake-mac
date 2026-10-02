@@ -83,6 +83,8 @@ pika는 덮개를 다시 열면 예약된 화면 끄기를 취소합니다. macO
 
 연결 끊김이나 메뉴 막대 문제는 [pika 전체 사용 가이드](https://no-sleep-pika.online/guide/ko/)에서 이어서 확인할 수 있습니다.
 
+[Mac에서 맥을 잠들지 않게 하는 방법: 클램쉘·터미널·pika 비교 →](https://no-sleep-pika.online/guide/ko/keep-mac-awake/)
+
 ## 맥을 덮어도 작업을 유지하세요
 
 pika는 Session과 Monitor 두 스위치로 제어하는 macOS 메뉴 막대 앱입니다. macOS 13 이상, Apple Silicon·Intel용입니다.

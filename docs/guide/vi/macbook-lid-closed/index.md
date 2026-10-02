@@ -49,6 +49,8 @@ pika có thể kết thúc phiên khi pin hoặc trạng thái nhiệt macOS ch�
 
 [Chi tiết cài đặt, kết nối và xử lý sự cố · English →](https://no-sleep-pika.online/guide/)
 
+[Cách giữ Mac không ngủ: clamshell, caffeinate và pika →](https://no-sleep-pika.online/guide/vi/keep-mac-awake/)
+
 ## Cách giữ MacBook chạy khi gập màn hình
 
 pika là ứng dụng thanh menu macOS với hai công tắc: Session và Monitor. Dành cho macOS 13 trở lên, Apple Silicon và Intel.
